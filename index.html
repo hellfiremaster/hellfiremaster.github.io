@@ -18,6 +18,9 @@
             border-top: none;
             margin-top: auto; /* 카드 본문이 위로 확장되도록 */
         }
+        .icon-title {
+            cursor: pointer; /* 커서 모양 변경 */
+        }
     </style>
 </head>
 <body>
@@ -26,7 +29,7 @@
         <h1 class="text-center mb-4">dcinside 프로그래밍 갤러리</h1>
         <p class="text-center mb-5">반갑다! 이곳은 프로그래밍 갤러리 위원회의 포트폴리오 페이지입니다.</p>
         
-        <h2 class="mb-4">포트폴리오</h2>
+        <h2 id="portfolio" class="mb-4"><span class="icon-title" onclick="copyLink('portfolio')">📁</span> 포트폴리오</h2>
 
         <div class="row gy-4">
             <div class="col-lg-3">
@@ -91,7 +94,7 @@
             </div>
         </div>
 
-        <h2 class="mt-5 mb-4">프갤위원회 용어 표준</h2>
+        <h2 id="standard" class="mt-5 mb-4"><span class="icon-title" onclick="copyLink('standard')">📚</span> 프갤위원회 용어 표준</h2>
 
         <p>프갤위원회의 엄격한 심사와 합의를 거쳐 채택됩니다.</p>
 
@@ -106,7 +109,7 @@
             </div>
         </div>
 
-        <h2 class="mt-5 mb-4">프갤 고닉 실력 티어표 v202409</h2>
+        <h2 id="tier" class="mt-5 mb-4"><span class="icon-title" onclick="copyLink('tier')">📊</span> 프갤 고닉 실력 티어표 v202409</h2>
 
         <p>B급 이상부터 프로그래밍 갤러리 위원회 참여자격을 드리고있습니다.</p>
 
@@ -192,7 +195,7 @@
             </tbody>
         </table>
 
-        <h2 class="mt-5 mb-4">📜 쇼요롤 명심보감</h2>
+        <h2 id="bogam" class="mt-5 mb-4"><span class="icon-title" onclick="copyLink('bogam')">📜</span> 쇼요롤 명심보감</h2>
 
         <div class="row gy-4">
             <div class="col-lg-3">
@@ -208,7 +211,18 @@
             </div>
         </div>
 
-        <h2 class="mt-5 mb-4">🧑‍🔬 프갤 위원회 연구소</h2>
+        <h2 id="lab-section" class="mt-5 mb-4"><span class="icon-title" onclick="copyLink('lab-section')">🧑‍🔬</span> 프갤 위원회 연구소</h2>
+
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="myToast">
+        <div class="toast-header">
+            <strong class="me-auto">Bootstrap</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Hello, world! This is a toast message.
+        </div>
+        </div>
+          
 
         <p>프갤위원회는 코딩 전쟁에서 살아남는 데 필수적인 그뤠잇 기술을 연구합니다.</p>
 
@@ -246,5 +260,51 @@
 
     <!-- Bootstrap JS 추가 (필요에 따라 선택) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Snackbar for link copy message -->
+    <div id="snackbar" style="
+        visibility: hidden;
+        min-width: 250px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 4px;
+        padding: 16px;
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.5s ease-in-out;
+    ">링크가 복사됐습니다.</div>
+    <script>
+    function copyLink(id) {
+        const link = `${window.location.origin}${window.location.pathname}#${id}`;
+        navigator.clipboard.writeText(link).then(() => {
+            showSnackbar();
+        });
+    }
+
+    function showSnackbar() {
+        const snackbar = document.getElementById("snackbar");
+        snackbar.style.visibility = "visible";
+        snackbar.style.opacity = "1";
+
+        setTimeout(() => {
+            hideSnackbar();
+        }, 2000); // Display for 3 seconds
+    }
+
+    function hideSnackbar() {
+        const snackbar = document.getElementById("snackbar");
+        snackbar.style.opacity = "0";
+        
+        // Delay hiding visibility until the fade-out transition completes
+        setTimeout(() => {
+            snackbar.style.visibility = "hidden";
+        }, 500); // Match this to the opacity transition duration
+    }
+    </script>
 </body>
 </html>
