@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check C Syntax with Tree-sitter and Report Errors</title>
+    <style>
+        /* CSS Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #fileContent {
+            border: 1px solid #ccc;
+            margin-top: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+            font-family: monospace;
+        }
+        .code-line {
+            display: flex;
+        }
+        .line-number {
+            width: 50px;
+            background-color: #f0f0f0;
+            text-align: right;
+            padding-right: 10px;
+            padding-left: 5px;
+            user-select: none;
+        }
+        .code-text {
+            flex: 1;
+            padding-left: 10px;
+        }
+        .error-line {
+            background-color: rgba(255, 0, 0, 0.2);
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Enter C Code to Check Syntax and Report Errors</h1>
+    
+    <textarea id="codeInput" rows="15" cols="80" placeholder="Write your C code here...">
+#include <iostream>
+
+int main() {
+  printf("Hello World!");
+  return 0;
+}</textarea><br>
+    <button id="checkButton">Check Syntax</button>
+
+    <div id="fileContent"></div>
+    <div id="result"></div>
+    <div id="errorMessages"></div>
+
+    <!-- Include tree-sitter.js -->
+    <script src="tree-sitter.js"></script>
+    <script>
+        (async function() {
+            // Get references to the input and display elements
+            const codeInput = document.getElementById('codeInput');
+            const checkButton = document.getElementById('checkButton');
+            const fileContentDiv = document.getElementById('fileContent');
+            const resultDiv = document.getElementById('result');
+            const errorMessagesDiv = document.getElementById('errorMessages');
+
+            // Initialize Tree-sitter
+            await TreeSitter.init();
+
+            const parser = new TreeSitter();
+
+            // Load the C language parser
+            const C = await TreeSitter.Language.load('tree-sitter-c.wasm'); // Ensure the path is correct
+            parser.setLanguage(C);
+
+            // Add an event listener for when the check button is clicked
+            checkButton.addEventListener('click', function() {
+                const code = codeInput.value;
+
+                // Clear previous error messages
+                errorMessagesDiv.innerHTML = '';
+
+                // Parse the code using Tree-sitter
+                const tree = parser.parse(code);
+
+                // Collect error nodes
+                let errorNodes = [];
+
+                // Function to traverse the syntax tree and collect error nodes
+                function traverse(node) {
+                    if (node.hasError) {
+                        let childHasError = false;
+                        for (let i = 0; i < node.childCount; i++) {
+                            const child = node.child(i);
+                            if (child.hasError) {
+                                childHasError = true;
+                                traverse(child);
+                            }
+                        }
+                        // If none of the children have errors, this is the smallest node with an error
+                        if (!childHasError) {
+                            errorNodes.push(node);
+                        }
+                    }
+                }
+
+                // Traverse the tree to collect error nodes
+                traverse(tree.rootNode);
+
+                // Generate code content with line numbers
+                const codeLines = code.split('\n');
+                let codeWithLineNumbers = '';
+
+                // Create a Set of error line numbers
+                const errorLineNumbers = new Set();
+                errorNodes.forEach(node => {
+                    errorLineNumbers.add(node.startPosition.row);
+                });
+
+                for (let i = 0; i < codeLines.length; i++) {
+                    const lineNumber = i + 1;
+                    const codeLine = codeLines[i];
+                    const escapedCodeLine = escapeHTML(codeLine);
+
+                    const lineClass = errorLineNumbers.has(i) ? 'code-line error-line' : 'code-line';
+
+                    codeWithLineNumbers += `
+                    <div class="${lineClass}">
+                        <span class="line-number">${lineNumber}</span>
+                        <span class="code-text">${escapedCodeLine}</span>
+                    </div>`;
+                }
+
+                // Display the code content
+                fileContentDiv.innerHTML = codeWithLineNumbers;
+
+                if (tree.rootNode.hasError) {
+                    resultDiv.textContent = 'Syntax Errors Found in the C Code.';
+                    resultDiv.style.color = 'red';
+
+                    // Display error messages
+                    errorNodes.forEach((node, index) => {
+                        const start = node.startPosition;
+                        const errorMessage = document.createElement('p');
+                        errorMessage.className = 'error-message';
+                        errorMessage.textContent = `Error ${index + 1}: Syntax error at line ${start.row + 1}, column ${start.column + 1}.`;
+                        errorMessagesDiv.appendChild(errorMessage);
+                    });
+                } else {
+                    resultDiv.textContent = 'The C Code is Syntactically Valid.';
+                    resultDiv.style.color = 'green';
+                }
+            });
+
+            // Function to escape HTML special characters
+            function escapeHTML(str) {
+                return str.replace(/[&<>"']/g, function(match) {
+                    const escapeMap = {
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#39;',
+                    };
+                    return escapeMap[match];
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
