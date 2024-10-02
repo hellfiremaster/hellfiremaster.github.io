@@ -21,12 +21,18 @@
         .icon-title {
             cursor: pointer; /* 커서 모양 변경 */
         }
+        .banner-image {
+            width: 100%;          /* 기본적으로 이미지는 컨테이너에 맞추기 */
+            height: 12rem;         /* 높이는 비율에 따라 자동 조정 */
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
     <!-- Bootstrap의 컨테이너 클래스를 적용 -->
     <div class="container mt-5 mb-3">
-        <h1 class="text-center mb-4">dcinside 프로그래밍 갤러리</h1>
+        <img src="image/header.jpg" alt="프로그래밍 갤러리 헤더 이미지" class="banner-image rounded mb-2">
+        <h1 class="text-center mb-4">dcinside 프로그래밍 갤러리 위원회</h1>
         <p class="text-center mb-5">반갑다! 이곳은 프로그래밍 갤러리 위원회의 포트폴리오 페이지입니다.</p>
         
         <h2 id="portfolio" class="mb-4"><span class="icon-title" onclick="copyLink('portfolio')">📁</span> 포트폴리오</h2>
@@ -224,7 +230,7 @@
         </div>
           
 
-        <p>프갤위원회는 코딩 전쟁에서 살아남는 데 필수적인 그뤠잇 기술을 연구합니다.</p>
+        <p>프갤위원회는 코딩 전쟁에서 살아남는 데 필수적인 그레잇 기술을 연구합니다.</p>
 
         <div class="row gy-4">
             <div class="col-lg-6">
