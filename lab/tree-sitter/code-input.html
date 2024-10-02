@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Check C Syntax with Tree-sitter and Report Errors</title>
+    <title>Check C Syntax with Tree-sitter</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* Custom CSS */
-        #fileContent {
+        #fileContent, #textContent {
             border: 1px solid #ccc;
             margin-top: 20px;
             max-height: 600px;
             overflow-y: auto;
             font-family: monospace;
+            padding: 10px;
+            background-color: #f9f9f9;
         }
         .code-line {
             display: flex;
@@ -40,23 +42,34 @@
 </head>
 <body>
     <div class="container mt-5">
+        <h1 class="text-center mb-4">프갤 위원회 C언어 문법 판독기</h1>
+
+        <!-- File Upload Section -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 col-md-10">
+                <h3>C 파일 업로드</h3>
+                <input type="file" id="fileInput" class="form-control" accept=".c" />
+                <div id="fileContent" class="mt-4 p-3 bg-light"></div>
+                <div id="fileResult" class="mt-3 fw-bold"></div>
+                <div id="fileErrorMessages"></div>
+            </div>
+        </div>
+
+        <!-- Manual Code Input Section -->
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">
-                <h1 class="text-center mb-4">Enter C Code to Check Syntax</h1>
-                <div class="form-group mb-3">
-                    <textarea id="codeInput" class="form-control" rows="15" placeholder="Write your C code here...">
+                <h3>C 코드 작성</h3>
+                <textarea id="codeInput" class="form-control" rows="10" placeholder="여기에 C 코드를 작성하세요...">
 #include <iostream>
 
 int main() {
   printf("Hello World!");
   return 0;
 }</textarea>
+                <div class="d-grid mt-3">
+                    <button id="checkButton" class="btn btn-primary btn-block">문법 체크</button>
                 </div>
-                <div class="d-grid">
-                    <button id="checkButton" class="btn btn-primary btn-block">Check Syntax</button>
-                </div>
-
-                <div id="fileContent" class="mt-4 p-3 bg-light"></div>
+                <div id="textContent" class="mt-4 p-3 bg-light"></div>
                 <div id="result" class="mt-3 fw-bold"></div>
                 <div id="errorMessages"></div>
             </div>
@@ -65,65 +78,56 @@ int main() {
 
     <!-- Include tree-sitter.js -->
     <script src="tree-sitter.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         (async function() {
-            // Get references to the input and display elements
+            const fileInput = document.getElementById('fileInput');
+            const fileContentDiv = document.getElementById('fileContent');
+            const fileResultDiv = document.getElementById('fileResult');
+            const fileErrorMessagesDiv = document.getElementById('fileErrorMessages');
+            
             const codeInput = document.getElementById('codeInput');
             const checkButton = document.getElementById('checkButton');
-            const fileContentDiv = document.getElementById('fileContent');
+            const textContentDiv = document.getElementById('textContent');
             const resultDiv = document.getElementById('result');
             const errorMessagesDiv = document.getElementById('errorMessages');
 
-            // Initialize Tree-sitter
             await TreeSitter.init();
-
             const parser = new TreeSitter();
-
-            // Load the C language parser
             const C = await TreeSitter.Language.load('tree-sitter-c.wasm');
             parser.setLanguage(C);
 
-            // Add an event listener for when the check button is clicked
+            // File upload event listener
+            fileInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const code = e.target.result;
+                        fileErrorMessagesDiv.innerHTML = '';
+                        const tree = parser.parse(code);
+                        displaySyntaxResult(code, tree, fileContentDiv, fileResultDiv, fileErrorMessagesDiv);
+                    };
+                    reader.readAsText(file);
+                }
+            });
+
+            // Code check button event listener
             checkButton.addEventListener('click', function() {
                 const code = codeInput.value;
-
-                // Clear previous error messages
                 errorMessagesDiv.innerHTML = '';
-
-                // Parse the code using Tree-sitter
                 const tree = parser.parse(code);
+                displaySyntaxResult(code, tree, textContentDiv, resultDiv, errorMessagesDiv);
+            });
 
-                // Collect error nodes
-                let errorNodes = [];
-
-                // Function to traverse the syntax tree and collect error nodes
-                function traverse(node) {
-                    if (node.hasError) {
-                        let childHasError = false;
-                        for (let i = 0; i < node.childCount; i++) {
-                            const child = node.child(i);
-                            if (child.hasError) {
-                                childHasError = true;
-                                traverse(child);
-                            }
-                        }
-                        // If none of the children have errors, this is the smallest node with an error
-                        if (!childHasError) {
-                            errorNodes.push(node);
-                        }
-                    }
-                }
-
-                // Traverse the tree to collect error nodes
-                traverse(tree.rootNode);
-
-                // Generate code content with line numbers
+            // Function to display syntax check results
+            function displaySyntaxResult(code, tree, contentDiv, resultDiv, errorMessagesDiv) {
                 const codeLines = code.split('\n');
                 let codeWithLineNumbers = '';
+                let errorNodes = [];
+                let errorLineNumbers = new Set();
 
-                // Create a Set of error line numbers
-                const errorLineNumbers = new Set();
+                traverseTree(tree.rootNode, errorNodes);
+
                 errorNodes.forEach(node => {
                     errorLineNumbers.add(node.startPosition.row);
                 });
@@ -132,36 +136,50 @@ int main() {
                     const lineNumber = i + 1;
                     const codeLine = codeLines[i];
                     const escapedCodeLine = escapeHTML(codeLine);
-
                     const lineClass = errorLineNumbers.has(i) ? 'code-line error-line' : 'code-line';
-
                     codeWithLineNumbers += `
-                    <div class="${lineClass}">
-                        <span class="line-number">${lineNumber}</span>
-                        <span class="code-text">${escapedCodeLine}</span>
-                    </div>`;
+                        <div class="${lineClass}">
+                            <span class="line-number">${lineNumber}</span>
+                            <span class="code-text">${escapedCodeLine}</span>
+                        </div>`;
                 }
 
-                // Display the code content
-                fileContentDiv.innerHTML = codeWithLineNumbers;
+                contentDiv.innerHTML = codeWithLineNumbers;
 
                 if (tree.rootNode.hasError) {
-                    resultDiv.textContent = 'Syntax Errors Found in the C Code.';
+                    resultDiv.textContent = '문법 오류가 발견되었습니다.';
                     resultDiv.style.color = 'red';
-
-                    // Display error messages
                     errorNodes.forEach((node, index) => {
                         const start = node.startPosition;
                         const errorMessage = document.createElement('p');
                         errorMessage.className = 'error-message';
-                        errorMessage.textContent = `Error ${index + 1}: Syntax error at line ${start.row + 1}, column ${start.column + 1}.`;
+                        // errorMessage.textContent = `Error ${index + 1}: Syntax error at line ${start.row + 1}, column ${start.column + 1}.`;
+                        // 오류 ${index + 1}: ${start.row + 1}번째 줄, ${start.column + 1}번째 열에서 문법 오류가 발생했습니다.
+                        errorMessage.textContent = `오류 ${index + 1}: ${start.row + 1}번째 줄, ${start.column + 1}번째 열에서 문법 오류가 발생했습니다.`;
                         errorMessagesDiv.appendChild(errorMessage);
                     });
                 } else {
-                    resultDiv.textContent = 'The C Code is Syntactically Valid.';
+                    resultDiv.textContent = '문법 오류가 없습니다.';
                     resultDiv.style.color = 'green';
                 }
-            });
+            }
+
+            // Function to traverse the syntax tree and collect error nodes
+            function traverseTree(node, errorNodes) {
+                if (node.hasError) {
+                    let childHasError = false;
+                    for (let i = 0; i < node.childCount; i++) {
+                        const child = node.child(i);
+                        if (child.hasError) {
+                            childHasError = true;
+                            traverseTree(child, errorNodes);
+                        }
+                    }
+                    if (!childHasError) {
+                        errorNodes.push(node);
+                    }
+                }
+            }
 
             // Function to escape HTML special characters
             function escapeHTML(str) {
