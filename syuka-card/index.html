@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>슈카월드 코믹스 포토 카드게임❤️</title>
+  <style>
+    /* 전체 레이아웃 */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin-top: 20px;
+    }
+
+    /* 게임판 컨테이너 */
+    .game-container {
+      display: grid;
+      grid-template-columns: repeat(4, 120px); /* 가로 4열 */
+      grid-gap: 20px;
+      margin-top: 30px;
+    }
+
+    /* 카드 스타일 */
+    .card {
+      position: relative;
+      width: 120px;
+      height: 150px;
+      perspective: 1000px;   /* 3D 뒤집기 효과를 위한 원근감 */
+      cursor: pointer;
+    }
+    .card-inner {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.5s;
+      transform-style: preserve-3d;
+    }
+    /* 카드가 뒤집혔을 때 뒷면이 보이도록 회전 */
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden; /* 뒤집혔을 때 숨기기 */
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    /* 카드 앞면 */
+    .card-front {
+      transform: rotateY(180deg); /* 기본은 뒤집힌 상태로, 뒷면이 보이도록 */
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* 카드 뒷면 */
+    .card-back {
+      background: #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+      color: #fff;
+    }
+
+    /* 매칭된 카드는 반투명 처리(또는 다른 효과 가능) */
+    .matched {
+      opacity: 0.5;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <h1>슈카월드 코믹스 포토 카드게임❤️</h1>
+  <div class="game-container" id="gameBoard"></div>
+
+  <script>
+    // 카드에 사용할 이미지 경로
+    const cardImages = [
+      "image/al.jpg",
+      "image/nini.jpg",
+      "image/nini2.jpg",
+      "image/suka.jpg",
+    ];
+
+    // 1. 이미지 4종을 2장씩 합쳐서 8장 배열 만들기
+    let cardsData = [];
+    cardImages.forEach((img) => {
+      cardsData.push(img);
+      cardsData.push(img);
+    });
+
+    // 2. 무작위 섞기 (Fisher-Yates Shuffle)
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+    shuffle(cardsData);
+
+    const gameBoard = document.getElementById("gameBoard");
+
+    let flippedCards = [];  // 현재 뒤집힌 카드(두 장)
+    let matchCount = 0;     // 매칭 완료된 쌍 수 (4가 되면 종료)
+
+    // 3. 카드를 동적으로 생성하여 gameBoard에 추가
+    cardsData.forEach((image, index) => {
+      // 카드 요소 생성
+      const card = document.createElement("div");
+      card.classList.add("card");
+      // 각 카드가 어떤 이미지인지 식별하기 위한 데이터
+      card.dataset.image = image;  
+
+      // 카드 내부(앞면, 뒷면)를 감싸는 .card-inner
+      const cardInner = document.createElement("div");
+      cardInner.classList.add("card-inner");
+
+      // 앞면(.card-front)
+      const cardFront = document.createElement("div");
+      cardFront.classList.add("card-face", "card-front");
+      cardFront.style.backgroundImage = `url(${image})`;
+
+      // 뒷면(.card-back) : 공통 디자인
+      const cardBack = document.createElement("div");
+      cardBack.classList.add("card-face", "card-back");
+      cardBack.textContent = "BACK";
+
+      // 조립
+      cardInner.appendChild(cardFront);
+      cardInner.appendChild(cardBack);
+      card.appendChild(cardInner);
+      gameBoard.appendChild(card);
+
+      // 클릭 이벤트
+      card.addEventListener("click", onCardClick);
+    });
+
+    // 4. 카드 클릭 시 동작
+    function onCardClick(e) {
+      const selectedCard = e.currentTarget;
+
+      // 이미 matched 상태이거나, 이미 뒤집힌 카드면 무시
+      if (selectedCard.classList.contains("matched") || selectedCard.classList.contains("flipped")) {
+        return;
+      }
+      // 뒤집은 카드가 2장이면 더 이상 뒤집지 않음
+      if (flippedCards.length === 2) {
+        return;
+      }
+
+      // 뒤집기
+      selectedCard.classList.add("flipped");
+      flippedCards.push(selectedCard);
+
+      // 2장이 뒤집히면 매칭 검사
+      if (flippedCards.length === 2) {
+        const [card1, card2] = flippedCards;
+        const img1 = card1.dataset.image;
+        const img2 = card2.dataset.image;
+
+        if (img1 === img2) {
+          // 매칭 성공
+          card1.classList.add("matched");
+          card2.classList.add("matched");
+          flippedCards = [];
+          matchCount++;
+
+          // 모든 카드(4쌍) 맞춘 경우
+          if (matchCount === 4) {
+            setTimeout(() => {
+              alert("축하합니다! 모든 카드를 맞췄습니다!");
+            }, 300);
+          }
+        } else {
+          // 매칭 실패 -> 잠시 보여준 뒤 다시 뒤집기
+          setTimeout(() => {
+            card1.classList.remove("flipped");
+            card2.classList.remove("flipped");
+            flippedCards = [];
+          }, 1000);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
