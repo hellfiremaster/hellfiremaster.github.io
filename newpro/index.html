@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>뉴프로 커뮤니티 - 이메일/PW + 닉네임</title>
+  <!-- Google Font (Jua) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
+    rel="stylesheet"
+  />
+  <!-- Bootstrap CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  />
+  <!-- CKEditor 5 (codeBlock 포함 빌드) -->
+  <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
+
+  <style>
+    /* 남색 계열 그라디언트 배경 */
+    body {
+      background: linear-gradient(135deg, #1f2945, #2a4065);
+      min-height: 100vh;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    .navbar {
+      background: rgba(10, 10, 20, 0.7) !important;
+    }
+    /* 상단 왼쪽 "뉴프로" 폰트 적용 */
+    .navbar-brand {
+      font-family: 'Jua', sans-serif;
+      font-size: 1.8rem;
+    }
+    /* Hero 영역 */
+    .hero-section {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: transparent;
+    }
+    .hero-title {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      color: #fff;
+      font-family: 'Jua', sans-serif; 
+    }
+    .hero-subtitle {
+      font-size: 1.25rem;
+      opacity: 0.9;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+      color: #d5d9e0;
+      font-family: 'Jua', sans-serif;
+    }
+    /* .glass-card: 반투명 흰색 배경 */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      border-radius: 1rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      color: #000; /* 카드 내부 텍스트 어두운색 */
+    }
+    /* CKEditor 높이 */
+    #editor {
+      min-height: 150px;
+    }
+    /* 토스트 - 중앙 하단 / 어두운 배경 + 밝은 글자 */
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+    }
+    .toast.dark-bg {
+      background-color: rgba(0,0,0,0.8);
+      color: #fff;
+    }
+    .toast.dark-bg .toast-header {
+      background-color: transparent;
+      color: #fff;
+      border-bottom: 1px solid #666;
+    }
+    .toast.dark-bg .btn-close {
+      filter: invert(1);
+    }
+    /* 숨김 상태 */
+    .d-none {
+      display: none !important;
+    }
+    /* 모달 내용은 흰 배경 + 검정 텍스트 */
+    .modal-content {
+      background-color: #fff !important;
+      color: #000 !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- 네비게이션 바 -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <span class="navbar-brand fw-bold">뉴프로</span>
+      <div class="ms-auto">
+        <button class="btn btn-outline-light me-2" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">로그인</button>
+        <button class="btn btn-success me-2" id="signupBtn" data-bs-toggle="modal" data-bs-target="#signupModal">회원가입</button>
+        <button class="btn btn-danger d-none" id="logoutBtn">로그아웃</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <h1 class="hero-title">코딩은 모험이다!</h1>
+    <p class="hero-subtitle">
+      뉴프로 커뮤니티에서 아이디어를 마음껏 나누고, 즐거운 코드 토크를 펼쳐보세요!
+    </p>
+  </section>
+
+  <!-- 메인 컨테이너 -->
+  <div class="container mb-5">
+    <!-- 글쓰기 카드 (로그인 시에만 보이게) -->
+    <div class="card glass-card p-3 d-none" id="postCard">
+      <div class="card-body">
+        <h5 class="card-title">새 글 작성</h5>
+        <div class="mb-3">
+          <label for="postTitle" class="form-label">제목</label>
+          <input
+            type="text"
+            class="form-control"
+            id="postTitle"
+            placeholder="제목을 입력하세요"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="editor" class="form-label">내용</label>
+          <div id="editor"></div>
+        </div>
+        <button class="btn btn-primary mt-2" id="savePostBtn">글 저장하기</button>
+      </div>
+    </div>
+
+    <!-- 글 목록 카드 -->
+    <div class="card glass-card mt-4">
+      <div class="card-body">
+        <h4 class="card-title">글 목록</h4>
+        <div id="postList" class="mt-3">
+          <!-- Firestore에서 가져온 글 목록 표시 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 로그인 모달 -->
+  <div
+    class="modal fade"
+    id="loginModal"
+    tabindex="-1"
+    aria-labelledby="loginModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="loginForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">로그인</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="loginEmail" class="form-label">이메일</label>
+              <input
+                type="email"
+                class="form-control"
+                id="loginEmail"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="loginPassword" class="form-label">비밀번호</label>
+              <input
+                type="password"
+                class="form-control"
+                id="loginPassword"
+                required
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              닫기
+            </button>
+            <button type="submit" class="btn btn-primary">로그인</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 회원가입 모달 -->
+  <div
+    class="modal fade"
+    id="signupModal"
+    tabindex="-1"
+    aria-labelledby="signupModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="signupForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signupModalLabel">회원가입</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="signupEmail" class="form-label">이메일</label>
+              <input
+                type="email"
+                class="form-control"
+                id="signupEmail"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="signupPassword" class="form-label">비밀번호</label>
+              <input
+                type="password"
+                class="form-control"
+                id="signupPassword"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="signupNickname" class="form-label">닉네임</label>
+              <input
+                type="text"
+                class="form-control"
+                id="signupNickname"
+                required
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              닫기
+            </button>
+            <button type="submit" class="btn btn-success">회원가입</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast (중앙 하단, 어두운 배경+밝은 글자) -->
+  <div class="toast-container">
+    <div
+      id="liveToast"
+      class="toast align-items-center dark-bg"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <div class="toast-header">
+        <strong class="me-auto" id="toastTitle">알림</strong>
+        <small class="text-muted" id="toastTime"></small>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="toast-body" id="toastMessage">
+        메시지 내용
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS (Popper 포함) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Firebase ES Modules (v11.2.0) -->
+  <script type="module">
+    /********************************
+     * Firebase Import & Init
+     ********************************/
+    import {
+      initializeApp
+    } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js';
+
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
+
+    import {
+      getFirestore,
+      collection,
+      doc,
+      setDoc,
+      getDoc,
+      addDoc,
+      onSnapshot,
+      orderBy,
+      query,
+      serverTimestamp
+    } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
+
+    // Firebase 설정
+    const firebaseConfig = {
+    apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
+    authDomain: "newpro-4bc73.firebaseapp.com",
+    projectId: "newpro-4bc73",
+    storageBucket: "newpro-4bc73.firebasestorage.app",
+    messagingSenderId: "267192611563",
+    appId: "1:267192611563:web:94fb5ec97872cd452a84ae"
+  };
+
+    // 초기화
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    /********************************
+     * CKEditor (codeBlock)
+     ********************************/
+    let editorInstance;
+    ClassicEditor
+      .create(document.querySelector('#editor'), {
+        toolbar: [
+          'heading', '|',
+          'bold', 'italic', 'link', 'codeBlock', '|',
+          'undo', 'redo'
+        ]
+      })
+      .then(editor => {
+        editorInstance = editor;
+      })
+      .catch(error => {
+        console.error('CKEditor 초기화 에러:', error);
+      });
+
+    /********************************
+     * DOM 요소
+     ********************************/
+    const loginBtn = document.getElementById('loginBtn');
+    const signupBtn = document.getElementById('signupBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    const postCard = document.getElementById('postCard');
+    const savePostBtn = document.getElementById('savePostBtn');
+    const postList = document.getElementById('postList');
+
+    // 회원가입
+    const signupForm = document.getElementById('signupForm');
+    const signupEmail = document.getElementById('signupEmail');
+    const signupPassword = document.getElementById('signupPassword');
+    const signupNickname = document.getElementById('signupNickname');
+
+    // 로그인
+    const loginForm = document.getElementById('loginForm');
+    const loginEmail = document.getElementById('loginEmail');
+    const loginPassword = document.getElementById('loginPassword');
+
+    // 글 작성
+    const postTitle = document.getElementById('postTitle');
+
+    /********************************
+     * Toast 함수
+     ********************************/
+    function showToast(message, title = '알림') {
+      const toastEl = document.getElementById('liveToast');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastMessage = document.getElementById('toastMessage');
+      const toastTime = document.getElementById('toastTime');
+
+      toastTitle.textContent = title;
+      toastMessage.textContent = message;
+      toastTime.textContent = new Date().toLocaleTimeString();
+
+      const bsToast = new bootstrap.Toast(toastEl);
+      bsToast.show();
+    }
+
+    /********************************
+     * 유저 닉네임 로드 함수
+     ********************************/
+    let currentNickname = null; // 로그인된 사용자의 닉네임
+
+    async function fetchUserNickname(uid) {
+      const userRef = doc(db, 'users', uid);
+      const snap = await getDoc(userRef);
+      if (snap.exists()) {
+        const data = snap.data();
+        return data.nickname;
+      } else {
+        return null;
+      }
+    }
+
+    /********************************
+     * 회원가입
+     ********************************/
+    signupForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      // 필수값 체크 (추가적인 로직, required 속성 외에 JS로도 확인)
+      const emailVal = signupEmail.value.trim();
+      const pwVal = signupPassword.value.trim();
+      const nickVal = signupNickname.value.trim();
+      if (!emailVal) {
+        showToast('이메일을 입력하세요.', '회원가입 실패');
+        return;
+      }
+      if (!pwVal) {
+        showToast('비밀번호를 입력하세요.', '회원가입 실패');
+        return;
+      }
+      if (!nickVal) {
+        showToast('닉네임을 입력하세요.', '회원가입 실패');
+        return;
+      }
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, emailVal, pwVal);
+        const user = userCredential.user;
+
+        // Firestore에 닉네임 저장
+        await setDoc(doc(db, 'users', user.uid), {
+          nickname: nickVal,
+          createdAt: serverTimestamp()
+        });
+
+        showToast('회원가입 성공!', '회원가입');
+        // 모달 닫기
+        const signupModalEl = document.getElementById('signupModal');
+        const signupModal = bootstrap.Modal.getInstance(signupModalEl);
+        signupModal.hide();
+      } catch (err) {
+        showToast(err.message, '회원가입 실패');
+      }
+    });
+
+    /********************************
+     * 로그인
+     ********************************/
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const emailVal = loginEmail.value.trim();
+      const pwVal = loginPassword.value.trim();
+
+      if (!emailVal) {
+        showToast('이메일을 입력하세요.', '로그인 실패');
+        return;
+      }
+      if (!pwVal) {
+        showToast('비밀번호를 입력하세요.', '로그인 실패');
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, emailVal, pwVal);
+        showToast('로그인 성공!', '로그인');
+        // 모달 닫기
+        const loginModalEl = document.getElementById('loginModal');
+        const loginModal = bootstrap.Modal.getInstance(loginModalEl);
+        loginModal.hide();
+      } catch (err) {
+        showToast(err.message, '로그인 실패');
+      }
+    });
+
+    /********************************
+     * 로그아웃
+     ********************************/
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+        showToast('로그아웃 완료', '로그아웃');
+      } catch (error) {
+        showToast(error.message, '로그아웃 실패');
+      }
+    });
+
+    /********************************
+     * Auth 상태 변화 -> UI 업데이트
+     ********************************/
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // 로그인 상태
+        loginBtn.classList.add('d-none');
+        signupBtn.classList.add('d-none');
+        logoutBtn.classList.remove('d-none');
+        postCard.classList.remove('d-none');
+
+        // 닉네임 로드
+        currentNickname = await fetchUserNickname(user.uid);
+      } else {
+        // 로그아웃 상태
+        loginBtn.classList.remove('d-none');
+        signupBtn.classList.remove('d-none');
+        logoutBtn.classList.add('d-none');
+        postCard.classList.add('d-none');
+        currentNickname = null;
+      }
+    });
+
+    /********************************
+     * 글 저장 (닉네임 포함)
+     ********************************/
+    savePostBtn.addEventListener('click', async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      if (!currentNickname) {
+        showToast('닉네임을 불러오지 못했습니다.', '오류');
+        return;
+      }
+      const titleVal = postTitle.value.trim();
+      const contentVal = editorInstance ? editorInstance.getData() : '';
+      if (!titleVal) {
+        showToast('제목을 입력하세요.', '오류');
+        return;
+      }
+      if (!contentVal.trim()) {
+        showToast('내용을 입력하세요.', '오류');
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, 'posts'), {
+          uid: user.uid,
+          nickname: currentNickname,
+          title: titleVal,
+          content: contentVal,
+          createdAt: serverTimestamp()
+        });
+        showToast('글이 등록되었습니다.', '글 작성');
+        // 입력 초기화
+        postTitle.value = '';
+        if (editorInstance) {
+          editorInstance.setData('');
+        }
+      } catch (err) {
+        showToast(err.message, '글 작성 실패');
+      }
+    });
+
+    /********************************
+     * 글 목록 실시간 조회
+     ********************************/
+    const postQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
+    onSnapshot(postQuery, (snapshot) => {
+      postList.innerHTML = '';
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const card = document.createElement('div');
+        card.className = 'card mb-3';
+        card.innerHTML = `
+          <div class="card-header fw-bold">${data.title}</div>
+          <div class="card-body">
+            <h6 class="card-subtitle text-muted mb-2">
+              작성자: ${data.nickname || '익명'}  
+              <span style="float:right;">
+                ${
+                  data.createdAt
+                    ? new Date(data.createdAt.seconds * 1000).toLocaleString()
+                    : ''
+                }
+              </span>
+            </h6>
+            <div class="card-text mt-2">${data.content}</div>
+          </div>
+        `;
+        postList.appendChild(card);
+      });
+    });
+  </script>
+</body>
+</html>
