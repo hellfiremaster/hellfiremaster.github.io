@@ -2,11 +2,11 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>뉴프로 커뮤니티 - 이메일/PW + 닉네임</title>
+  <title>뉴프로 커뮤니티 - 게시판 (댓글 + 수정/삭제)</title>
   <!-- Google Font (Jua) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
+  <link 
     href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
     rel="stylesheet"
   />
@@ -92,10 +92,18 @@
     .d-none {
       display: none !important;
     }
-    /* 모달 내용은 흰 배경 + 검정 텍스트 */
+    /* 모달 내용은 흰 배경 + 검정 텍스트 (가독성) */
     .modal-content {
       background-color: #fff !important;
       color: #000 !important;
+    }
+    /* 댓글 영역 스타일 */
+    .comment-item {
+      background-color: #f8f9fa;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      margin-bottom: 0.5rem;
+      color: #000;
     }
   </style>
 </head>
@@ -105,6 +113,7 @@
     <div class="container-fluid">
       <span class="navbar-brand fw-bold">뉴프로</span>
       <div class="ms-auto">
+        <!-- 로그인/회원가입/로그아웃 버튼들 -->
         <button class="btn btn-outline-light me-2" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">로그인</button>
         <button class="btn btn-success me-2" id="signupBtn" data-bs-toggle="modal" data-bs-target="#signupModal">회원가입</button>
         <button class="btn btn-danger d-none" id="logoutBtn">로그아웃</button>
@@ -122,7 +131,12 @@
 
   <!-- 메인 컨테이너 -->
   <div class="container mb-5">
-    <!-- 글쓰기 카드 (로그인 시에만 보이게) -->
+    <!-- 글 목록 카드 상단에 "글쓰기" 버튼 (로그인 시에만 표시) -->
+    <div class="d-flex justify-content-end mb-2">
+      <button class="btn btn-light d-none" id="togglePostFormBtn">글쓰기</button>
+    </div>
+
+    <!-- 글쓰기 카드 (기본 숨김) -->
     <div class="card glass-card p-3 d-none" id="postCard">
       <div class="card-body">
         <h5 class="card-title">새 글 작성</h5>
@@ -154,57 +168,93 @@
     </div>
   </div>
 
-  <!-- 로그인 모달 -->
+  <!-- [수정 모달] -->
   <div
     class="modal fade"
-    id="loginModal"
+    id="editModal"
     tabindex="-1"
-    aria-labelledby="loginModalLabel"
+    aria-labelledby="editModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">글 수정</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editPostId" />
+          <div class="mb-3">
+            <label for="editTitle" class="form-label">제목</label>
+            <input
+              type="text"
+              class="form-control"
+              id="editTitle"
+              placeholder="제목을 입력하세요"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="editContentEditor" class="form-label">내용</label>
+            <div id="editContentEditor"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            닫기
+          </button>
+          <button type="button" class="btn btn-success" id="updatePostBtn">
+            수정하기
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- [댓글 삭제 확인 모달] (선택) -->
+  <div
+    class="modal fade"
+    id="deleteCommentModal"
+    tabindex="-1"
+    aria-labelledby="deleteCommentModalLabel"
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <form id="loginForm">
-          <div class="modal-header">
-            <h5 class="modal-title" id="loginModalLabel">로그인</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="loginEmail" class="form-label">이메일</label>
-              <input
-                type="email"
-                class="form-control"
-                id="loginEmail"
-                required
-              />
-            </div>
-            <div class="mb-3">
-              <label for="loginPassword" class="form-label">비밀번호</label>
-              <input
-                type="password"
-                class="form-control"
-                id="loginPassword"
-                required
-              />
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              닫기
-            </button>
-            <button type="submit" class="btn btn-primary">로그인</button>
-          </div>
-        </form>
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteCommentModalLabel">댓글 삭제</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>해당 댓글을 삭제하시겠습니까?</p>
+          <input type="hidden" id="deleteCommentPostId" />
+          <input type="hidden" id="deleteCommentId" />
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            닫기
+          </button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteCommentBtn">
+            삭제
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -273,6 +323,61 @@
     </div>
   </div>
 
+  <!-- 로그인 모달 -->
+  <div
+    class="modal fade"
+    id="loginModal"
+    tabindex="-1"
+    aria-labelledby="loginModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form id="loginForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">로그인</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="loginEmail" class="form-label">이메일</label>
+              <input
+                type="email"
+                class="form-control"
+                id="loginEmail"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="loginPassword" class="form-label">비밀번호</label>
+              <input
+                type="password"
+                class="form-control"
+                id="loginPassword"
+                required
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              닫기
+            </button>
+            <button type="submit" class="btn btn-primary">로그인</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast (중앙 하단, 어두운 배경+밝은 글자) -->
   <div class="toast-container">
     <div
@@ -325,6 +430,8 @@
       setDoc,
       getDoc,
       addDoc,
+      updateDoc,
+      deleteDoc,
       onSnapshot,
       orderBy,
       query,
@@ -333,13 +440,13 @@
 
     // Firebase 설정
     const firebaseConfig = {
-    apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
-    authDomain: "newpro-4bc73.firebaseapp.com",
-    projectId: "newpro-4bc73",
-    storageBucket: "newpro-4bc73.firebasestorage.app",
-    messagingSenderId: "267192611563",
-    appId: "1:267192611563:web:94fb5ec97872cd452a84ae"
-  };
+        apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
+        authDomain: "newpro-4bc73.firebaseapp.com",
+        projectId: "newpro-4bc73",
+        storageBucket: "newpro-4bc73.firebasestorage.app",
+        messagingSenderId: "267192611563",
+        appId: "1:267192611563:web:94fb5ec97872cd452a84ae"
+    };
 
     // 초기화
     const app = initializeApp(firebaseConfig);
@@ -347,9 +454,11 @@
     const db = getFirestore(app);
 
     /********************************
-     * CKEditor (codeBlock)
+     * CKEditor
      ********************************/
-    let editorInstance;
+    let createEditor;   // 새 글 작성용
+    let editEditor;     // 수정 모달용
+
     ClassicEditor
       .create(document.querySelector('#editor'), {
         toolbar: [
@@ -359,21 +468,40 @@
         ]
       })
       .then(editor => {
-        editorInstance = editor;
+        createEditor = editor;
       })
       .catch(error => {
         console.error('CKEditor 초기화 에러:', error);
       });
 
+    ClassicEditor
+      .create(document.querySelector('#editContentEditor'), {
+        toolbar: [
+          'heading', '|',
+          'bold', 'italic', 'link', 'codeBlock', '|',
+          'undo', 'redo'
+        ]
+      })
+      .then(editor => {
+        editEditor = editor;
+      })
+      .catch(error => {
+        console.error('수정 에디터 초기화 에러:', error);
+      });
+
+
     /********************************
-     * DOM 요소
+     * DOM 요소 참조
      ********************************/
     const loginBtn = document.getElementById('loginBtn');
     const signupBtn = document.getElementById('signupBtn');
     const logoutBtn = document.getElementById('logoutBtn');
 
+    // 글쓰기 버튼 (로그인 시에만 보이도록)
+    const togglePostFormBtn = document.getElementById('togglePostFormBtn');
     const postCard = document.getElementById('postCard');
     const savePostBtn = document.getElementById('savePostBtn');
+
     const postList = document.getElementById('postList');
 
     // 회원가입
@@ -389,6 +517,20 @@
 
     // 글 작성
     const postTitle = document.getElementById('postTitle');
+
+    // 수정 모달
+    const editModalEl = document.getElementById('editModal');
+    const editModal = new bootstrap.Modal(editModalEl);
+    const editPostId = document.getElementById('editPostId');
+    const editTitle = document.getElementById('editTitle');
+    const updatePostBtn = document.getElementById('updatePostBtn');
+
+    // 댓글 삭제 모달
+    const deleteCommentModalEl = document.getElementById('deleteCommentModal');
+    const deleteCommentModal = new bootstrap.Modal(deleteCommentModalEl);
+    const deleteCommentPostId = document.getElementById('deleteCommentPostId');
+    const deleteCommentId = document.getElementById('deleteCommentId');
+    const confirmDeleteCommentBtn = document.getElementById('confirmDeleteCommentBtn');
 
     /********************************
      * Toast 함수
@@ -408,9 +550,9 @@
     }
 
     /********************************
-     * 유저 닉네임 로드 함수
+     * 닉네임 로딩
      ********************************/
-    let currentNickname = null; // 로그인된 사용자의 닉네임
+    let currentNickname = null;
 
     async function fetchUserNickname(uid) {
       const userRef = doc(db, 'users', uid);
@@ -418,9 +560,8 @@
       if (snap.exists()) {
         const data = snap.data();
         return data.nickname;
-      } else {
-        return null;
       }
+      return null;
     }
 
     /********************************
@@ -428,34 +569,25 @@
      ********************************/
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      // 필수값 체크 (추가적인 로직, required 속성 외에 JS로도 확인)
       const emailVal = signupEmail.value.trim();
       const pwVal = signupPassword.value.trim();
       const nickVal = signupNickname.value.trim();
-      if (!emailVal) {
-        showToast('이메일을 입력하세요.', '회원가입 실패');
-        return;
-      }
-      if (!pwVal) {
-        showToast('비밀번호를 입력하세요.', '회원가입 실패');
-        return;
-      }
-      if (!nickVal) {
-        showToast('닉네임을 입력하세요.', '회원가입 실패');
+
+      if (!emailVal || !pwVal || !nickVal) {
+        showToast('모든 항목을 입력하세요.', '회원가입 실패');
         return;
       }
 
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, emailVal, pwVal);
         const user = userCredential.user;
-
         // Firestore에 닉네임 저장
         await setDoc(doc(db, 'users', user.uid), {
           nickname: nickVal,
           createdAt: serverTimestamp()
         });
-
         showToast('회원가입 성공!', '회원가입');
+
         // 모달 닫기
         const signupModalEl = document.getElementById('signupModal');
         const signupModal = bootstrap.Modal.getInstance(signupModalEl);
@@ -472,16 +604,10 @@
       e.preventDefault();
       const emailVal = loginEmail.value.trim();
       const pwVal = loginPassword.value.trim();
-
-      if (!emailVal) {
-        showToast('이메일을 입력하세요.', '로그인 실패');
+      if (!emailVal || !pwVal) {
+        showToast('이메일/비밀번호를 입력하세요.', '로그인 실패');
         return;
       }
-      if (!pwVal) {
-        showToast('비밀번호를 입력하세요.', '로그인 실패');
-        return;
-      }
-
       try {
         await signInWithEmailAndPassword(auth, emailVal, pwVal);
         showToast('로그인 성공!', '로그인');
@@ -507,30 +633,47 @@
     });
 
     /********************************
-     * Auth 상태 변화 -> UI 업데이트
+     * Auth 상태 감지 -> UI 업데이트
      ********************************/
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // 로그인 상태
+        // 로그인됨
         loginBtn.classList.add('d-none');
         signupBtn.classList.add('d-none');
         logoutBtn.classList.remove('d-none');
-        postCard.classList.remove('d-none');
 
-        // 닉네임 로드
+        // 글쓰기 버튼, 폼 표시
+        togglePostFormBtn.classList.remove('d-none');
+
         currentNickname = await fetchUserNickname(user.uid);
       } else {
-        // 로그아웃 상태
+        // 로그아웃됨
         loginBtn.classList.remove('d-none');
         signupBtn.classList.remove('d-none');
         logoutBtn.classList.add('d-none');
+
+        // 글쓰기 버튼, 폼 숨김
+        togglePostFormBtn.classList.add('d-none');
         postCard.classList.add('d-none');
+
         currentNickname = null;
       }
     });
 
     /********************************
-     * 글 저장 (닉네임 포함)
+     * 글쓰기 버튼 토글
+     ********************************/
+    togglePostFormBtn.addEventListener('click', () => {
+      // postCard를 숨기거나 보이는 토글
+      if (postCard.classList.contains('d-none')) {
+        postCard.classList.remove('d-none');
+      } else {
+        postCard.classList.add('d-none');
+      }
+    });
+
+    /********************************
+     * 글 작성
      ********************************/
     savePostBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
@@ -543,7 +686,7 @@
         return;
       }
       const titleVal = postTitle.value.trim();
-      const contentVal = editorInstance ? editorInstance.getData() : '';
+      const contentVal = createEditor ? createEditor.getData() : '';
       if (!titleVal) {
         showToast('제목을 입력하세요.', '오류');
         return;
@@ -562,43 +705,302 @@
           createdAt: serverTimestamp()
         });
         showToast('글이 등록되었습니다.', '글 작성');
-        // 입력 초기화
+        // 초기화
         postTitle.value = '';
-        if (editorInstance) {
-          editorInstance.setData('');
-        }
+        if (createEditor) createEditor.setData('');
+        // 글쓰기 폼 닫기
+        postCard.classList.add('d-none');
       } catch (err) {
         showToast(err.message, '글 작성 실패');
       }
     });
 
     /********************************
-     * 글 목록 실시간 조회
+     * 글 수정/삭제/댓글 기능
      ********************************/
+    // 수정 모달 열기
+    async function openEditModal(postDoc) {
+      editPostId.value = postDoc.id;
+      editTitle.value = postDoc.data().title;
+      if (editEditor) {
+        editEditor.setData(postDoc.data().content);
+      }
+      editModal.show();
+    }
+
+    // 글 수정하기
+    updatePostBtn.addEventListener('click', async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      const docId = editPostId.value;
+      const newTitle = editTitle.value.trim();
+      const newContent = editEditor ? editEditor.getData() : '';
+      if (!newTitle || !newContent.trim()) {
+        showToast('제목과 내용을 입력하세요.', '오류');
+        return;
+      }
+
+      try {
+        const postRef = doc(db, 'posts', docId);
+        const postSnap = await getDoc(postRef);
+        if (!postSnap.exists()) {
+          showToast('존재하지 않는 글입니다.', '오류');
+          return;
+        }
+        // 작성자 확인
+        if (postSnap.data().uid !== user.uid) {
+          showToast('본인 글만 수정할 수 있습니다.', '오류');
+          return;
+        }
+        // 수정
+        await updateDoc(postRef, {
+          title: newTitle,
+          content: newContent
+        });
+        showToast('글이 수정되었습니다.', '성공');
+        editModal.hide();
+      } catch (err) {
+        showToast(err.message, '수정 실패');
+      }
+    });
+
+    // 글 삭제하기
+    async function deletePost(postDoc) {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      const postData = postDoc.data();
+      if (postData.uid !== user.uid) {
+        showToast('본인 글만 삭제할 수 있습니다.', '오류');
+        return;
+      }
+      if (!confirm('이 글을 삭제하시겠습니까?')) {
+        return;
+      }
+      try {
+        await deleteDoc(postDoc.ref);
+        showToast('글이 삭제되었습니다.', '삭제');
+      } catch (err) {
+        showToast(err.message, '삭제 실패');
+      }
+    }
+
+    // 댓글 작성
+    async function addComment(postId, content) {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      if (!content.trim()) {
+        showToast('댓글 내용을 입력하세요.', '오류');
+        return;
+      }
+      if (!currentNickname) {
+        showToast('닉네임을 불러오지 못했습니다.', '오류');
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, 'posts', postId, 'comments'), {
+          uid: user.uid,
+          nickname: currentNickname,
+          content,
+          createdAt: serverTimestamp()
+        });
+        showToast('댓글이 등록되었습니다.', '댓글 작성');
+      } catch (err) {
+        showToast(err.message, '댓글 등록 실패');
+      }
+    }
+
+    // 댓글 삭제 모달 열기
+    function openDeleteCommentModal(postId, commentId) {
+      deleteCommentPostId.value = postId;
+      deleteCommentId.value = commentId;
+      deleteCommentModal.show();
+    }
+
+    // 댓글 실제 삭제
+    confirmDeleteCommentBtn.addEventListener('click', async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      const postId = deleteCommentPostId.value;
+      const commentId = deleteCommentId.value;
+      try {
+        const commentRef = doc(db, 'posts', postId, 'comments', commentId);
+        const commentSnap = await getDoc(commentRef);
+        if (!commentSnap.exists()) {
+          showToast('존재하지 않는 댓글입니다.', '오류');
+          return;
+        }
+        if (commentSnap.data().uid !== user.uid) {
+          showToast('본인 댓글만 삭제할 수 있습니다.', '오류');
+          return;
+        }
+        await deleteDoc(commentRef);
+        showToast('댓글이 삭제되었습니다.', '댓글 삭제');
+        deleteCommentModal.hide();
+      } catch (err) {
+        showToast(err.message, '댓글 삭제 실패');
+      }
+    });
+
+    // 댓글 렌더링
+    function renderComments(postId, comments, containerEl) {
+      containerEl.innerHTML = '';
+      comments.forEach((c) => {
+        const div = document.createElement('div');
+        div.className = 'comment-item';
+        div.innerHTML = `
+          <div class="fw-bold">${c.nickname || '익명'}</div>
+          <div class="small text-muted mb-1">
+            ${
+              c.createdAt
+                ? new Date(c.createdAt.seconds * 1000).toLocaleString()
+                : ''
+            }
+          </div>
+          <div>${c.content}</div>
+        `;
+        // 작성자면 삭제 버튼 표시
+        if (auth.currentUser && auth.currentUser.uid === c.uid) {
+          const delBtn = document.createElement('button');
+          delBtn.className = 'btn btn-sm btn-danger ms-2';
+          delBtn.textContent = '삭제';
+          delBtn.addEventListener('click', () => {
+            openDeleteCommentModal(postId, c.commentId); 
+          });
+          div.appendChild(delBtn);
+        }
+        containerEl.appendChild(div);
+      });
+    }
+
+    // 글 DOM 생성
+    function createPostItem(docSnap) {
+      const data = docSnap.data();
+      const postId = docSnap.id;
+
+      // 메인 카드
+      const card = document.createElement('div');
+      card.className = 'card mb-3';
+
+      let isAuthor = false;
+      if (auth.currentUser && auth.currentUser.uid === data.uid) {
+        isAuthor = true; 
+      }
+
+      card.innerHTML = `
+        <div class="card-header fw-bold d-flex justify-content-between align-items-center">
+          <span>${data.title}</span>
+          ${
+            isAuthor
+              ? `
+                <div>
+                  <button class="btn btn-sm btn-warning me-2" id="editBtn-${postId}">수정</button>
+                  <button class="btn btn-sm btn-danger" id="deleteBtn-${postId}">삭제</button>
+                </div>
+              `
+              : ''
+          }
+        </div>
+        <div class="card-body">
+          <h6 class="card-subtitle text-muted mb-2">
+            작성자: ${data.nickname || '익명'}  
+            <span style="float:right;">
+              ${
+                data.createdAt
+                  ? new Date(data.createdAt.seconds * 1000).toLocaleString()
+                  : ''
+              }
+            </span>
+          </h6>
+          <div class="card-text mt-2">${data.content}</div>
+          
+          <!-- 댓글 리스트 -->
+          <div class="mt-3">
+            <h6>댓글</h6>
+            <div id="commentList-${postId}"></div>
+          </div>
+
+          <!-- 댓글 작성 폼 (로그인 시만 보이게) -->
+          <div class="mt-2 d-none" id="commentForm-${postId}">
+            <textarea class="form-control mb-2" rows="2" placeholder="댓글을 입력하세요" id="commentInput-${postId}"></textarea>
+            <button class="btn btn-secondary" id="commentBtn-${postId}">댓글 달기</button>
+          </div>
+        </div>
+      `;
+
+      // 수정 버튼
+      if (isAuthor) {
+        const editBtn = card.querySelector(`#editBtn-${postId}`);
+        editBtn.addEventListener('click', async () => {
+          const postSnap = await getDoc(doc(db, 'posts', postId));
+          if (postSnap.exists()) {
+            openEditModal(postSnap);
+          } else {
+            showToast('글 정보를 불러오지 못했습니다.', '오류');
+          }
+        });
+
+        // 삭제 버튼
+        const deleteBtn = card.querySelector(`#deleteBtn-${postId}`);
+        deleteBtn.addEventListener('click', async () => {
+          const postSnap = await getDoc(doc(db, 'posts', postId));
+          if (postSnap.exists()) {
+            await deletePost(postSnap);
+          }
+        });
+      }
+
+      // 댓글 관련
+      const commentListEl = card.querySelector(`#commentList-${postId}`);
+      const commentFormEl = card.querySelector(`#commentForm-${postId}`);
+      const commentInputEl = card.querySelector(`#commentInput-${postId}`);
+      const commentBtn = card.querySelector(`#commentBtn-${postId}`);
+
+      // 로그인 상태라면 댓글 작성 폼 보이기
+      if (auth.currentUser) {
+        commentFormEl.classList.remove('d-none');
+      }
+
+      commentBtn.addEventListener('click', () => {
+        const text = commentInputEl.value.trim();
+        addComment(postId, text);
+        commentInputEl.value = '';
+      });
+
+      // 댓글 실시간 가져오기
+      const cmtQuery = query(collection(db, 'posts', postId, 'comments'), orderBy('createdAt', 'asc'));
+      onSnapshot(cmtQuery, (snapshot) => {
+        const cmtData = [];
+        snapshot.forEach((cmtDoc) => {
+          const cdata = cmtDoc.data();
+          cdata.commentId = cmtDoc.id;  // 삭제 시 참조
+          cmtData.push(cdata);
+        });
+        renderComments(postId, cmtData, commentListEl);
+      });
+
+      return card;
+    }
+
+    // 글 목록 실시간 조회
     const postQuery = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
     onSnapshot(postQuery, (snapshot) => {
       postList.innerHTML = '';
       snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const card = document.createElement('div');
-        card.className = 'card mb-3';
-        card.innerHTML = `
-          <div class="card-header fw-bold">${data.title}</div>
-          <div class="card-body">
-            <h6 class="card-subtitle text-muted mb-2">
-              작성자: ${data.nickname || '익명'}  
-              <span style="float:right;">
-                ${
-                  data.createdAt
-                    ? new Date(data.createdAt.seconds * 1000).toLocaleString()
-                    : ''
-                }
-              </span>
-            </h6>
-            <div class="card-text mt-2">${data.content}</div>
-          </div>
-        `;
-        postList.appendChild(card);
+        const item = createPostItem(docSnap);
+        postList.appendChild(item);
       });
     });
   </script>
