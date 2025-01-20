@@ -107,6 +107,12 @@
       margin-bottom: 0.5rem;
       color: #000;
     }
+    /* 작성자+시간 겹침 방지 (flex-wrap) */
+    .post-subtitle {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
   </style>
 </head>
 <body>
@@ -408,7 +414,7 @@
   <!-- Bootstrap JS (Popper 포함) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Firebase ES Modules (v11.2.0) -->
+  <!-- Firebase ES Modules -->
   <script type="module">
     /********************************
      * Firebase Import & Init
@@ -437,18 +443,20 @@
       onSnapshot,
       orderBy,
       query,
-      serverTimestamp
+      serverTimestamp,
+      arrayUnion,
+      arrayRemove
     } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
 
     // Firebase 설정
     const firebaseConfig = {
-        apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
-        authDomain: "newpro-4bc73.firebaseapp.com",
-        projectId: "newpro-4bc73",
-        storageBucket: "newpro-4bc73.firebasestorage.app",
-        messagingSenderId: "267192611563",
-        appId: "1:267192611563:web:94fb5ec97872cd452a84ae"
-    };
+      apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
+      authDomain: "newpro-4bc73.firebaseapp.com",
+      projectId: "newpro-4bc73",
+      storageBucket: "newpro-4bc73.firebasestorage.app",
+      messagingSenderId: "267192611563",
+      appId: "1:267192611563:web:94fb5ec97872cd452a84ae"
+  };
 
     // 초기화
     const app = initializeApp(firebaseConfig);
@@ -491,6 +499,73 @@
         console.error('수정 에디터 초기화 에러:', error);
       });
 
+    /********************************
+     * 날짜/시간 포맷팅 함수
+     * 예) 2025.1.20, 8:05:44 PM
+     ********************************/
+    function formatDateTime(timestamp) {
+      // Firestore Timestamp -> JS Date
+      if (!timestamp || !timestamp.seconds) return '';
+      const date = new Date(timestamp.seconds * 1000);
+
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
+
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      let seconds = date.getSeconds();
+
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours === 0 ? 12 : hours;
+
+      // 앞에 0 붙이기
+      minutes = minutes.toString().padStart(2, '0');
+      seconds = seconds.toString().padStart(2, '0');
+
+      return `${year}.${month}.${day}, ${hours}:${minutes}:${seconds} ${ampm}`;
+    }
+
+    /********************************
+     * Toast 함수
+     ********************************/
+    function showToast(message, title = '알림') {
+      const toastEl = document.getElementById('liveToast');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastMessage = document.getElementById('toastMessage');
+      const toastTime = document.getElementById('toastTime');
+
+      toastTitle.textContent = title;
+      toastMessage.textContent = message;
+      // 여기도 동일 포맷 사용 (현재 시각)
+      const now = new Date();
+      toastTime.textContent = formatDateForToast(now);
+
+      const bsToast = new bootstrap.Toast(toastEl);
+      bsToast.show();
+    }
+
+    // 토스트에서 사용할 "현재 시각" 간단 포맷
+    function formatDateForToast(date) {
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
+
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      let seconds = date.getSeconds();
+
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours === 0 ? 12 : hours;
+
+      // 앞에 0 붙이기
+      minutes = minutes.toString().padStart(2, '0');
+      seconds = seconds.toString().padStart(2, '0');
+
+      return `${year}.${month}.${day}, ${hours}:${minutes}:${seconds} ${ampm}`;
+    }
 
     /********************************
      * DOM 요소 참조
@@ -533,23 +608,6 @@
     const deleteCommentPostId = document.getElementById('deleteCommentPostId');
     const deleteCommentId = document.getElementById('deleteCommentId');
     const confirmDeleteCommentBtn = document.getElementById('confirmDeleteCommentBtn');
-
-    /********************************
-     * Toast 함수
-     ********************************/
-    function showToast(message, title = '알림') {
-      const toastEl = document.getElementById('liveToast');
-      const toastTitle = document.getElementById('toastTitle');
-      const toastMessage = document.getElementById('toastMessage');
-      const toastTime = document.getElementById('toastTime');
-
-      toastTitle.textContent = title;
-      toastMessage.textContent = message;
-      toastTime.textContent = new Date().toLocaleTimeString();
-
-      const bsToast = new bootstrap.Toast(toastEl);
-      bsToast.show();
-    }
 
     /********************************
      * 닉네임 로딩
@@ -704,7 +762,9 @@
           nickname: currentNickname,
           title: titleVal,
           content: contentVal,
-          createdAt: serverTimestamp()
+          createdAt: serverTimestamp(),
+          likes: [],
+          dislikes: []
         });
         showToast('글이 등록되었습니다.', '글 작성');
         // 초기화
@@ -858,6 +918,16 @@
 
     // 댓글 렌더링
     function renderComments(postId, comments, containerEl) {
+      // 댓글 헤딩 토글
+      const commentHeaderEl = document.getElementById(`commentHeader-${postId}`);
+      if (commentHeaderEl) {
+        if (comments.length === 0) {
+          commentHeaderEl.classList.add('d-none');
+        } else {
+          commentHeaderEl.classList.remove('d-none');
+        }
+      }
+
       containerEl.innerHTML = '';
       comments.forEach((c) => {
         const div = document.createElement('div');
@@ -865,11 +935,7 @@
         div.innerHTML = `
           <div class="fw-bold">${c.nickname || '익명'}</div>
           <div class="small text-muted mb-1">
-            ${
-              c.createdAt
-                ? new Date(c.createdAt.seconds * 1000).toLocaleString()
-                : ''
-            }
+            ${formatDateTime(c.createdAt)}
           </div>
           <div>${c.content}</div>
         `;
@@ -887,6 +953,73 @@
       });
     }
 
+    /********************************
+     * 추천/비추천 기능
+     ********************************/
+    async function toggleLike(postDoc) {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      const postId = postDoc.id;
+      const data = postDoc.data();
+      const postRef = doc(db, 'posts', postId);
+
+      const likes = data.likes || [];
+      const dislikes = data.dislikes || [];
+
+      // 이미 like를 눌렀는지 체크
+      if (likes.includes(user.uid)) {
+        // 이미 추천한 상태라면 추천 취소
+        await updateDoc(postRef, {
+          likes: arrayRemove(user.uid)
+        });
+      } else {
+        // 추천하지 않은 상태라면 추천 추가
+        // 비추천 배열에 유저가 있으면 제거
+        const updates = {
+          likes: arrayUnion(user.uid)
+        };
+        if (dislikes.includes(user.uid)) {
+          updates.dislikes = arrayRemove(user.uid);
+        }
+        await updateDoc(postRef, updates);
+      }
+    }
+
+    async function toggleDislike(postDoc) {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      const postId = postDoc.id;
+      const data = postDoc.data();
+      const postRef = doc(db, 'posts', postId);
+
+      const likes = data.likes || [];
+      const dislikes = data.dislikes || [];
+
+      // 이미 dislike를 눌렀는지 체크
+      if (dislikes.includes(user.uid)) {
+        // 이미 비추천한 상태라면 비추천 취소
+        await updateDoc(postRef, {
+          dislikes: arrayRemove(user.uid)
+        });
+      } else {
+        // 비추천하지 않은 상태라면 비추천 추가
+        // 추천 배열에 유저가 있으면 제거
+        const updates = {
+          dislikes: arrayUnion(user.uid)
+        };
+        if (likes.includes(user.uid)) {
+          updates.likes = arrayRemove(user.uid);
+        }
+        await updateDoc(postRef, updates);
+      }
+    }
+
     // 글 DOM 생성
     function createPostItem(docSnap) {
       const data = docSnap.data();
@@ -900,6 +1033,10 @@
       if (auth.currentUser && auth.currentUser.uid === data.uid) {
         isAuthor = true; 
       }
+
+      // 추천/비추천 카운트
+      const likeCount = data.likes ? data.likes.length : 0;
+      const dislikeCount = data.dislikes ? data.dislikes.length : 0;
 
       card.innerHTML = `
         <div class="card-header fw-bold d-flex justify-content-between align-items-center">
@@ -916,21 +1053,23 @@
           }
         </div>
         <div class="card-body">
-          <h6 class="card-subtitle text-muted mb-2">
-            작성자: ${data.nickname || '익명'}  
-            <span style="float:right;">
-              ${
-                data.createdAt
-                  ? new Date(data.createdAt.seconds * 1000).toLocaleString()
-                  : ''
-              }
-            </span>
+          <h6 class="card-subtitle text-muted mb-2 post-subtitle">
+            <span>작성자: ${data.nickname || '익명'}</span>
+            <span>${formatDateTime(data.createdAt)}</span>
           </h6>
           <div class="card-text mt-2">${data.content}</div>
           
+          <!-- 추천/비추천 -->
+          <div class="mt-3 d-flex align-items-center gap-2">
+            <button class="btn btn-sm btn-outline-primary" id="likeBtn-${postId}">👍</button>
+            <span id="likeCount-${postId}">${likeCount}</span>
+            <button class="btn btn-sm btn-outline-danger" id="dislikeBtn-${postId}">👎</button>
+            <span id="dislikeCount-${postId}">${dislikeCount}</span>
+          </div>
+
           <!-- 댓글 리스트 -->
           <div class="mt-3">
-            <h6>댓글</h6>
+            <h6 id="commentHeader-${postId}">댓글</h6>
             <div id="commentList-${postId}"></div>
           </div>
 
@@ -963,6 +1102,16 @@
           }
         });
       }
+
+      // 추천/비추천 버튼
+      const likeBtn = card.querySelector(`#likeBtn-${postId}`);
+      likeBtn.addEventListener('click', () => {
+        toggleLike(docSnap);
+      });
+      const dislikeBtn = card.querySelector(`#dislikeBtn-${postId}`);
+      dislikeBtn.addEventListener('click', () => {
+        toggleDislike(docSnap);
+      });
 
       // 댓글 관련
       const commentListEl = card.querySelector(`#commentList-${postId}`);
