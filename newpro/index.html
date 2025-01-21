@@ -17,8 +17,19 @@
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
   />
-  <!-- CKEditor 5 (codeBlock 포함 빌드) -->
-  <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
+
+  <!-- Toast UI Editor: CSS/JS, 코드블록 하이라이트 플러그인 -->
+  <link
+    rel="stylesheet"
+    href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"
+  />
+  <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
+  <link
+    rel="stylesheet"
+    href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css"
+  />
+  <script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.js"></script>
 
   <style>
     /* 남색 계열 그라디언트 배경 */
@@ -66,10 +77,6 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       color: #000; /* 카드 내부 텍스트 어두운색 */
     }
-    /* CKEditor 높이 */
-    #editor {
-      min-height: 150px;
-    }
     /* 토스트 - 중앙 하단 / 어두운 배경 + 밝은 글자 */
     .toast-container {
       position: fixed;
@@ -113,6 +120,17 @@
       justify-content: space-between;
       flex-wrap: wrap;
     }
+
+    /* 로딩 시 회전 애니메이션 */
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    /* 로딩 버튼에 적용할 클래스 */
+    .auth-loading {
+      animation: spin 1.0s linear infinite;
+    }
   </style>
 </head>
 <body>
@@ -121,9 +139,18 @@
     <div class="container">
       <span class="navbar-brand fw-bold">뉴프로</span>
       <div class="ms-auto">
-        <!-- 로그인/회원가입/로그아웃 버튼들 -->
-        <button class="btn btn-outline-light me-2" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">로그인</button>
-        <button class="btn btn-success me-2" id="signupBtn" data-bs-toggle="modal" data-bs-target="#signupModal">회원가입</button>
+        <!-- 로딩중 상태를 보여줄 임시 버튼 (처음에만 보임) -->
+        <button class="btn btn-outline-light me-2 auth-loading" id="authLoadingBtn">
+          로딩중...
+        </button>
+
+        <!-- 로그인/회원가입/로그아웃 버튼들 (초기에 숨김) -->
+        <button class="btn btn-outline-light me-2 d-none" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
+          로그인
+        </button>
+        <button class="btn btn-success me-2 d-none" id="signupBtn" data-bs-toggle="modal" data-bs-target="#signupModal">
+          회원가입
+        </button>
         <button class="btn btn-danger d-none" id="logoutBtn">로그아웃</button>
       </div>
     </div>
@@ -159,6 +186,7 @@
         </div>
         <div class="mb-3">
           <label for="editor" class="form-label">내용</label>
+          <!-- Toast UI Editor 삽입 영역 -->
           <div id="editor"></div>
         </div>
         <button class="btn btn-primary mt-2" id="savePostBtn">글 저장하기</button>
@@ -208,6 +236,7 @@
           </div>
           <div class="mb-3">
             <label for="editContentEditor" class="form-label">내용</label>
+            <!-- Toast UI Editor 수정용 영역 -->
             <div id="editContentEditor"></div>
           </div>
         </div>
@@ -227,7 +256,7 @@
     </div>
   </div>
 
-  <!-- [댓글 삭제 확인 모달] (선택) -->
+  <!-- [댓글 삭제 확인 모달] -->
   <div
     class="modal fade"
     id="deleteCommentModal"
@@ -450,13 +479,13 @@
 
     // Firebase 설정
     const firebaseConfig = {
-      apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
-      authDomain: "newpro-4bc73.firebaseapp.com",
-      projectId: "newpro-4bc73",
-      storageBucket: "newpro-4bc73.firebasestorage.app",
-      messagingSenderId: "267192611563",
-      appId: "1:267192611563:web:94fb5ec97872cd452a84ae"
-  };
+        apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
+        authDomain: "newpro-4bc73.firebaseapp.com",
+        projectId: "newpro-4bc73",
+        storageBucket: "newpro-4bc73.firebasestorage.app",
+        messagingSenderId: "267192611563",
+        appId: "1:267192611563:web:94fb5ec97872cd452a84ae"
+    };
 
     // 초기화
     const app = initializeApp(firebaseConfig);
@@ -464,47 +493,33 @@
     const db = getFirestore(app);
 
     /********************************
-     * CKEditor
+     * Toast UI Editor 초기화
      ********************************/
-    let createEditor;   // 새 글 작성용
-    let editEditor;     // 수정 모달용
+    const { Editor } = toastui;
+    const { codeSyntaxHighlight } = Editor.plugin;
 
-    ClassicEditor
-      .create(document.querySelector('#editor'), {
-        toolbar: [
-          'heading', '|',
-          'bold', 'italic', 'link', 'codeBlock', '|',
-          'undo', 'redo'
-        ]
-      })
-      .then(editor => {
-        createEditor = editor;
-      })
-      .catch(error => {
-        console.error('CKEditor 초기화 에러:', error);
-      });
+    // "글쓰기"용 에디터 (height 200px)
+    let createEditor = new Editor({
+      el: document.querySelector('#editor'),
+      height: '200px',
+      initialEditType: 'wysiwyg',
+      previewStyle: 'vertical',
+      plugins: [codeSyntaxHighlight]
+    });
 
-    ClassicEditor
-      .create(document.querySelector('#editContentEditor'), {
-        toolbar: [
-          'heading', '|',
-          'bold', 'italic', 'link', 'codeBlock', '|',
-          'undo', 'redo'
-        ]
-      })
-      .then(editor => {
-        editEditor = editor;
-      })
-      .catch(error => {
-        console.error('수정 에디터 초기화 에러:', error);
-      });
+    // "수정" 모달 에디터 (height 200px)
+    let editEditor = new Editor({
+      el: document.querySelector('#editContentEditor'),
+      height: '200px',
+      initialEditType: 'wysiwyg',
+      previewStyle: 'vertical',
+      plugins: [codeSyntaxHighlight]
+    });
 
     /********************************
      * 날짜/시간 포맷팅 함수
-     * 예) 2025.1.20, 8:05:44 PM
      ********************************/
     function formatDateTime(timestamp) {
-      // Firestore Timestamp -> JS Date
       if (!timestamp || !timestamp.seconds) return '';
       const date = new Date(timestamp.seconds * 1000);
 
@@ -520,7 +535,6 @@
       hours = hours % 12;
       hours = hours === 0 ? 12 : hours;
 
-      // 앞에 0 붙이기
       minutes = minutes.toString().padStart(2, '0');
       seconds = seconds.toString().padStart(2, '0');
 
@@ -538,7 +552,6 @@
 
       toastTitle.textContent = title;
       toastMessage.textContent = message;
-      // 여기도 동일 포맷 사용 (현재 시각)
       const now = new Date();
       toastTime.textContent = formatDateForToast(now);
 
@@ -546,7 +559,6 @@
       bsToast.show();
     }
 
-    // 토스트에서 사용할 "현재 시각" 간단 포맷
     function formatDateForToast(date) {
       let year = date.getFullYear();
       let month = date.getMonth() + 1;
@@ -560,7 +572,6 @@
       hours = hours % 12;
       hours = hours === 0 ? 12 : hours;
 
-      // 앞에 0 붙이기
       minutes = minutes.toString().padStart(2, '0');
       seconds = seconds.toString().padStart(2, '0');
 
@@ -570,11 +581,12 @@
     /********************************
      * DOM 요소 참조
      ********************************/
+    const authLoadingBtn = document.getElementById('authLoadingBtn');
     const loginBtn = document.getElementById('loginBtn');
     const signupBtn = document.getElementById('signupBtn');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // 글쓰기 버튼 (로그인 시에만 보이도록)
+    // 글쓰기 버튼
     const togglePostFormBtn = document.getElementById('togglePostFormBtn');
     const postCard = document.getElementById('postCard');
     const savePostBtn = document.getElementById('savePostBtn');
@@ -675,6 +687,9 @@
         const loginModalEl = document.getElementById('loginModal');
         const loginModal = bootstrap.Modal.getInstance(loginModalEl);
         loginModal.hide();
+
+        // 필요시 새로고침 (원하시면 아래 주석 해제)
+        // window.location.reload();
       } catch (err) {
         showToast(err.message, '로그인 실패');
       }
@@ -687,6 +702,8 @@
       try {
         await signOut(auth);
         showToast('로그아웃 완료', '로그아웃');
+        // 필요시 새로고침 (원하시면 아래 주석 해제)
+        // window.location.reload();
       } catch (error) {
         showToast(error.message, '로그아웃 실패');
       }
@@ -696,13 +713,15 @@
      * Auth 상태 감지 -> UI 업데이트
      ********************************/
     onAuthStateChanged(auth, async (user) => {
+      // 로딩 버튼은 숨긴다
+      authLoadingBtn.classList.add('d-none');
+
       if (user) {
         // 로그인됨
         loginBtn.classList.add('d-none');
         signupBtn.classList.add('d-none');
         logoutBtn.classList.remove('d-none');
 
-        // 글쓰기 버튼, 폼 표시
         togglePostFormBtn.classList.remove('d-none');
 
         currentNickname = await fetchUserNickname(user.uid);
@@ -712,7 +731,6 @@
         signupBtn.classList.remove('d-none');
         logoutBtn.classList.add('d-none');
 
-        // 글쓰기 버튼, 폼 숨김
         togglePostFormBtn.classList.add('d-none');
         postCard.classList.add('d-none');
 
@@ -724,7 +742,6 @@
      * 글쓰기 버튼 토글
      ********************************/
     togglePostFormBtn.addEventListener('click', () => {
-      // postCard를 숨기거나 보이는 토글
       if (postCard.classList.contains('d-none')) {
         postCard.classList.remove('d-none');
       } else {
@@ -746,7 +763,8 @@
         return;
       }
       const titleVal = postTitle.value.trim();
-      const contentVal = createEditor ? createEditor.getData() : '';
+      const contentVal = createEditor ? createEditor.getHTML() : '';
+
       if (!titleVal) {
         showToast('제목을 입력하세요.', '오류');
         return;
@@ -769,8 +787,7 @@
         showToast('글이 등록되었습니다.', '글 작성');
         // 초기화
         postTitle.value = '';
-        if (createEditor) createEditor.setData('');
-        // 글쓰기 폼 닫기
+        if (createEditor) createEditor.setHTML('');
         postCard.classList.add('d-none');
       } catch (err) {
         showToast(err.message, '글 작성 실패');
@@ -778,19 +795,17 @@
     });
 
     /********************************
-     * 글 수정/삭제/댓글 기능
+     * 글 수정 / 삭제 / 댓글 기능
      ********************************/
-    // 수정 모달 열기
     async function openEditModal(postDoc) {
       editPostId.value = postDoc.id;
       editTitle.value = postDoc.data().title;
       if (editEditor) {
-        editEditor.setData(postDoc.data().content);
+        editEditor.setHTML(postDoc.data().content);
       }
       editModal.show();
     }
 
-    // 글 수정하기
     updatePostBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
       if (!user) {
@@ -799,7 +814,8 @@
       }
       const docId = editPostId.value;
       const newTitle = editTitle.value.trim();
-      const newContent = editEditor ? editEditor.getData() : '';
+      const newContent = editEditor ? editEditor.getHTML() : '';
+
       if (!newTitle || !newContent.trim()) {
         showToast('제목과 내용을 입력하세요.', '오류');
         return;
@@ -812,12 +828,10 @@
           showToast('존재하지 않는 글입니다.', '오류');
           return;
         }
-        // 작성자 확인
         if (postSnap.data().uid !== user.uid) {
           showToast('본인 글만 수정할 수 있습니다.', '오류');
           return;
         }
-        // 수정
         await updateDoc(postRef, {
           title: newTitle,
           content: newContent
@@ -829,7 +843,6 @@
       }
     });
 
-    // 글 삭제하기
     async function deletePost(postDoc) {
       const user = auth.currentUser;
       if (!user) {
@@ -888,7 +901,6 @@
       deleteCommentModal.show();
     }
 
-    // 댓글 실제 삭제
     confirmDeleteCommentBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
       if (!user) {
@@ -918,7 +930,6 @@
 
     // 댓글 렌더링
     function renderComments(postId, comments, containerEl) {
-      // 댓글 헤딩 토글
       const commentHeaderEl = document.getElementById(`commentHeader-${postId}`);
       if (commentHeaderEl) {
         if (comments.length === 0) {
@@ -939,13 +950,12 @@
           </div>
           <div>${c.content}</div>
         `;
-        // 작성자면 삭제 버튼 표시
         if (auth.currentUser && auth.currentUser.uid === c.uid) {
           const delBtn = document.createElement('button');
           delBtn.className = 'btn btn-sm btn-danger ms-2';
           delBtn.textContent = '삭제';
           delBtn.addEventListener('click', () => {
-            openDeleteCommentModal(postId, c.commentId); 
+            openDeleteCommentModal(postId, c.commentId);
           });
           div.appendChild(delBtn);
         }
@@ -953,9 +963,7 @@
       });
     }
 
-    /********************************
-     * 추천/비추천 기능
-     ********************************/
+    // 좋아요/싫어요 토글
     async function toggleLike(postDoc) {
       const user = auth.currentUser;
       if (!user) {
@@ -969,15 +977,11 @@
       const likes = data.likes || [];
       const dislikes = data.dislikes || [];
 
-      // 이미 like를 눌렀는지 체크
       if (likes.includes(user.uid)) {
-        // 이미 추천한 상태라면 추천 취소
         await updateDoc(postRef, {
           likes: arrayRemove(user.uid)
         });
       } else {
-        // 추천하지 않은 상태라면 추천 추가
-        // 비추천 배열에 유저가 있으면 제거
         const updates = {
           likes: arrayUnion(user.uid)
         };
@@ -1001,15 +1005,11 @@
       const likes = data.likes || [];
       const dislikes = data.dislikes || [];
 
-      // 이미 dislike를 눌렀는지 체크
       if (dislikes.includes(user.uid)) {
-        // 이미 비추천한 상태라면 비추천 취소
         await updateDoc(postRef, {
           dislikes: arrayRemove(user.uid)
         });
       } else {
-        // 비추천하지 않은 상태라면 비추천 추가
-        // 추천 배열에 유저가 있으면 제거
         const updates = {
           dislikes: arrayUnion(user.uid)
         };
@@ -1025,7 +1025,6 @@
       const data = docSnap.data();
       const postId = docSnap.id;
 
-      // 메인 카드
       const card = document.createElement('div');
       card.className = 'card mb-3';
 
@@ -1034,7 +1033,6 @@
         isAuthor = true; 
       }
 
-      // 추천/비추천 카운트
       const likeCount = data.likes ? data.likes.length : 0;
       const dislikeCount = data.dislikes ? data.dislikes.length : 0;
 
@@ -1081,7 +1079,6 @@
         </div>
       `;
 
-      // 수정 버튼
       if (isAuthor) {
         const editBtn = card.querySelector(`#editBtn-${postId}`);
         editBtn.addEventListener('click', async () => {
@@ -1093,7 +1090,6 @@
           }
         });
 
-        // 삭제 버튼
         const deleteBtn = card.querySelector(`#deleteBtn-${postId}`);
         deleteBtn.addEventListener('click', async () => {
           const postSnap = await getDoc(doc(db, 'posts', postId));
@@ -1103,7 +1099,7 @@
         });
       }
 
-      // 추천/비추천 버튼
+      // 좋아요/싫어요
       const likeBtn = card.querySelector(`#likeBtn-${postId}`);
       likeBtn.addEventListener('click', () => {
         toggleLike(docSnap);
@@ -1113,7 +1109,7 @@
         toggleDislike(docSnap);
       });
 
-      // 댓글 관련
+      // 댓글
       const commentListEl = card.querySelector(`#commentList-${postId}`);
       const commentFormEl = card.querySelector(`#commentForm-${postId}`);
       const commentInputEl = card.querySelector(`#commentInput-${postId}`);
@@ -1131,15 +1127,23 @@
       });
 
       // 댓글 실시간 가져오기
-      const cmtQuery = query(collection(db, 'posts', postId, 'comments'), orderBy('createdAt', 'asc'));
+      const cmtQuery = query(
+        collection(db, 'posts', postId, 'comments'),
+        orderBy('createdAt', 'asc')
+      );
       onSnapshot(cmtQuery, (snapshot) => {
         const cmtData = [];
         snapshot.forEach((cmtDoc) => {
           const cdata = cmtDoc.data();
-          cdata.commentId = cmtDoc.id;  // 삭제 시 참조
+          cdata.commentId = cmtDoc.id;
           cmtData.push(cdata);
         });
         renderComments(postId, cmtData, commentListEl);
+
+        // 좋아요/싫어요 카운트 갱신
+        const updatedData = docSnap.data();
+        document.getElementById(`likeCount-${postId}`).textContent = updatedData.likes?.length || 0;
+        document.getElementById(`dislikeCount-${postId}`).textContent = updatedData.dislikes?.length || 0;
       });
 
       return card;
