@@ -136,11 +136,51 @@
     .auth-loading {
       animation: spin 1.0s linear infinite;
     }
-
     #postList img {
       max-width: 100%;
       height: auto;
-      /* 필요시 display: block; margin: 0 auto; 로 가운데 정렬 */
+    }
+
+    /* "계급 안내" 버튼 --> 더 화려하게 */
+    .shining-btn {
+      position: relative;
+      overflow: hidden;
+      background-color: #ff69b4; /* 기본 배경: 분홍빛 */
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      box-shadow: 0 0 8px rgba(255,105,180, 0.6);
+      font-weight: bold;
+      cursor: pointer;
+    }
+    /* 반짝이는 효과: 버튼 위를 가로지르는 그라디언트 애니메이션 */
+    .shining-btn::before {
+      content: "";
+      position: absolute;
+      top: -100%;
+      left: -100%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.7) 0%,
+        rgba(255, 255, 255, 0) 40%,
+        rgba(255, 255, 255, 0) 60%,
+        rgba(255, 255, 255, 0.7) 100%
+      );
+      animation: shine 2.5s infinite;
+      transform: rotate(0deg);
+    }
+    @keyframes shine {
+      0% {
+        transform: translate(-100%, -100%);
+      }
+      50% {
+        transform: translate(100%, 100%);
+      }
+      100% {
+        transform: translate(-100%, -100%);
+      }
     }
   </style>
 </head>
@@ -177,8 +217,12 @@
 
   <!-- 메인 컨테이너 -->
   <div class="container mb-5">
-    <!-- 글 목록 카드 상단에 "글쓰기" 버튼 (로그인 시에만 표시) -->
+    <!-- 글 목록 카드 상단에 "글쓰기" 버튼 + "계급 안내" 버튼(로그인 시에만 표시) -->
     <div class="d-flex justify-content-end mb-2">
+      <!-- 더 화려한 버튼 (shining-btn) -->
+      <button class="btn shining-btn d-none me-2" id="showRankBtn" data-bs-toggle="modal" data-bs-target="#rankModal">
+        내 계급 보기
+      </button>
       <button class="btn btn-light d-none" id="togglePostFormBtn">글쓰기</button>
     </div>
 
@@ -426,6 +470,47 @@
     </div>
   </div>
 
+  <!-- [계급 안내 모달] -->
+  <div
+    class="modal fade"
+    id="rankModal"
+    tabindex="-1"
+    aria-labelledby="rankModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="rankModalLabel">내 계급 안내</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <!-- 현재 계급/점수 표시 영역 -->
+          <p><strong>내 점수</strong>: <span id="myScore">로딩중...</span></p>
+          <p><strong>내 계급</strong>: <span id="myRank">로딩중...</span></p>
+          <hr/>
+          <h6>계급 기준</h6>
+          <ul style="font-size:0.95rem;">
+            <li>🥉 브론즈: 0~99</li>
+            <li>🥈 실버: 100~499</li>
+            <li>🥇 골드: 500~999</li>
+            <li>🛡️ 플래티넘: 1,000~4,999</li>
+            <li>💎 다이아몬드: 5,000~9,999</li>
+            <li>🏆 마스터: 10,000~24,999</li>
+            <li>👑 레전드: 25,000~49,999</li>
+            <li>🌌 이터널: 50,000+</li>
+          </ul>
+          <small class="text-muted">행동별 점수: 글쓰기 +50, 댓글 +20, 좋아요 ±10, 싫어요 ±5 (토글 시 차감/복원).</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast (중앙 하단, 어두운 배경+밝은 글자) -->
   <div class="toast-container">
     <div
@@ -480,7 +565,7 @@
       addDoc,
       updateDoc,
       deleteDoc,
-      onSnapshot,
+      runTransaction,
       serverTimestamp,
       arrayUnion,
       arrayRemove,
@@ -488,7 +573,8 @@
       orderBy,
       getDocs,
       startAfter,
-      limit
+      limit,
+      onSnapshot   // onSnapshot 추가!
     } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
 
     // Firebase 설정 (사용자의 firebaseConfig로 교체)
@@ -515,7 +601,6 @@
     // "글쓰기"용 에디터
     let createEditor = new Editor({
       el: document.querySelector('#editor'),
-      // height: '200px',
       initialEditType: 'wysiwyg',
       previewStyle: 'vertical',
       plugins: [codeSyntaxHighlight]
@@ -524,14 +609,13 @@
     // "수정" 모달 에디터
     let editEditor = new Editor({
       el: document.querySelector('#editContentEditor'),
-      // height: '200px',
       initialEditType: 'wysiwyg',
       previewStyle: 'vertical',
       plugins: [codeSyntaxHighlight]
     });
 
     /********************************
-     * 날짜/시간 포맷팅
+     * 날짜/시간 포맷
      ********************************/
     function formatDateTime(timestamp) {
       if (!timestamp || !timestamp.seconds) return '';
@@ -599,11 +683,12 @@
     const signupBtn = document.getElementById('signupBtn');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // 글쓰기 버튼
+    // 글쓰기 / 계급 안내 버튼
     const togglePostFormBtn = document.getElementById('togglePostFormBtn');
+    const showRankBtn = document.getElementById('showRankBtn'); 
+
     const postCard = document.getElementById('postCard');
     const savePostBtn = document.getElementById('savePostBtn');
-
     const postList = document.getElementById('postList');
 
     // 회원가입
@@ -634,17 +719,84 @@
     const deleteCommentId = document.getElementById('deleteCommentId');
     const confirmDeleteCommentBtn = document.getElementById('confirmDeleteCommentBtn');
 
+    // 계급 안내 모달
+    const rankModalEl = document.getElementById('rankModal');
+    const myScoreEl = document.getElementById('myScore');
+    const myRankEl = document.getElementById('myRank');
+
     /********************************
-     * 닉네임 로딩
+     * 전역 상태
      ********************************/
     let currentNickname = null;
-    async function fetchUserNickname(uid) {
+    let currentScore = 0; // DB에서 가져온 내 점수 (로그인 시 업데이트)
+
+    /********************************
+     * 계급(Rank) 계산 함수
+     ********************************/
+    function getRankByScore(score) {
+      if (score >= 50000) {
+        return { name: '이터널', icon: '🌌' };
+      } else if (score >= 25000) {
+        return { name: '레전드', icon: '👑' };
+      } else if (score >= 10000) {
+        return { name: '마스터', icon: '🏆' };
+      } else if (score >= 5000) {
+        return { name: '다이아몬드', icon: '💎' };
+      } else if (score >= 1000) {
+        return { name: '플래티넘', icon: '🛡️' };
+      } else if (score >= 500) {
+        return { name: '골드', icon: '🥇' };
+      } else if (score >= 100) {
+        return { name: '실버', icon: '🥈' };
+      } else {
+        return { name: '브론즈', icon: '🥉' };
+      }
+    }
+
+    /********************************
+     * 사용자 정보(userDoc) 가져오기
+     ********************************/
+    async function fetchUserDoc(uid) {
       const userRef = doc(db, 'users', uid);
       const snap = await getDoc(userRef);
+      return snap;
+    }
+
+    async function fetchUserNicknameAndScore(uid) {
+      const snap = await fetchUserDoc(uid);
       if (snap.exists()) {
-        return snap.data().nickname || null;
+        const data = snap.data();
+        return {
+          nickname: data.nickname || null,
+          score: data.score || 0
+        };
       }
-      return null;
+      return { nickname: null, score: 0 };
+    }
+
+    /********************************
+     * 트랜잭션 기반 점수 업데이트
+     ********************************/
+    async function updateUserScore(uid, diff) {
+      if (!uid) return;
+      try {
+        await runTransaction(db, async (transaction) => {
+          const userRef = doc(db, 'users', uid);
+          const userSnap = await transaction.get(userRef);
+          let oldScore = 0;
+          if (userSnap.exists()) {
+            oldScore = userSnap.data().score || 0;
+          }
+          transaction.update(userRef, {
+            score: oldScore + diff
+          });
+        });
+        const { score } = await fetchUserNicknameAndScore(uid);
+        currentScore = score;
+      } catch (err) {
+        console.error(err);
+        showToast('점수 업데이트 실패: ' + err.message, '오류');
+      }
     }
 
     /********************************
@@ -664,14 +816,12 @@
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, emailVal, pwVal);
         const user = userCredential.user;
-        // Firestore에 닉네임 저장
         await setDoc(doc(db, 'users', user.uid), {
           nickname: nickVal,
+          score: 0,
           createdAt: serverTimestamp()
         });
         showToast('회원가입 성공!', '회원가입');
-
-        // 모달 닫기
         bootstrap.Modal.getInstance(signupModal).hide();
       } catch (err) {
         showToast(err.message, '회원가입 실패');
@@ -693,7 +843,6 @@
       try {
         await signInWithEmailAndPassword(auth, emailVal, pwVal);
         showToast('로그인 성공!', '로그인');
-        // 모달 닫기
         bootstrap.Modal.getInstance(loginModal).hide();
       } catch (err) {
         showToast(err.message, '로그인 실패');
@@ -716,26 +865,30 @@
      * Auth 상태 감지 -> UI 업데이트
      ********************************/
     onAuthStateChanged(auth, async (user) => {
-      // 로딩 버튼은 숨긴다
+      // 로딩 버튼은 숨김
       authLoadingBtn.classList.add('d-none');
 
       if (user) {
-        // 로그인됨
         loginBtn.classList.add('d-none');
         signupBtn.classList.add('d-none');
         logoutBtn.classList.remove('d-none');
         togglePostFormBtn.classList.remove('d-none');
+        showRankBtn.classList.remove('d-none');
 
-        currentNickname = await fetchUserNickname(user.uid);
+        // 닉네임 & 점수 로드
+        const userData = await fetchUserNicknameAndScore(user.uid);
+        currentNickname = userData.nickname;
+        currentScore = userData.score;
       } else {
-        // 로그아웃됨
         loginBtn.classList.remove('d-none');
         signupBtn.classList.remove('d-none');
         logoutBtn.classList.add('d-none');
         togglePostFormBtn.classList.add('d-none');
+        showRankBtn.classList.add('d-none');
         postCard.classList.add('d-none');
 
         currentNickname = null;
+        currentScore = 0;
       }
     });
 
@@ -743,15 +896,26 @@
      * 글쓰기 버튼 토글
      ********************************/
     togglePostFormBtn.addEventListener('click', () => {
-      if (postCard.classList.contains('d-none')) {
-        postCard.classList.remove('d-none');
+      postCard.classList.toggle('d-none');
+    });
+
+    /********************************
+     * 계급 안내 모달 보일 때
+     ********************************/
+    rankModalEl.addEventListener('show.bs.modal', () => {
+      if (!auth.currentUser) {
+        myScoreEl.textContent = '(로그인 필요)';
+        myRankEl.textContent = '-';
       } else {
-        postCard.classList.add('d-none');
+        myScoreEl.textContent = `${currentScore}점`;
+        const rankInfo = getRankByScore(currentScore);
+        myRankEl.textContent = `${rankInfo.name} ${rankInfo.icon}`;
       }
     });
 
     /********************************
      * 글 작성
+       => 트랜잭션 오류 해결(모든 get -> set/update 순)
      ********************************/
     savePostBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
@@ -777,29 +941,47 @@
       }
 
       try {
-        await addDoc(collection(db, 'posts'), {
-          uid: user.uid,
-          nickname: currentNickname,
-          title: titleVal,
-          content: contentVal,
-          createdAt: serverTimestamp(),
-          likes: [],
-          dislikes: []
+        await runTransaction(db, async (transaction) => {
+          // 1) 먼저 userRef 읽기
+          const userRef = doc(db, 'users', user.uid);
+          const userSnap = await transaction.get(userRef);
+
+          let oldScore = 0;
+          if (userSnap.exists()) {
+            oldScore = userSnap.data().score || 0;
+          }
+
+          // 2) 새 게시글 쓰기
+          const newPostRef = doc(collection(db, 'posts'));
+          transaction.set(newPostRef, {
+            uid: user.uid,
+            nickname: currentNickname,
+            title: titleVal,
+            content: contentVal,
+            createdAt: serverTimestamp(),
+            likes: [],
+            dislikes: []
+          });
+
+          // 3) 점수 +50
+          transaction.update(userRef, {
+            score: oldScore + 50
+          });
         });
 
         showToast('글이 등록되었습니다.', '글 작성');
-
-        // 에디터 & 제목 초기화
         postTitle.value = '';
         createEditor.setHTML('');
-
-        // 글쓰기 카드 접기
         postCard.classList.add('d-none');
 
         // 목록 리셋 & 다시 가져오기
         lastVisible = null;
         postList.innerHTML = '';
         await loadMorePosts();
+
+        // 내 점수 갱신
+        const userData = await fetchUserNicknameAndScore(user.uid);
+        currentScore = userData.score;
       } catch (err) {
         showToast(err.message, '글 작성 실패');
       }
@@ -818,7 +1000,7 @@
     }
 
     /********************************
-     * 글 수정 (여기에서 목록 리로드)
+     * 글 수정
      ********************************/
     updatePostBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
@@ -846,8 +1028,6 @@
           showToast('본인 글만 수정할 수 있습니다.', '오류');
           return;
         }
-
-        // Firestore 데이터 업데이트
         await updateDoc(postRef, {
           title: newTitle,
           content: newContent
@@ -860,7 +1040,6 @@
         lastVisible = null;
         postList.innerHTML = '';
         await loadMorePosts();
-
       } catch (err) {
         showToast(err.message, '수정 실패');
       }
@@ -897,7 +1076,7 @@
     }
 
     /********************************
-     * 댓글 추가
+     * 댓글 등록 (score +20)
      ********************************/
     async function addComment(postId, content) {
       const user = auth.currentUser;
@@ -909,19 +1088,38 @@
         showToast('댓글 내용을 입력하세요.', '오류');
         return;
       }
-      if (!currentNickname) {
-        showToast('닉네임을 불러오지 못했습니다.', '오류');
-        return;
-      }
 
       try {
-        await addDoc(collection(db, 'posts', postId, 'comments'), {
-          uid: user.uid,
-          nickname: currentNickname,
-          content,
-          createdAt: serverTimestamp()
+        await runTransaction(db, async (transaction) => {
+          // (1) 먼저 읽기
+          const userRef = doc(db, 'users', user.uid);
+          const userSnap = await transaction.get(userRef);
+          
+          let oldScore = 0;
+          if (userSnap.exists()) {
+            oldScore = userSnap.data().score || 0;
+          }
+
+          // (2) 그 다음에 쓰기
+          const cmtRef = doc(collection(db, 'posts', postId, 'comments'));
+          transaction.set(cmtRef, {
+            uid: user.uid,
+            nickname: currentNickname,
+            content,
+            createdAt: serverTimestamp()
+          });
+
+          // (3) 마찬가지로 쓰기(업데이트)
+          transaction.update(userRef, {
+            score: oldScore + 20
+          });
         });
+
         showToast('댓글이 등록되었습니다.', '댓글 작성');
+
+        // 내 점수 갱신
+        const userData = await fetchUserNicknameAndScore(user.uid);
+        currentScore = userData.score;
       } catch (err) {
         showToast(err.message, '댓글 등록 실패');
       }
@@ -1001,7 +1199,7 @@
     }
 
     /********************************
-     * 좋아요/싫어요 (중복 클릭 방지)
+     * 좋아요/싫어요 (score 변경 포함)
      ********************************/
     let likeDislikeInProgress = new Set();
 
@@ -1015,27 +1213,55 @@
       likeDislikeInProgress.add(postId);
 
       try {
-        const postRef = doc(db, 'posts', postId);
-        const snapshot = await getDoc(postRef);
-        if (!snapshot.exists()) return;
+        await runTransaction(db, async (transaction) => {
+          const postRef = doc(db, 'posts', postId);
+          const postSnap = await transaction.get(postRef);
+          if (!postSnap.exists()) return;
 
-        const data = snapshot.data();
-        const likes = data.likes || [];
-        const dislikes = data.dislikes || [];
+          const data = postSnap.data();
+          const likes = data.likes || [];
+          const dislikes = data.dislikes || [];
 
-        if (likes.includes(user.uid)) {
-          // 좋아요 해제
-          await updateDoc(postRef, {
-            likes: arrayRemove(user.uid)
-          });
-        } else {
-          // 좋아요 추가
-          const updates = { likes: arrayUnion(user.uid) };
-          if (dislikes.includes(user.uid)) {
-            updates.dislikes = arrayRemove(user.uid);
+          const userRef = doc(db, 'users', user.uid);
+          const userSnap = await transaction.get(userRef);
+          let oldScore = 0;
+          if (userSnap.exists()) {
+            oldScore = userSnap.data().score || 0;
           }
-          await updateDoc(postRef, updates);
-        }
+
+          let scoreDiff = 0;
+          const alreadyLiked = likes.includes(user.uid);
+          const alreadyDisliked = dislikes.includes(user.uid);
+
+          if (alreadyLiked) {
+            // 좋아요 해제 -> score -10
+            transaction.update(postRef, {
+              likes: arrayRemove(user.uid)
+            });
+            scoreDiff -= 10;
+          } else {
+            // 좋아요 추가
+            transaction.update(postRef, {
+              likes: arrayUnion(user.uid)
+            });
+            // 기존에 싫어요가 있었다면 제거
+            if (alreadyDisliked) {
+              transaction.update(postRef, {
+                dislikes: arrayRemove(user.uid)
+              });
+              scoreDiff += 5; // 싫어요 해제는 +5
+            }
+            scoreDiff += 10; // 좋아요 추가는 +10
+          }
+
+          transaction.update(userRef, {
+            score: oldScore + scoreDiff
+          });
+        });
+
+        // 내 점수 다시 로드
+        const userData = await fetchUserNicknameAndScore(user.uid);
+        currentScore = userData.score;
       } catch (err) {
         showToast(err.message, '오류');
       } finally {
@@ -1053,27 +1279,55 @@
       likeDislikeInProgress.add(postId);
 
       try {
-        const postRef = doc(db, 'posts', postId);
-        const snapshot = await getDoc(postRef);
-        if (!snapshot.exists()) return;
+        await runTransaction(db, async (transaction) => {
+          const postRef = doc(db, 'posts', postId);
+          const postSnap = await transaction.get(postRef);
+          if (!postSnap.exists()) return;
 
-        const data = snapshot.data();
-        const likes = data.likes || [];
-        const dislikes = data.dislikes || [];
+          const data = postSnap.data();
+          const likes = data.likes || [];
+          const dislikes = data.dislikes || [];
 
-        if (dislikes.includes(user.uid)) {
-          // 싫어요 해제
-          await updateDoc(postRef, {
-            dislikes: arrayRemove(user.uid)
-          });
-        } else {
-          // 싫어요 추가
-          const updates = { dislikes: arrayUnion(user.uid) };
-          if (likes.includes(user.uid)) {
-            updates.likes = arrayRemove(user.uid);
+          const userRef = doc(db, 'users', user.uid);
+          const userSnap = await transaction.get(userRef);
+          let oldScore = 0;
+          if (userSnap.exists()) {
+            oldScore = userSnap.data().score || 0;
           }
-          await updateDoc(postRef, updates);
-        }
+
+          let scoreDiff = 0;
+          const alreadyLiked = likes.includes(user.uid);
+          const alreadyDisliked = dislikes.includes(user.uid);
+
+          if (alreadyDisliked) {
+            // 싫어요 해제 -> score +5
+            transaction.update(postRef, {
+              dislikes: arrayRemove(user.uid)
+            });
+            scoreDiff += 5;
+          } else {
+            // 싫어요 추가
+            transaction.update(postRef, {
+              dislikes: arrayUnion(user.uid)
+            });
+            // 기존에 좋아요가 있었다면 제거
+            if (alreadyLiked) {
+              transaction.update(postRef, {
+                likes: arrayRemove(user.uid)
+              });
+              scoreDiff -= 10; // 좋아요 해제는 -10
+            }
+            scoreDiff -= 5;  // 싫어요 추가는 -5
+          }
+
+          transaction.update(userRef, {
+            score: oldScore + scoreDiff
+          });
+        });
+
+        // 내 점수 다시 로드
+        const userData = await fetchUserNicknameAndScore(user.uid);
+        currentScore = userData.score;
       } catch (err) {
         showToast(err.message, '오류');
       } finally {
@@ -1083,16 +1337,33 @@
 
     /********************************
      * 개별 글 DOM 생성 함수
+       - 작성자 닉네임 옆에는 rank "이모티콘"만
+       - 이모티콘 클릭 시 토스트로 rank+점수 표시
      ********************************/
-    function createPostItem(docSnap) {
+    async function createPostItem(docSnap) {
       const data = docSnap.data();
       const postId = docSnap.id;
+
+      // 글 작성자 rank 가져오기
+      let authorNickname = data.nickname || '익명';
+      let authorRankEmoji = '';
+      try {
+        const snap = await fetchUserDoc(data.uid);
+        if (snap.exists()) {
+          const userData = snap.data();
+          const userScore = userData.score || 0;
+          const rankInfo = getRankByScore(userScore);
+          authorRankEmoji = rankInfo.icon; // '💎' 등
+          authorNickname = userData.nickname || authorNickname;
+        }
+      } catch (_) { /* 무시 */ }
 
       const card = document.createElement('div');
       card.className = 'card mb-3';
 
       let isAuthor = false;
-      if (auth.currentUser && auth.currentUser.uid === data.uid) {
+      const currentUser = auth.currentUser;
+      if (currentUser && currentUser.uid === data.uid) {
         isAuthor = true; 
       }
 
@@ -1100,13 +1371,12 @@
       const likeCount = data.likes ? data.likes.length : 0;
       const dislikeCount = data.dislikes ? data.dislikes.length : 0;
 
-      // 카드 내용
       card.innerHTML = `
         <div class="card-header fw-bold d-flex justify-content-between align-items-center">
           <span>${data.title}</span>
           ${
             isAuthor
-              ? `
+              ? ` 
                 <div>
                   <button class="btn btn-sm btn-warning me-2" id="editBtn-${postId}">수정</button>
                   <button class="btn btn-sm btn-danger" id="deleteBtn-${postId}">삭제</button>
@@ -1117,7 +1387,11 @@
         </div>
         <div class="card-body">
           <h6 class="card-subtitle text-muted mb-2 post-subtitle">
-            <span>작성자: ${data.nickname || '익명'}</span>
+            <!-- 작성자 닉네임 + 이모티콘 (계급명은 숨김) -->
+            <span>
+              작성자: ${authorNickname}
+              <span style="cursor:pointer;" id="rankIcon-${postId}">${authorRankEmoji}</span>
+            </span>
             <span>${formatDateTime(data.createdAt)}</span>
           </h6>
           <div class="card-text mt-2">${data.content}</div>
@@ -1144,7 +1418,7 @@
         </div>
       `;
 
-      // 수정/삭제 버튼
+      // 수정/삭제
       if (isAuthor) {
         const editBtn = card.querySelector(`#editBtn-${postId}`);
         editBtn.addEventListener('click', async () => {
@@ -1167,41 +1441,58 @@
 
       // 좋아요/싫어요
       const likeBtn = card.querySelector(`#likeBtn-${postId}`);
-      likeBtn.addEventListener('click', () => {
-        toggleLike(postId);
-      });
-
       const dislikeBtn = card.querySelector(`#dislikeBtn-${postId}`);
-      dislikeBtn.addEventListener('click', () => {
-        toggleDislike(postId);
-      });
+      likeBtn.addEventListener('click', () => toggleLike(postId));
+      dislikeBtn.addEventListener('click', () => toggleDislike(postId));
 
-      // 이미 좋아요/싫어요했는지에 따른 버튼 색상
-      if (auth.currentUser) {
-        if (data.likes?.includes(auth.currentUser.uid)) {
+      // 초기 색상
+      if (currentUser) {
+        if (data.likes?.includes(currentUser.uid)) {
           likeBtn.classList.remove('btn-outline-primary');
           likeBtn.classList.add('btn-primary');
         }
-        if (data.dislikes?.includes(auth.currentUser.uid)) {
+        if (data.dislikes?.includes(currentUser.uid)) {
           dislikeBtn.classList.remove('btn-outline-danger');
           dislikeBtn.classList.add('btn-danger');
         }
       }
 
-      // 댓글 작성 폼 (로그인 상태에서만)
+      // 댓글 작성 폼
       const commentListEl = card.querySelector(`#commentList-${postId}`);
       const commentFormEl = card.querySelector(`#commentForm-${postId}`);
       const commentInputEl = card.querySelector(`#commentInput-${postId}`);
       const commentBtn = card.querySelector(`#commentBtn-${postId}`);
-
-      if (auth.currentUser) {
+      if (currentUser) {
         commentFormEl.classList.remove('d-none');
       }
-
       commentBtn.addEventListener('click', () => {
         const text = commentInputEl.value.trim();
         addComment(postId, text);
         commentInputEl.value = '';
+      });
+
+      // "계급 이모티콘" 클릭 시 -> 토스트로 계급명+점수 표시
+      const rankIconEl = card.querySelector(`#rankIcon-${postId}`);
+      rankIconEl.addEventListener('click', async () => {
+        // 클릭 시 DB에서 최신 점수/계급 한번 더 조회 (작성자)
+        // (이미 authorRankEmoji가 있지만, 실시간 반영 위해)
+        try {
+          const userSnap = await fetchUserDoc(data.uid);
+          if (userSnap.exists()) {
+            const uData = userSnap.data();
+            const s = uData.score || 0;
+            const rInfo = getRankByScore(s);
+            // 토스트 메시지 출력
+            showToast(
+              `계급: ${rInfo.name} (${s}점)`,
+              authorNickname
+            );
+          } else {
+            showToast('유저 정보 없음', '알림');
+          }
+        } catch (err) {
+          showToast(err.message, '알림');
+        }
       });
 
       return card;
@@ -1220,18 +1511,19 @@
       if (likeCountEl) likeCountEl.textContent = data.likes?.length || 0;
       if (dislikeCountEl) dislikeCountEl.textContent = data.dislikes?.length || 0;
 
-      // 버튼 색상
       const likeBtn = document.getElementById(`likeBtn-${postId}`);
       const dislikeBtn = document.getElementById(`dislikeBtn-${postId}`);
-      if (likeBtn && dislikeBtn && auth.currentUser) {
-        if (data.likes?.includes(auth.currentUser.uid)) {
+      const currentUser = auth.currentUser;
+
+      if (likeBtn && dislikeBtn && currentUser) {
+        if (data.likes?.includes(currentUser.uid)) {
           likeBtn.classList.remove('btn-outline-primary');
           likeBtn.classList.add('btn-primary');
         } else {
           likeBtn.classList.remove('btn-primary');
           likeBtn.classList.add('btn-outline-primary');
         }
-        if (data.dislikes?.includes(auth.currentUser.uid)) {
+        if (data.dislikes?.includes(currentUser.uid)) {
           dislikeBtn.classList.remove('btn-outline-danger');
           dislikeBtn.classList.add('btn-danger');
         } else {
@@ -1239,16 +1531,6 @@
           dislikeBtn.classList.add('btn-outline-danger');
         }
       }
-
-      // (추가) 제목이나 내용이 바뀐 경우 즉시 반영하고 싶으면 아래 로직도 가능
-      // const titleHeader = document.querySelector(`#editBtn-${postId}`)?.closest('.card-header')?.querySelector('span');
-      // if (titleHeader) {
-      //   titleHeader.textContent = data.title;
-      // }
-      // const contentBody = document.querySelector(`#likeBtn-${postId}`)?.closest('.card-body')?.querySelector('.card-text');
-      // if (contentBody) {
-      //   contentBody.innerHTML = data.content;
-      // }
     }
 
     /********************************
@@ -1281,12 +1563,11 @@
       if (!snapshot.empty) {
         let newLastDoc = null;
 
-        snapshot.forEach((docSnap) => {
-          // 글 DOM 생성
-          const item = createPostItem(docSnap);
+        for (let docSnap of snapshot.docs) {
+          const item = await createPostItem(docSnap);
           postList.appendChild(item);
 
-          // 각 글에 대한 실시간 onSnapshot
+          // 글 문서 실시간 모니터링
           onSnapshot(doc(db, 'posts', docSnap.id), (updatedSnap) => {
             if (updatedSnap.exists()) {
               updatePostUI(updatedSnap);
@@ -1312,23 +1593,21 @@
           });
 
           newLastDoc = docSnap;
-        });
-
-        // 마지막 문서 갱신
+        }
         lastVisible = newLastDoc;
       }
 
       isLoading = false;
     }
 
-    // 스크롤 바닥 부근 -> 다음 5개 로드
+    // 스크롤 바닥 근접 -> 다음 5개 로드
     window.addEventListener('scroll', () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
         loadMorePosts();
       }
     });
 
-    // 페이지 처음 진입 시 5개 로드
+    // 페이지 첫 진입 시 5개 로드
     loadMorePosts();
   </script>
 </body>
