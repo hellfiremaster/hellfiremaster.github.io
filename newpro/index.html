@@ -220,7 +220,7 @@
     <!-- 글 목록 카드 상단에 "글쓰기" 버튼 + "계급 안내" 버튼(로그인 시에만 표시) -->
     <div class="d-flex justify-content-end mb-2">
       <!-- 더 화려한 버튼 (shining-btn) -->
-      <button class="btn shining-btn d-none me-2" id="showRankBtn" data-bs-toggle="modal" data-bs-target="#rankModal">
+      <button class="btn shining-btn me-2" id="showRankBtn" data-bs-toggle="modal" data-bs-target="#rankModal">
         내 계급 보기
       </button>
       <button class="btn btn-light d-none" id="togglePostFormBtn">글쓰기</button>
@@ -873,7 +873,7 @@
         signupBtn.classList.add('d-none');
         logoutBtn.classList.remove('d-none');
         togglePostFormBtn.classList.remove('d-none');
-        showRankBtn.classList.remove('d-none');
+        // showRankBtn.classList.remove('d-none');
 
         // 닉네임 & 점수 로드
         const userData = await fetchUserNicknameAndScore(user.uid);
@@ -884,7 +884,7 @@
         signupBtn.classList.remove('d-none');
         logoutBtn.classList.add('d-none');
         togglePostFormBtn.classList.add('d-none');
-        showRankBtn.classList.add('d-none');
+        // showRankBtn.classList.add('d-none');
         postCard.classList.add('d-none');
 
         currentNickname = null;
