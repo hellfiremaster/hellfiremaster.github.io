@@ -1164,27 +1164,75 @@
     /********************************
      * 댓글 목록 렌더링
      ********************************/
-    function renderComments(postId, comments, containerEl) {
-      const commentHeaderEl = document.getElementById(`commentHeader-${postId}`);
-      if (commentHeaderEl) {
-        if (comments.length === 0) {
-          commentHeaderEl.classList.add('d-none');
-        } else {
-          commentHeaderEl.classList.remove('d-none');
-        }
-      }
-
+     async function renderComments(postId, comments, containerEl) {
       containerEl.innerHTML = '';
-      comments.forEach((c) => {
+
+      // 댓글 목록을 순회 (for...of 사용 권장)
+      for (const c of comments) {
+        // 1) 유저 정보 불러오기 (uid → users/{uid} 문서)
+        let rankIcon = '';
+        let commentNickname = c.nickname || '익명';
+
+        if (c.uid) {
+          try {
+            const userRef = doc(db, 'users', c.uid);
+            const userSnap = await getDoc(userRef);
+
+            if (userSnap.exists()) {
+              const userData = userSnap.data();
+              const userScore = userData.score || 0;
+              const rankInfo = getRankByScore(userScore); // { name: '골드', icon: '🥇' } 등
+              rankIcon = rankInfo.icon;
+              // (만약 닉네임이 userDoc에 더 최신 정보가 있다면 갱신)
+              commentNickname = userData.nickname || commentNickname;
+            }
+          } catch (err) {
+            console.error('유저 정보 로드 실패:', err);
+          }
+        }
+
+        // 2) DOM 생성
         const div = document.createElement('div');
         div.className = 'comment-item';
+
+        // 각 댓글의 HTML 템플릿 (닉네임 옆에 rankIcon)
         div.innerHTML = `
-          <div class="fw-bold">${c.nickname || '익명'}</div>
+          <div class="fw-bold">
+            ${commentNickname} 
+            <span style="cursor:pointer;" id="commentRankIcon-${postId}-${c.commentId}">
+              ${rankIcon}
+            </span>
+          </div>
           <div class="small text-muted mb-1">
             ${formatDateTime(c.createdAt)}
           </div>
           <div>${c.content}</div>
         `;
+
+        // 3) 계급 이모티콘 클릭 → 토스트로 계급명+점수 표시
+        const rankIconEl = div.querySelector(
+          `#commentRankIcon-${postId}-${c.commentId}`
+        );
+        if (rankIconEl && rankIcon) {
+          rankIconEl.addEventListener('click', async () => {
+            try {
+              const userRef = doc(db, 'users', c.uid);
+              const userSnap = await getDoc(userRef);
+              if (userSnap.exists()) {
+                const uData = userSnap.data();
+                const s = uData.score || 0;
+                const rInfo = getRankByScore(s);
+                showToast(`계급: ${rInfo.name} (${s}점)`, commentNickname);
+              } else {
+                showToast('유저 정보 없음', '알림');
+              }
+            } catch (err) {
+              showToast(err.message, '알림');
+            }
+          });
+        }
+
+        // 4) (옵션) 댓글 작성자라면 '삭제' 버튼 표시
         if (auth.currentUser && auth.currentUser.uid === c.uid) {
           const delBtn = document.createElement('button');
           delBtn.className = 'btn btn-sm btn-danger ms-2';
@@ -1194,8 +1242,9 @@
           });
           div.appendChild(delBtn);
         }
+
         containerEl.appendChild(div);
-      });
+      }
     }
 
     /********************************
