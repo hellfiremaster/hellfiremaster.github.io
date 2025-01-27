@@ -539,7 +539,7 @@
   <!-- Bootstrap JS (Popper 포함) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Firebase ES Modules -->
+  <!-- Firebase ES Modules (App, Auth, Firestore, AppCheck) -->
   <script type="module">
     /********************************
      * Firebase Import & Init
@@ -547,6 +547,11 @@
     import {
       initializeApp
     } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js';
+
+    import {
+      initializeAppCheck,
+      ReCaptchaV3Provider
+    } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app-check.js';
 
     import {
       getAuth,
@@ -574,10 +579,9 @@
       getDocs,
       startAfter,
       limit,
-      onSnapshot   // onSnapshot 추가!
+      onSnapshot
     } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
 
-    // Firebase 설정 (사용자의 firebaseConfig로 교체)
     const firebaseConfig = {
       apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
       authDomain: "newpro-4bc73.firebaseapp.com",
@@ -587,8 +591,13 @@
       appId: "1:267192611563:web:94fb5ec97872cd452a84ae"
     };
 
-    // 초기화
     const app = initializeApp(firebaseConfig);
+
+    initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider('6LcKb8QqAAAAAKReI1hvkatzxiNvquuoryudyXi4'),
+      isTokenAutoRefreshEnabled: true
+    });
+
     const auth = getAuth(app);
     const db = getFirestore(app);
 
@@ -598,7 +607,6 @@
     const { Editor } = toastui;
     const { codeSyntaxHighlight } = Editor.plugin;
 
-    // "글쓰기"용 에디터
     let createEditor = new Editor({
       el: document.querySelector('#editor'),
       initialEditType: 'wysiwyg',
@@ -606,7 +614,6 @@
       plugins: [codeSyntaxHighlight]
     });
 
-    // "수정" 모달 에디터
     let editEditor = new Editor({
       el: document.querySelector('#editContentEditor'),
       initialEditType: 'wysiwyg',
@@ -683,7 +690,6 @@
     const signupBtn = document.getElementById('signupBtn');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // 글쓰기 / 계급 안내 버튼
     const togglePostFormBtn = document.getElementById('togglePostFormBtn');
     const showRankBtn = document.getElementById('showRankBtn'); 
 
@@ -728,7 +734,7 @@
      * 전역 상태
      ********************************/
     let currentNickname = null;
-    let currentScore = 0; // DB에서 가져온 내 점수 (로그인 시 업데이트)
+    let currentScore = 0;
 
     /********************************
      * 계급(Rank) 계산 함수
@@ -873,7 +879,6 @@
         signupBtn.classList.add('d-none');
         logoutBtn.classList.remove('d-none');
         togglePostFormBtn.classList.remove('d-none');
-        // showRankBtn.classList.remove('d-none');
 
         // 닉네임 & 점수 로드
         const userData = await fetchUserNicknameAndScore(user.uid);
@@ -884,7 +889,6 @@
         signupBtn.classList.remove('d-none');
         logoutBtn.classList.add('d-none');
         togglePostFormBtn.classList.add('d-none');
-        // showRankBtn.classList.add('d-none');
         postCard.classList.add('d-none');
 
         currentNickname = null;
@@ -914,8 +918,7 @@
     });
 
     /********************************
-     * 글 작성
-       => 트랜잭션 오류 해결(모든 get -> set/update 순)
+     * 글 작성 (트랜잭션)
      ********************************/
     savePostBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
@@ -1100,7 +1103,7 @@
             oldScore = userSnap.data().score || 0;
           }
 
-          // (2) 그 다음에 쓰기
+          // (2) 댓글 추가
           const cmtRef = doc(collection(db, 'posts', postId, 'comments'));
           transaction.set(cmtRef, {
             uid: user.uid,
@@ -1109,7 +1112,7 @@
             createdAt: serverTimestamp()
           });
 
-          // (3) 마찬가지로 쓰기(업데이트)
+          // (3) 점수 +20
           transaction.update(userRef, {
             score: oldScore + 20
           });
@@ -1164,12 +1167,10 @@
     /********************************
      * 댓글 목록 렌더링
      ********************************/
-     async function renderComments(postId, comments, containerEl) {
+    async function renderComments(postId, comments, containerEl) {
       containerEl.innerHTML = '';
 
-      // 댓글 목록을 순회 (for...of 사용 권장)
       for (const c of comments) {
-        // 1) 유저 정보 불러오기 (uid → users/{uid} 문서)
         let rankIcon = '';
         let commentNickname = c.nickname || '익명';
 
@@ -1181,9 +1182,8 @@
             if (userSnap.exists()) {
               const userData = userSnap.data();
               const userScore = userData.score || 0;
-              const rankInfo = getRankByScore(userScore); // { name: '골드', icon: '🥇' } 등
+              const rankInfo = getRankByScore(userScore);
               rankIcon = rankInfo.icon;
-              // (만약 닉네임이 userDoc에 더 최신 정보가 있다면 갱신)
               commentNickname = userData.nickname || commentNickname;
             }
           } catch (err) {
@@ -1191,11 +1191,8 @@
           }
         }
 
-        // 2) DOM 생성
         const div = document.createElement('div');
         div.className = 'comment-item';
-
-        // 각 댓글의 HTML 템플릿 (닉네임 옆에 rankIcon)
         div.innerHTML = `
           <div class="fw-bold">
             ${commentNickname} 
@@ -1209,10 +1206,7 @@
           <div>${c.content}</div>
         `;
 
-        // 3) 계급 이모티콘 클릭 → 토스트로 계급명+점수 표시
-        const rankIconEl = div.querySelector(
-          `#commentRankIcon-${postId}-${c.commentId}`
-        );
+        const rankIconEl = div.querySelector(`#commentRankIcon-${postId}-${c.commentId}`);
         if (rankIconEl && rankIcon) {
           rankIconEl.addEventListener('click', async () => {
             try {
@@ -1232,7 +1226,6 @@
           });
         }
 
-        // 4) (옵션) 댓글 작성자라면 '삭제' 버튼 표시
         if (auth.currentUser && auth.currentUser.uid === c.uid) {
           const delBtn = document.createElement('button');
           delBtn.className = 'btn btn-sm btn-danger ms-2';
@@ -1283,24 +1276,21 @@
           const alreadyDisliked = dislikes.includes(user.uid);
 
           if (alreadyLiked) {
-            // 좋아요 해제 -> score -10
             transaction.update(postRef, {
               likes: arrayRemove(user.uid)
             });
             scoreDiff -= 10;
           } else {
-            // 좋아요 추가
             transaction.update(postRef, {
               likes: arrayUnion(user.uid)
             });
-            // 기존에 싫어요가 있었다면 제거
             if (alreadyDisliked) {
               transaction.update(postRef, {
                 dislikes: arrayRemove(user.uid)
               });
-              scoreDiff += 5; // 싫어요 해제는 +5
+              scoreDiff += 5; 
             }
-            scoreDiff += 10; // 좋아요 추가는 +10
+            scoreDiff += 10; 
           }
 
           transaction.update(userRef, {
@@ -1308,7 +1298,6 @@
           });
         });
 
-        // 내 점수 다시 로드
         const userData = await fetchUserNicknameAndScore(user.uid);
         currentScore = userData.score;
       } catch (err) {
@@ -1349,24 +1338,21 @@
           const alreadyDisliked = dislikes.includes(user.uid);
 
           if (alreadyDisliked) {
-            // 싫어요 해제 -> score +5
             transaction.update(postRef, {
               dislikes: arrayRemove(user.uid)
             });
             scoreDiff += 5;
           } else {
-            // 싫어요 추가
             transaction.update(postRef, {
               dislikes: arrayUnion(user.uid)
             });
-            // 기존에 좋아요가 있었다면 제거
             if (alreadyLiked) {
               transaction.update(postRef, {
                 likes: arrayRemove(user.uid)
               });
-              scoreDiff -= 10; // 좋아요 해제는 -10
+              scoreDiff -= 10; 
             }
-            scoreDiff -= 5;  // 싫어요 추가는 -5
+            scoreDiff -= 5;  
           }
 
           transaction.update(userRef, {
@@ -1374,7 +1360,6 @@
           });
         });
 
-        // 내 점수 다시 로드
         const userData = await fetchUserNicknameAndScore(user.uid);
         currentScore = userData.score;
       } catch (err) {
@@ -1386,14 +1371,11 @@
 
     /********************************
      * 개별 글 DOM 생성 함수
-       - 작성자 닉네임 옆에는 rank "이모티콘"만
-       - 이모티콘 클릭 시 토스트로 rank+점수 표시
      ********************************/
     async function createPostItem(docSnap) {
       const data = docSnap.data();
       const postId = docSnap.id;
 
-      // 글 작성자 rank 가져오기
       let authorNickname = data.nickname || '익명';
       let authorRankEmoji = '';
       try {
@@ -1402,7 +1384,7 @@
           const userData = snap.data();
           const userScore = userData.score || 0;
           const rankInfo = getRankByScore(userScore);
-          authorRankEmoji = rankInfo.icon; // '💎' 등
+          authorRankEmoji = rankInfo.icon; 
           authorNickname = userData.nickname || authorNickname;
         }
       } catch (_) { /* 무시 */ }
@@ -1416,7 +1398,6 @@
         isAuthor = true; 
       }
 
-      // 좋아요/싫어요 초기값
       const likeCount = data.likes ? data.likes.length : 0;
       const dislikeCount = data.dislikes ? data.dislikes.length : 0;
 
@@ -1436,7 +1417,6 @@
         </div>
         <div class="card-body">
           <h6 class="card-subtitle text-muted mb-2 post-subtitle">
-            <!-- 작성자 닉네임 + 이모티콘 (계급명은 숨김) -->
             <span>
               작성자: ${authorNickname}
               <span style="cursor:pointer;" id="rankIcon-${postId}">${authorRankEmoji}</span>
@@ -1494,7 +1474,6 @@
       likeBtn.addEventListener('click', () => toggleLike(postId));
       dislikeBtn.addEventListener('click', () => toggleDislike(postId));
 
-      // 초기 색상
       if (currentUser) {
         if (data.likes?.includes(currentUser.uid)) {
           likeBtn.classList.remove('btn-outline-primary');
@@ -1523,19 +1502,13 @@
       // "계급 이모티콘" 클릭 시 -> 토스트로 계급명+점수 표시
       const rankIconEl = card.querySelector(`#rankIcon-${postId}`);
       rankIconEl.addEventListener('click', async () => {
-        // 클릭 시 DB에서 최신 점수/계급 한번 더 조회 (작성자)
-        // (이미 authorRankEmoji가 있지만, 실시간 반영 위해)
         try {
           const userSnap = await fetchUserDoc(data.uid);
           if (userSnap.exists()) {
             const uData = userSnap.data();
             const s = uData.score || 0;
             const rInfo = getRankByScore(s);
-            // 토스트 메시지 출력
-            showToast(
-              `계급: ${rInfo.name} (${s}점)`,
-              authorNickname
-            );
+            showToast(`계급: ${rInfo.name} (${s}점)`, authorNickname);
           } else {
             showToast('유저 정보 없음', '알림');
           }
@@ -1554,7 +1527,6 @@
       const postId = postSnap.id;
       const data = postSnap.data();
 
-      // 좋아요/싫어요
       const likeCountEl = document.getElementById(`likeCount-${postId}`);
       const dislikeCountEl = document.getElementById(`dislikeCount-${postId}`);
       if (likeCountEl) likeCountEl.textContent = data.likes?.length || 0;
