@@ -938,7 +938,7 @@
         return;
       }
 
-      const titleVal = postTitle.value.trim();
+      const titleVal = DOMPurify.sanitize(postTitle.value.trim());
       // 원본 Toast UI Editor HTML
       const unsafeContent = createEditor ? createEditor.getHTML() : '';
       // DOMPurify로 정제
