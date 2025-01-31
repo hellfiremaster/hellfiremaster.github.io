@@ -189,6 +189,36 @@
     .keep-line-breaks {
       white-space: pre-line;
     }
+
+    /* 공지사항 전체 컨테이너 */
+    .notice-banner {
+      /* 다크 녹색 그라디언트 */
+      background: linear-gradient(130deg, #002f2f, #004a3f);
+      border: 1px solid #0a7f5f;  
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      position: relative;
+      overflow: hidden;
+      /* 약간의 그림자 */
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+      /* 텍스트는 밝은 초록 + 네온 효과 */
+      color: #69ffa2;
+      font-weight: bold;
+      text-shadow: 0 0 5px #69ffa2, 0 0 10px #69ffa2;
+      /* 부드러운 호버 효과 (마우스 올리면 더 밝아짐) */
+      transition: filter 0.3s;
+    }
+    .notice-banner:hover {
+      filter: brightness(1.2);
+    }
+
+    /* 텍스트가 길면 자동 줄바꿈 */
+    .notice-banner p {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
   </style>
 </head>
 <body>
@@ -232,6 +262,8 @@
       </button>
       <button class="btn btn-light d-none" id="togglePostFormBtn">글쓰기</button>
     </div>
+
+    <div id="noticeContainer" class="notice-container mb-3"></div>
 
     <!-- 글쓰기 카드 (기본 숨김) -->
     <div class="card glass-card p-3 d-none" id="postCard">
@@ -581,6 +613,7 @@
       serverTimestamp,
       arrayUnion,
       arrayRemove,
+      where,
       query,
       orderBy,
       getDocs,
@@ -737,6 +770,8 @@
     const myScoreEl = document.getElementById('myScore');
     const myRankEl = document.getElementById('myRank');
 
+    const noticeContainer = document.getElementById('noticeContainer');
+
     /********************************
      * 전역 상태
      ********************************/
@@ -764,6 +799,41 @@
       } else {
         return { name: '브론즈', icon: '🥉' };
       }
+    }
+
+    function fetchActiveNotices() {
+      // 현재 클라이언트 시각 기준 (단순화)
+      const now = new Date();
+
+      // 공지 조건: startDate <= now <= endDate
+      const q = query(
+        collection(db, 'notices'),
+        where('startDate', '<=', now),
+        where('endDate', '>=', now),
+        orderBy('startDate', 'desc')
+      );
+
+      // 실시간 모니터링
+      onSnapshot(q, (snapshot) => {
+        // 기존 공지를 모두 제거
+        noticeContainer.innerHTML = '';
+
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          // content (HTML 또는 텍스트), startDate, endDate 등
+
+          // 공지 배너 DOM 생성
+          const bannerEl = document.createElement('div');
+          bannerEl.classList.add('notice-banner');
+
+          // 혹시 content를 HTML 형태로 넣을 예정이면 DOMPurify 사용
+          // bannerEl.innerHTML = DOMPurify.sanitize(data.content);
+          // 단순 텍스트라면 textContent로:
+          bannerEl.textContent = data.content;
+
+          noticeContainer.appendChild(bannerEl);
+        });
+      });
     }
 
     /********************************
@@ -1654,6 +1724,7 @@
       }
     });
 
+    fetchActiveNotices();
     // 페이지 첫 진입 시 5개 로드
     loadMorePosts();
   </script>
