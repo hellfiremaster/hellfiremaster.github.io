@@ -254,11 +254,15 @@
 
   <!-- 메인 컨테이너 -->
   <div class="container mb-5">
-    <!-- 글 목록 카드 상단에 "글쓰기" 버튼 + "계급 안내" 버튼(로그인 시에만 표시) -->
+    <!-- 글 목록 카드 상단에 "글쓰기" 버튼 + "계급 안내", "랭킹 보기" 버튼 (로그인 시에만 표시) -->
     <div class="d-flex justify-content-end mb-2">
-      <!-- 더 화려한 버튼 (shining-btn) -->
+      <!-- 더 화려한 버튼 (계급 안내) -->
       <button class="btn shining-btn me-2" id="showRankBtn" data-bs-toggle="modal" data-bs-target="#rankModal">
         내 계급 보기
+      </button>
+      <!-- 새로 추가한 랭킹 보기 버튼 -->
+      <button class="btn btn-outline-info me-2" id="showRankingBtn" data-bs-toggle="modal" data-bs-target="#rankingModal">
+        랭킹
       </button>
       <button class="btn btn-light d-none" id="togglePostFormBtn">글쓰기</button>
     </div>
@@ -545,6 +549,21 @@
             <li>🌌 이터널: 50,000+</li>
           </ul>
           <small class="text-muted">행동별 점수: 글쓰기 +50, 댓글 +20, 좋아요 ±10, 싫어요 ±5 (토글 시 차감/복원).</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- [랭킹 모달] -->
+  <div class="modal fade" id="rankingModal" tabindex="-1" aria-labelledby="rankingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="rankingModalLabel">랭킹</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="rankingContainer" style="max-height: 70vh; overflow-y: auto;">
+          <!-- Firestore users 랭킹 항목들이 무한 스크롤로 로드됩니다 -->
         </div>
       </div>
     </div>
@@ -1646,7 +1665,7 @@
     }
 
     /********************************
-     * 무한 스크롤 -> 5개씩 조회
+     * 무한 스크롤 -> 5개씩 조회 (게시글)
      ********************************/
     let lastVisible = null;
     let isLoading = false;
@@ -1721,6 +1740,67 @@
     window.addEventListener('scroll', () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
         loadMorePosts();
+      }
+    });
+
+    /********************************
+     * [추가] 랭킹 무한 스크롤 (Firestore users)
+     ********************************/
+    let rankingLastVisible = null;
+    let isRankingLoading = false;
+    let rankingCount = 0;
+    const RANKING_PAGE_SIZE = 10;
+
+    async function loadMoreRanking() {
+      if (isRankingLoading) return;
+      isRankingLoading = true;
+
+      let q = query(
+        collection(db, 'users'),
+        orderBy('score', 'desc'),
+        limit(RANKING_PAGE_SIZE)
+      );
+
+      if (rankingLastVisible) {
+        q = query(
+          collection(db, 'users'),
+          orderBy('score', 'desc'),
+          startAfter(rankingLastVisible),
+          limit(RANKING_PAGE_SIZE)
+        );
+      }
+
+      const snapshot = await getDocs(q);
+      const rankingContainer = document.getElementById('rankingContainer');
+      if (!snapshot.empty) {
+        snapshot.forEach(docSnap => {
+          rankingCount++;
+          const userData = docSnap.data();
+          const rankInfo = getRankByScore(userData.score || 0);
+          const item = document.createElement('div');
+          item.className = 'p-2 border-bottom';
+          item.innerHTML = `<strong>${rankingCount}위</strong> - ${userData.nickname || '익명'} : ${userData.score}점 ${rankInfo.icon}`;
+          rankingContainer.appendChild(item);
+          rankingLastVisible = docSnap;
+        });
+      }
+      isRankingLoading = false;
+    }
+
+    // 랭킹 모달 열 때 랭킹 리스트 초기화 및 첫 로드
+    const rankingModalEl = document.getElementById('rankingModal');
+    rankingModalEl.addEventListener('show.bs.modal', () => {
+      rankingLastVisible = null;
+      rankingCount = 0;
+      document.getElementById('rankingContainer').innerHTML = '';
+      loadMoreRanking();
+    });
+
+    // 랭킹 모달 내부 스크롤 이벤트 (무한 스크롤)
+    const rankingContainer = document.getElementById('rankingContainer');
+    rankingContainer.addEventListener('scroll', () => {
+      if (rankingContainer.scrollTop + rankingContainer.clientHeight >= rankingContainer.scrollHeight - 50) {
+        loadMoreRanking();
       }
     });
 
