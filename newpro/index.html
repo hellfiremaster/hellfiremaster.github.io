@@ -219,6 +219,29 @@
       white-space: pre-wrap;
       word-break: break-all;
     }
+
+    .video-responsive {
+      position: relative;
+      width: 560px;         /* 기본 너비 560px (데스크탑 기준) */
+      max-width: 100%;      /* 화면이 작으면 100%까지 줄어듦 */
+      margin: 1rem 0;       /* 위/아래 여백, 좌측 정렬 */
+    }
+
+    .video-responsive::before {
+      content: "";
+      display: block;
+      padding-top: 56.25%;  /* 16:9 비율 (315/560 = 56.25%) */
+    }
+
+    .video-responsive iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100% !important;
+      height: 100% !important;
+      border: 0;
+    }
+
   </style>
 </head>
 <body>
@@ -820,6 +843,41 @@
       }
     }
 
+    /********************************
+     * 유튜브 링크 임베디드 변환 함수 (게시글 내용에만 적용)
+     ********************************/
+     function convertYouTubeLinks(text) {
+      return text.replace(
+        /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/watch\?v=)([A-Za-z0-9_-]{11})([^\s]*)/g,
+        (match, videoId, params) => {
+          let urlSearch = '';
+          if (params) {
+            // params의 시작 ?나 & 제거 후 URLSearchParams로 파싱
+            const queryString = params.replace(/^[\?&]/, '');
+            const searchParams = new URLSearchParams(queryString);
+            const start = searchParams.get('start');
+            if (start) {
+              urlSearch = `?start=${start}`;
+            }
+          }
+          return `<div class="video-responsive"><iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}${urlSearch}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+        }
+      );
+    }
+
+
+
+    /********************************
+     * URL 링크 텍스트를 앵커 태그로 변환 (댓글 등)
+     ********************************/
+    function convertLinks(text) {
+      // URL을 링크로 변환
+      return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+    }
+
+    /********************************
+     * Active 공지사항 로드 (실시간)
+     ********************************/
     function fetchActiveNotices() {
       // 현재 클라이언트 시각 기준 (단순화)
       const now = new Date();
@@ -839,15 +897,11 @@
 
         snapshot.forEach((docSnap) => {
           const data = docSnap.data();
-          // content (HTML 또는 텍스트), startDate, endDate 등
-
           // 공지 배너 DOM 생성
           const bannerEl = document.createElement('div');
           bannerEl.classList.add('notice-banner');
 
-          // 혹시 content를 HTML 형태로 넣을 예정이면 DOMPurify 사용
-          // bannerEl.innerHTML = DOMPurify.sanitize(data.content);
-          // 단순 텍스트라면 textContent로:
+          // 만약 HTML 내용이라면 DOMPurify로 정제 후 innerHTML 사용 가능
           bannerEl.textContent = data.content;
 
           noticeContainer.appendChild(bannerEl);
@@ -1014,7 +1068,7 @@
     });
 
     /********************************
-     * 글 작성 (DOMPurify 적용)
+     * 글 작성 (DOMPurify 적용 및 유튜브 링크 임베디드 변환)
      ********************************/
     savePostBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
@@ -1270,8 +1324,16 @@
     /********************************
      * 댓글 목록 렌더링 (출력 시 DOMPurify 적용)
      ********************************/
-    async function renderComments(postId, comments, containerEl) {
+     async function renderComments(postId, comments, containerEl) {
       containerEl.innerHTML = '';
+
+      // 댓글이 없으면 댓글 헤더(h6 요소)를 숨기고, 있으면 보이게 함
+      const header = document.getElementById(`commentHeader-${postId}`);
+      if (comments.length === 0) {
+        if (header) header.style.display = 'none';
+      } else {
+        if (header) header.style.display = '';
+      }
 
       for (const c of comments) {
         let rankIcon = '';
@@ -1295,7 +1357,7 @@
           }
         }
 
-        // 댓글 내용 DOMPurify + convertLinks
+        // 댓글 내용 DOMPurify + convertLinks (댓글에는 임베디드 변환X)
         const safeContent = DOMPurify.sanitize(c.content ?? '');
         const finalContent = convertLinks(safeContent);
 
@@ -1478,7 +1540,7 @@
     }
 
     /********************************
-     * 개별 글 DOM 생성 함수 (출력 시 DOMPurify)
+     * 개별 글 DOM 생성 함수 (게시글 내용에 유튜브 임베디드 적용)
      ********************************/
     async function createPostItem(docSnap) {
       const data = docSnap.data();
@@ -1506,8 +1568,9 @@
       const likeCount = data.likes ? data.likes.length : 0;
       const dislikeCount = data.dislikes ? data.dislikes.length : 0;
 
-      // 게시글 본문도 DOMPurify로 재차 정제
+      // 게시글 본문도 DOMPurify로 재차 정제한 후 유튜브 링크 임베디드 변환 적용
       const safeContent = DOMPurify.sanitize(data.content ?? '');
+      const finalContent = convertYouTubeLinks(safeContent);
 
       const card = document.createElement('div');
       card.className = 'card mb-3';
@@ -1533,7 +1596,7 @@
             </span>
             <span>${formatDateTime(data.createdAt)}</span>
           </h6>
-          <div class="card-text mt-2">${safeContent}</div>
+          <div class="card-text mt-2">${finalContent}</div>
           
           <!-- 추천/비추천 -->
           <div class="mt-3 d-flex align-items-center gap-2">
@@ -1731,10 +1794,6 @@
       isLoading = false;
     }
 
-    function convertLinks(text) {
-      // URL을 링크로 변환
-      return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
-    }
 
     // 스크롤 바닥 근접 -> 다음 5개 로드
     window.addEventListener('scroll', () => {
