@@ -843,29 +843,59 @@
       }
     }
 
-    /********************************
-     * 유튜브 링크 임베디드 변환 함수 (게시글 내용에만 적용)
-     ********************************/
-     function convertYouTubeLinks(text) {
-      return text.replace(
-        /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/watch\?v=)([A-Za-z0-9_-]{11})([^\s]*)/g,
+    // HTML 엔티티를 디코딩하는 함수
+    function decodeHtml(html) {
+      const txt = document.createElement("textarea");
+      txt.innerHTML = html;
+      return txt.value;
+    }
+
+    // "3h20m10s" 또는 "90" 같은 문자열을 초 단위의 숫자로 변환하는 함수
+    function parseTimeParameter(timeStr) {
+      let seconds = 0;
+      // h, m, s 각각 추출
+      const hMatch = timeStr.match(/(\d+)h/);
+      if (hMatch) {
+        seconds += parseInt(hMatch[1], 10) * 3600;
+      }
+      const mMatch = timeStr.match(/(\d+)m/);
+      if (mMatch) {
+        seconds += parseInt(mMatch[1], 10) * 60;
+      }
+      const sMatch = timeStr.match(/(\d+)s/);
+      if (sMatch) {
+        seconds += parseInt(sMatch[1], 10);
+      }
+      // h, m, s가 없으면 숫자만 있는 경우 (초로 간주)
+      if (!hMatch && !mMatch && !sMatch && /^\d+$/.test(timeStr)) {
+        seconds = parseInt(timeStr, 10);
+      }
+      return seconds;
+    }
+
+    // 유튜브 링크를 찾아서 iframe embed 코드로 변환하는 함수
+    function convertYouTubeLinks(text) {
+      // 먼저 HTML 엔티티를 디코딩합니다.
+      const decodedText = decodeHtml(text);
+      return decodedText.replace(
+        /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/watch\?v=)([A-Za-z0-9_-]{11})([^<\s]*)/g,
         (match, videoId, params) => {
-          let urlSearch = '';
+          let startParam = '';
           if (params) {
-            // params의 시작 ?나 & 제거 후 URLSearchParams로 파싱
+            // params의 맨 앞 ? 또는 & 제거 후 파라미터 파싱
             const queryString = params.replace(/^[\?&]/, '');
             const searchParams = new URLSearchParams(queryString);
-            const start = searchParams.get('start');
-            if (start) {
-              urlSearch = `?start=${start}`;
+            // "t" 파라미터 추출 (유튜브 시간 파라미터는 "t"임)
+            const t = searchParams.get('t');
+            if (t) {
+              const seconds = parseTimeParameter(t);
+              startParam = `?start=${seconds}`;
             }
           }
-          return `<div class="video-responsive"><iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}${urlSearch}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+          return `<div class="video-responsive"><iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}${startParam}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
         }
       );
     }
-
-
 
     /********************************
      * URL 링크 텍스트를 앵커 태그로 변환 (댓글 등)
