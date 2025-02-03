@@ -1077,6 +1077,14 @@
         currentNickname = null;
         currentScore = 0;
       }
+
+      // **** 로그인 상태에 따라 댓글 입력폼 UI 갱신 ****
+      const commentForms = document.querySelectorAll('[id^="commentForm-"]');
+      if (user) {
+        commentForms.forEach(form => form.classList.remove('d-none'));
+      } else {
+        commentForms.forEach(form => form.classList.add('d-none'));
+      }
     });
 
     /********************************
@@ -1696,6 +1704,7 @@
       const commentFormEl = card.querySelector(`#commentForm-${postId}`);
       const commentInputEl = card.querySelector(`#commentInput-${postId}`);
       const commentBtn = card.querySelector(`#commentBtn-${postId}`);
+      // 생성 시점에는 현재 로그인 여부에 따라 처리 (추후 onAuthStateChanged에서 갱신)
       if (currentUser) {
         commentFormEl.classList.remove('d-none');
       }
