@@ -684,6 +684,27 @@
     const db = getFirestore(app);
 
     /********************************
+     * 전역 사용자 캐시 객체
+     ********************************/
+    const userCache = {}; // uid를 key로 사용자 데이터를 캐싱
+
+    // 기존 fetchUserDoc 함수 수정 – 캐시에 데이터가 있으면 Firestore 조회 없이 반환
+    async function fetchUserDoc(uid) {
+      if (userCache[uid]) {
+        return {
+          exists: () => true,
+          data: () => userCache[uid]
+        };
+      }
+      const userRef = doc(db, 'users', uid);
+      const snap = await getDoc(userRef);
+      if (snap.exists()) {
+        userCache[uid] = snap.data();
+      }
+      return snap;
+    }
+
+    /********************************
      * Toast UI Editor 초기화
      ********************************/
     const { Editor } = toastui;
@@ -945,10 +966,10 @@
     /********************************
      * 사용자 정보(userDoc) 가져오기
      ********************************/
-    async function fetchUserDoc(uid) {
+    async function fetchUserDocWithoutCache(uid) {
+      // 기존 함수와 구분하여 캐시를 사용하지 않는 함수 (필요 시)
       const userRef = doc(db, 'users', uid);
-      const snap = await getDoc(userRef);
-      return snap;
+      return await getDoc(userRef);
     }
 
     async function fetchUserNicknameAndScore(uid) {
@@ -976,6 +997,8 @@
           if (userSnap.exists()) {
             oldScore = userSnap.data().score || 0;
           }
+
+          // 2) 점수 업데이트
           transaction.update(userRef, {
             score: oldScore + diff
           });
@@ -1380,14 +1403,12 @@
         let rankIcon = '';
         let commentNickname = c.nickname || '익명';
 
-        // (작성자 랭크 이모지)
+        // (작성자 랭크 이모지) – 캐시를 활용하여 사용자 정보 조회
         if (c.uid) {
           try {
-            const userRef = doc(db, 'users', c.uid);
-            const userSnap = await getDoc(userRef);
-
-            if (userSnap.exists()) {
-              const userData = userSnap.data();
+            const snap = await fetchUserDoc(c.uid);
+            if (snap.exists()) {
+              const userData = snap.data();
               const userScore = userData.score || 0;
               const rankInfo = getRankByScore(userScore);
               rankIcon = rankInfo.icon;
@@ -1421,10 +1442,9 @@
         if (rankIconEl && rankIcon) {
           rankIconEl.addEventListener('click', async () => {
             try {
-              const userRef = doc(db, 'users', c.uid);
-              const userSnap = await getDoc(userRef);
-              if (userSnap.exists()) {
-                const uData = userSnap.data();
+              const snap = await fetchUserDoc(c.uid);
+              if (snap.exists()) {
+                const uData = snap.data();
                 const s = uData.score || 0;
                 const rInfo = getRankByScore(s);
                 showToast(`계급: ${rInfo.name} (${s}점)`, commentNickname);
@@ -1718,9 +1738,9 @@
       const rankIconEl = card.querySelector(`#rankIcon-${postId}`);
       rankIconEl.addEventListener('click', async () => {
         try {
-          const userSnap = await fetchUserDoc(data.uid);
-          if (userSnap.exists()) {
-            const uData = userSnap.data();
+          const snap = await fetchUserDoc(data.uid);
+          if (snap.exists()) {
+            const uData = snap.data();
             const s = uData.score || 0;
             const rInfo = getRankByScore(s);
             showToast(`계급: ${rInfo.name} (${s}점)`, authorNickname);
