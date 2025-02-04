@@ -208,6 +208,7 @@
       text-shadow: 0 0 5px #69ffa2, 0 0 10px #69ffa2;
       /* 부드러운 호버 효과 (마우스 올리면 더 밝아짐) */
       transition: filter 0.3s;
+      cursor: pointer;
     }
     .notice-banner:hover {
       filter: brightness(1.2);
@@ -1958,12 +1959,16 @@
       }, 250);
     }
 
+    let fireworkCount = 3;
     function setTimeoutLaunchFireworks() {
       launchFireworks();
 
       // 다음 폭죽을 랜덤한 시간 후 실행 (1초~3초 사이)
-      let nextInterval = Math.random() * 2000 + 4000; 
-      setTimeout(setTimeoutLaunchFireworks, nextInterval);
+      fireworkCount--;
+      if(fireworkCount >= 0) {
+        let nextInterval = Math.random() * 2000 + 10000; 
+        setTimeout(setTimeoutLaunchFireworks, nextInterval);
+      }
     }
 
     // 랭킹 모달 열 때 랭킹 리스트 초기화 및 첫 로드
