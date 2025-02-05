@@ -592,7 +592,7 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
 
   <!-- [랭킹 모달] -->
   <div class="modal fade" id="rankingModal" tabindex="-1" aria-labelledby="rankingModalLabel" aria-hidden="true">
@@ -2034,7 +2034,7 @@
         showToast('로그인 상태가 아닙니다.', '오류');
         return;
       }
-      if (!confirm('댓글을 제외한 모든 작성글과 계정이 삭제됩니다. 댓글은 직접 삭제해야합니다. 정말 탈퇴하시겠습니까?')) {
+      if (!confirm('회원탈퇴 시, 작성하신 댓글은 삭제되지 않고 남습니다.\n댓글은 별도로 직접 삭제하셔야 하며,\n댓글을 제외한 모든 작성글과 계정이 완전히 삭제됩니다.\n정말로 탈퇴하시겠습니까?')) {
         return;
       }
       try {
@@ -2046,9 +2046,7 @@
         // users 콜렉션의 사용자 문서 삭제
         await deleteDoc(doc(db, 'users', user.uid));
         // Firebase Auth 계정 삭제
-        console.log('문서 삭제 완료')
         await deleteUser(user);
-        console.log('탈퇴 완료')
         showToast('회원탈퇴가 완료되었습니다.', '회원탈퇴');
         // 로그아웃 처리
         await signOut(auth);
