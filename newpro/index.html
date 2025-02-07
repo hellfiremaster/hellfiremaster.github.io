@@ -1864,14 +1864,16 @@
       if (currentUser) {
         const magicBtn = card.querySelector(`#magicBtn-${postId}`);
         if (magicBtn) {
-          // 조건: 자신의 글이거나, 현재 점수가 글 작성자의 점수보다 높아야 함.
-          if (currentUser.uid === data.uid || currentScore > authorScore) {
-            magicBtn.disabled = false;
-          } else {
-            magicBtn.disabled = true;
-            magicBtn.title = "포인트가 부족하여 마법 사용이 불가능합니다.";
-          }
-          magicBtn.addEventListener('click', () => openMagicModal(postId, data, authorScore));
+          // 버튼은 항상 활성화 상태로 두고,
+          // 클릭 시 현재 사용자의 포인트와 글 작성자의 포인트를 비교하여 조건 미충족 시 토스트 메시지 표시
+          magicBtn.addEventListener('click', () => {
+            // 만약 작성자가 아니면서 현재 포인트가 글 작성자보다 낮거나 같다면
+            if (currentUser.uid !== data.uid && currentScore <= authorScore) {
+              showToast("작성자보다 포인트가 낮습니다..", "마법");
+              return;
+            }
+            openMagicModal(postId, data, authorScore);
+          });
         }
       }
 
