@@ -321,6 +321,15 @@
       100% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
     }
 
+    /* --- 추가: 모바일 화면에서 수정/삭제 (액션) 버튼 오른쪽 정렬 --- */
+    @media (max-width: 576px) {
+      .action-buttons {
+        margin-left: auto;
+        text-align: right;
+        display: flex;
+        gap: 0.1rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1151,33 +1160,6 @@
     }
 
     /********************************
-     * 트랜잭션 기반 점수 업데이트
-     ********************************/
-    async function updateUserScore(uid, diff) {
-      if (!uid) return;
-      try {
-        await runTransaction(db, async (transaction) => {
-          const userRef = doc(db, 'users', uid);
-          const userSnap = await transaction.get(userRef);
-          let oldScore = 0;
-          if (userSnap.exists()) {
-            oldScore = userSnap.data().score || 0;
-          }
-
-          // 2) 점수 업데이트
-          transaction.update(userRef, {
-            score: oldScore + diff
-          });
-        });
-        const { score } = await fetchUserNicknameAndScore(uid);
-        currentScore = score;
-      } catch (err) {
-        console.error(err);
-        showToast('점수 업데이트 실패: ' + err.message, '오류');
-      }
-    }
-
-    /********************************
      * 회원가입
      ********************************/
     signupForm.addEventListener('submit', async (e) => {
@@ -1838,7 +1820,7 @@
       card.innerHTML = `
         <div class="card-header fw-bold d-flex justify-content-between align-items-center">
           <span>${data.title}</span>
-          <div>
+          <div class="action-buttons">
             ${isAuthor ? `
               <button class="btn btn-sm btn-warning me-2" id="editBtn-${postId}">수정</button>
               <button class="btn btn-sm btn-danger me-2" id="deleteBtn-${postId}">삭제</button>
@@ -1992,11 +1974,21 @@
       const postDocData = postSnap.data();
       let magic = postDocData.magic || null;
 
+      // <--- [추가] 마법 지속 시간이 지난 경우, magic을 null 처리하여 새 마법 시전 UI 표시
+      if (magic && magic.expiresAt) {
+        const now = new Date();
+        const exp = new Date(magic.expiresAt.seconds * 1000);
+        if (now >= exp) {
+          magic = null;
+        }
+      }
+      // --->
+
       magicInfoDiv.innerHTML = "";
       magicModalFooter.innerHTML = "";
 
       if (magic) {
-        // 마법이 이미 적용된 경우
+        // 마법이 현재 적용 중인 경우
         let expiresAt = magic.expiresAt ? new Date(magic.expiresAt.seconds * 1000) : null;
         magicInfoDiv.innerHTML = `
           <p>현재 적용된 마법: <strong>${magic.magicType}</strong></p>
@@ -2021,7 +2013,7 @@
         closeBtn.setAttribute('data-bs-dismiss', 'modal');
         magicModalFooter.appendChild(closeBtn);
       } else {
-        // 마법이 적용되지 않은 경우: 글 작성자이거나 현재 사용자의 점수가 글 작성자보다 높으면 시전 가능
+        // 마법이 적용되어 있지 않은 경우 (또는 이미 만료된 경우)
         if (auth.currentUser.uid === postData.uid || currentScore > authorScore) {
           // 현재 사용자의 계급에 따른 사용 가능한 마법 종류를 가져옴
           const rankInfo = getRankByScore(currentScore);
@@ -2072,14 +2064,14 @@
       }
       // 각 마법 효과별 지속 시간 매핑 (초 단위)
       const durationMapping = {
-        'magic-basic': 300,
-        'magic-shimmer': 300,
-        'magic-blessing': 400,
-        'magic-curse': 400,
-        'magic-font': 500,
-        'magic-title': 500,
-        'magic-rainbow': 600,
-        'magic-ultimate': 600
+        'magic-basic': 3000,
+        'magic-shimmer': 3000,
+        'magic-blessing': 4000,
+        'magic-curse': 4000,
+        'magic-font': 5000,
+        'magic-title': 5000,
+        'magic-rainbow': 6000,
+        'magic-ultimate': 6000
       };
       const duration = durationMapping[magicType] || 300;
       const expiresAt = Timestamp.fromDate(new Date(Date.now() + duration * 1000));
