@@ -257,6 +257,11 @@
     .magic-btn:hover {
       box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.8);
     }
+    /* 비활성화된 마법 버튼의 테두리/그림자 제거 */
+    .magic-btn:disabled {
+      border: none !important;
+      box-shadow: none !important;
+    }
     /* 반짝이는 마법: 더 강렬한 그라데이션 애니메이션 */
     .magic-shimmer {
       background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.1) 100%);
@@ -306,6 +311,16 @@
       50% { transform: scale(1.05); }
       100% { transform: scale(1); }
     }
+    /* 기본 마법: 간단한 푸른빛 글로우 효과 */
+    .magic-basic {
+      animation: basicGlow 2s infinite;
+    }
+    @keyframes basicGlow {
+      0% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
+      50% { box-shadow: 0 0 15px rgba(0, 255, 255, 1); }
+      100% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
+    }
+
   </style>
 </head>
 <body>
@@ -1185,7 +1200,8 @@
           createdAt: serverTimestamp()
         });
         showToast('회원가입 성공!', '회원가입');
-        bootstrap.Modal.getInstance(signupModal).hide();
+        bootstrap.Modal.getInstance(document.getElementById('signupModal')).hide();
+        location.reload();
       } catch (err) {
         showToast(err.message, '회원가입 실패');
       }
@@ -1206,7 +1222,8 @@
       try {
         await signInWithEmailAndPassword(auth, emailVal, pwVal);
         showToast('로그인 성공!', '로그인');
-        bootstrap.Modal.getInstance(loginModal).hide();
+        bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+        location.reload();
       } catch (err) {
         showToast(err.message, '로그인 실패');
       }
@@ -1236,6 +1253,7 @@
       try {
         await signOut(auth);
         showToast('로그아웃 완료', '로그아웃');
+        location.reload();
       } catch (error) {
         showToast(error.message, '로그아웃 실패');
       }
@@ -1587,7 +1605,7 @@
             if (snap.exists()) {
               const userData = snap.data();
               const userScore = userData.score || 0;
-              const rankInfo = getRankByScore(userScore);
+              const rankInfo = getRankByScore(userData.score || 0);
               rankIcon = rankInfo.icon;
               commentNickname = userData.nickname || commentNickname;
             }
