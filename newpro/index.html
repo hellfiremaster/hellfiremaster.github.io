@@ -243,6 +243,69 @@
       border: 0;
     }
 
+    /* ===== 마법 시스템 관련 CSS ===== */
+    /* 마법 버튼 스타일 – 배경색을 노랑(#FFD700)으로 지정하여 화려함을 강조 */
+    .magic-btn {
+      position: relative;
+      overflow: hidden;
+      color: #000;
+      border-radius: 5px;
+      margin-left: 5px;
+      padding: 2px 6px;
+      transition: box-shadow 0.3s;
+    }
+    .magic-btn:hover {
+      box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.8);
+    }
+    /* 반짝이는 마법: 더 강렬한 그라데이션 애니메이션 */
+    .magic-shimmer {
+      background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.1) 100%);
+      background-size: 200% auto;
+      animation: shimmer 1.5s linear infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+    /* 축복의 마법: 더욱 반짝거리고 화려하게 */
+    .magic-blessing {
+      background: linear-gradient(45deg, rgba(255,215,0,0.4), rgba(255,215,0,0.8));
+      animation: blessingPulse 2s ease-in-out infinite;
+    }
+    @keyframes blessingPulse {
+      0%, 100% { box-shadow: 0 0 10px 2px rgba(255,215,0,0.8); }
+      50% { box-shadow: 0 0 20px 4px rgba(255,215,0,1); }
+    }
+    /* 저주의 마법는 그대로 유지 */
+    .magic-curse {
+      filter: invert(1) blur(2px);
+    }
+    .magic-font {
+      font-family: 'Comic Sans MS', cursive, sans-serif !important;
+    }
+    /* 제목 반전 마법 → 대신 글자 순서를 뒤집어 표시 */
+    .magic-title {
+      direction: rtl;
+      unicode-bidi: bidi-override;
+    }
+    .magic-rainbow {
+      border: 3px solid;
+      border-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet) 1;
+      animation: rainbow 3s linear infinite;
+    }
+    @keyframes rainbow {
+      0% { border-image-source: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet); }
+      100% { border-image-source: linear-gradient(45deg, violet, indigo, blue, green, yellow, orange, red); }
+    }
+    .magic-ultimate {
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0) 70%) !important;
+      animation: ultimateGlow 2s infinite;
+    }
+    @keyframes ultimateGlow {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
   </style>
 </head>
 <body>
@@ -609,6 +672,27 @@
     </div>
   </div>
 
+  <!-- [마법 모달] -->
+  <div class="modal fade" id="magicModal" tabindex="-1" aria-labelledby="magicModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="magicModalLabel">마법 사용</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="magicPostId" />
+          <div id="magicInfo">
+            <!-- 마법 정보가 여기에 표시됩니다. -->
+          </div>
+        </div>
+        <div class="modal-footer" id="magicModalFooter">
+          <!-- 버튼은 상황에 따라 동적으로 생성됩니다. -->
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast (중앙 하단, 어두운 배경+밝은 글자) -->
   <div class="toast-container">
     <div
@@ -682,7 +766,9 @@
       getDocs,
       startAfter,
       limit,
-      onSnapshot
+      onSnapshot,
+      Timestamp,
+      deleteField
     } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
 
     const firebaseConfig = {
@@ -901,6 +987,33 @@
         return { name: '브론즈', icon: '🥉' };
       }
     }
+
+    // 계급에 따라 사용 가능한 마법 종류 반환
+    function getAvailableMagicTypes(rankName) {
+      switch(rankName) {
+          case '브론즈': return ['magic-basic'];
+          case '실버': return ['magic-basic', 'magic-shimmer'];
+          case '골드': return ['magic-basic', 'magic-shimmer', 'magic-blessing'];
+          case '플래티넘': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse'];
+          case '다이아몬드': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse', 'magic-font'];
+          case '마스터': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse', 'magic-font', 'magic-title'];
+          case '레전드': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse', 'magic-font', 'magic-title', 'magic-rainbow'];
+          case '이터널': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse', 'magic-font', 'magic-title', 'magic-rainbow', 'magic-ultimate'];
+          default: return ['magic-basic'];
+      }
+    }
+
+    // 마법 코드에 따른 표시명 매핑
+    const magicDisplayNames = {
+      'magic-basic': '기본 마법',
+      'magic-shimmer': '반짝이는 마법',
+      'magic-blessing': '축복의 마법',
+      'magic-curse': '저주의 마법',
+      'magic-font': '글꼴 변경 마법',
+      'magic-title': '글자 뒤집기 마법',
+      'magic-rainbow': '무지개 마법',
+      'magic-ultimate': '궁극의 마법'
+    };
 
     // HTML 엔티티를 디코딩하는 함수
     function decodeHtml(html) {
@@ -1665,20 +1778,26 @@
     }
 
     /********************************
-     * 개별 글 DOM 생성 함수 (게시글 내용에 유튜브 임베디드 적용)
+     * 개별 글 DOM 생성 함수 (게시글 내용에 유튜브 임베디드 적용 및 마법 버튼 추가)
      ********************************/
     async function createPostItem(docSnap) {
       const data = docSnap.data();
       const postId = docSnap.id;
 
+      // 카드 요소에 고유 ID 부여 (마법 효과 UI 업데이트를 위해)
+      const card = document.createElement('div');
+      card.className = 'card mb-3';
+      card.id = 'postCard-' + postId;
+
       let authorNickname = data.nickname || '익명';
       let authorRankEmoji = '';
+      let authorScore = 0;
       try {
         const snap = await fetchUserDoc(data.uid);
         if (snap.exists()) {
           const userData = snap.data();
-          const userScore = userData.score || 0;
-          const rankInfo = getRankByScore(userScore);
+          authorScore = userData.score || 0;
+          const rankInfo = getRankByScore(userData.score || 0);
           authorRankEmoji = rankInfo.icon; 
           authorNickname = userData.nickname || authorNickname;
         }
@@ -1697,21 +1816,17 @@
       const safeContent = DOMPurify.sanitize(data.content ?? '');
       const finalContent = convertYouTubeLinks(safeContent);
 
-      const card = document.createElement('div');
-      card.className = 'card mb-3';
+      // 카드 헤더에 제목 및 수정/삭제/마법 버튼들을 포함
       card.innerHTML = `
         <div class="card-header fw-bold d-flex justify-content-between align-items-center">
           <span>${data.title}</span>
-          ${
-            isAuthor
-              ? ` 
-                <div>
-                  <button class="btn btn-sm btn-warning me-2" id="editBtn-${postId}">수정</button>
-                  <button class="btn btn-sm btn-danger" id="deleteBtn-${postId}">삭제</button>
-                </div>
-              `
-              : ''
-          }
+          <div>
+            ${isAuthor ? `
+              <button class="btn btn-sm btn-warning me-2" id="editBtn-${postId}">수정</button>
+              <button class="btn btn-sm btn-danger me-2" id="deleteBtn-${postId}">삭제</button>
+            ` : ''}
+            ${currentUser ? `<button class="btn btn-sm magic-btn" id="magicBtn-${postId}">✨</button>` : ''}
+          </div>
         </div>
         <div class="card-body">
           <h6 class="card-subtitle text-muted mb-2 post-subtitle">
@@ -1745,7 +1860,22 @@
         </div>
       `;
 
-      // 수정/삭제
+      // 마법 버튼 – 현재 사용자가 있을 경우에만 처리
+      if (currentUser) {
+        const magicBtn = card.querySelector(`#magicBtn-${postId}`);
+        if (magicBtn) {
+          // 조건: 자신의 글이거나, 현재 점수가 글 작성자의 점수보다 높아야 함.
+          if (currentUser.uid === data.uid || currentScore > authorScore) {
+            magicBtn.disabled = false;
+          } else {
+            magicBtn.disabled = true;
+            magicBtn.title = "포인트가 부족하여 마법 사용이 불가능합니다.";
+          }
+          magicBtn.addEventListener('click', () => openMagicModal(postId, data, authorScore));
+        }
+      }
+
+      // 수정/삭제 버튼 이벤트
       if (isAuthor) {
         const editBtn = card.querySelector(`#editBtn-${postId}`);
         editBtn.addEventListener('click', async () => {
@@ -1766,7 +1896,7 @@
         });
       }
 
-      // 좋아요/싫어요
+      // 좋아요/싫어요 이벤트
       const likeBtn = card.querySelector(`#likeBtn-${postId}`);
       const dislikeBtn = card.querySelector(`#dislikeBtn-${postId}`);
       likeBtn.addEventListener('click', () => toggleLike(postId));
@@ -1783,12 +1913,11 @@
         }
       }
 
-      // 댓글 작성 폼
+      // 댓글 작성 폼 처리
       const commentListEl = card.querySelector(`#commentList-${postId}`);
       const commentFormEl = card.querySelector(`#commentForm-${postId}`);
       const commentInputEl = card.querySelector(`#commentInput-${postId}`);
       const commentBtn = card.querySelector(`#commentBtn-${postId}`);
-      // 생성 시점에는 현재 로그인 여부에 따라 처리 (추후 onAuthStateChanged에서 갱신)
       if (currentUser) {
         commentFormEl.classList.remove('d-none');
       }
@@ -1816,11 +1945,183 @@
         }
       });
 
+      // 만약 글에 이미 마법이 적용되어 있다면, 해당 마법 효과 클래스를 추가
+      if (data.magic && data.magic.expiresAt) {
+        const now = new Date();
+        const exp = new Date(data.magic.expiresAt.seconds * 1000);
+        if (now < exp) {
+          card.classList.add(data.magic.magicType);
+        }
+      }
+
       return card;
     }
 
     /********************************
-     * 실시간 글 UI 갱신
+     * 마법 관련 함수
+     ********************************/
+    async function openMagicModal(postId, postData, authorScore) {
+      const magicModalEl = document.getElementById('magicModal');
+      const magicModal = new bootstrap.Modal(magicModalEl);
+      const magicPostIdInput = document.getElementById('magicPostId');
+      const magicInfoDiv = document.getElementById('magicInfo');
+      const magicModalFooter = document.getElementById('magicModalFooter');
+      magicPostIdInput.value = postId;
+
+      // 최신 게시글 정보를 가져옴
+      const postRef = doc(db, 'posts', postId);
+      const postSnap = await getDoc(postRef);
+      const postDocData = postSnap.data();
+      let magic = postDocData.magic || null;
+
+      magicInfoDiv.innerHTML = "";
+      magicModalFooter.innerHTML = "";
+
+      if (magic) {
+        // 마법이 이미 적용된 경우
+        let expiresAt = magic.expiresAt ? new Date(magic.expiresAt.seconds * 1000) : null;
+        magicInfoDiv.innerHTML = `
+          <p>현재 적용된 마법: <strong>${magic.magicType}</strong></p>
+          <p>시전자: <strong>${magic.casterNickname || '알 수 없음'}</strong></p>
+          <p>종료 시각: <strong>${expiresAt ? expiresAt.toLocaleString() : '알 수 없음'}</strong></p>
+        `;
+        // 시전자와 비교하여 현재 사용자가 해제할 수 있는지 확인 (자신과 같거나 점수가 높아야 함)
+        const casterSnap = await getDoc(doc(db, 'users', magic.casterUid));
+        const casterData = casterSnap.exists() ? casterSnap.data() : null;
+        const casterScore = casterData ? (casterData.score || 0) : 0;
+
+        if (currentScore >= casterScore) {
+          const removeBtn = document.createElement('button');
+          removeBtn.className = 'btn btn-danger';
+          removeBtn.textContent = '마법 해제';
+          removeBtn.addEventListener('click', () => removeMagic(postId));
+          magicModalFooter.appendChild(removeBtn);
+        }
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'btn btn-secondary';
+        closeBtn.textContent = '닫기';
+        closeBtn.setAttribute('data-bs-dismiss', 'modal');
+        magicModalFooter.appendChild(closeBtn);
+      } else {
+        // 마법이 적용되지 않은 경우: 글 작성자이거나 현재 사용자의 점수가 글 작성자보다 높으면 시전 가능
+        if (auth.currentUser.uid === postData.uid || currentScore > authorScore) {
+          // 현재 사용자의 계급에 따른 사용 가능한 마법 종류를 가져옴
+          const rankInfo = getRankByScore(currentScore);
+          const availableMagic = getAvailableMagicTypes(rankInfo.name);
+          // 라디오 버튼으로 마법 선택 UI 구성
+          let radioHTML = `<p>이 글에 시전할 마법을 선택하세요:</p>`;
+          availableMagic.forEach((magicType, index) => {
+              const displayName = magicDisplayNames[magicType] || magicType;
+              radioHTML += `
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="magicRadio" id="magicRadio-${magicType}" value="${magicType}" ${index===0 ? 'checked' : ''}>
+                <label class="form-check-label" for="magicRadio-${magicType}">${displayName}</label>
+              </div>`;
+          });
+          magicInfoDiv.innerHTML = radioHTML;
+          const castBtn = document.createElement('button');
+          castBtn.className = 'btn btn-primary';
+          castBtn.textContent = '마법 시전';
+          castBtn.addEventListener('click', () => {
+            const radios = document.getElementsByName('magicRadio');
+            let selectedMagic;
+            for(let radio of radios) {
+              if(radio.checked) {
+                selectedMagic = radio.value;
+                break;
+              }
+            }
+            castMagic(postId, postData, selectedMagic);
+          });
+          magicModalFooter.appendChild(castBtn);
+        } else {
+          magicInfoDiv.innerHTML = `<p>포인트가 부족하여 마법을 시전할 수 없습니다.</p>`;
+        }
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'btn btn-secondary';
+        closeBtn.textContent = '닫기';
+        closeBtn.setAttribute('data-bs-dismiss', 'modal');
+        magicModalFooter.appendChild(closeBtn);
+      }
+      magicModal.show();
+    }
+
+    async function castMagic(postId, postData, magicType) {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      // 각 마법 효과별 지속 시간 매핑 (초 단위)
+      const durationMapping = {
+        'magic-basic': 300,
+        'magic-shimmer': 300,
+        'magic-blessing': 400,
+        'magic-curse': 400,
+        'magic-font': 500,
+        'magic-title': 500,
+        'magic-rainbow': 600,
+        'magic-ultimate': 600
+      };
+      const duration = durationMapping[magicType] || 300;
+      const expiresAt = Timestamp.fromDate(new Date(Date.now() + duration * 1000));
+
+      try {
+        await runTransaction(db, async (transaction) => {
+          const postRef = doc(db, 'posts', postId);
+          const postSnap = await transaction.get(postRef);
+          if (!postSnap.exists()) {
+            throw new Error('글을 찾을 수 없습니다.');
+          }
+          transaction.update(postRef, {
+            magic: {
+              magicType: magicType,
+              casterUid: user.uid,
+              casterNickname: currentNickname,
+              castTime: serverTimestamp(),
+              duration: duration,
+              expiresAt: expiresAt
+            }
+          });
+        });
+        showToast('마법이 시전되었습니다!', '마법');
+        // 즉시 UI 업데이트 – 해당 카드에 마법 효과 클래스를 추가
+        const cardEl = document.getElementById(`postCard-${postId}`);
+        if (cardEl) {
+          cardEl.classList.add(magicType);
+        }
+        bootstrap.Modal.getInstance(document.getElementById('magicModal')).hide();
+      } catch (err) {
+        showToast(err.message, '마법 시전 실패');
+      }
+    }
+
+    async function removeMagic(postId) {
+      try {
+        await runTransaction(db, async (transaction) => {
+          const postRef = doc(db, 'posts', postId);
+          const postSnap = await transaction.get(postRef);
+          if (!postSnap.exists()) {
+            throw new Error('글을 찾을 수 없습니다.');
+          }
+          transaction.update(postRef, {
+            magic: deleteField()
+          });
+        });
+        showToast('마법이 해제되었습니다.', '마법');
+        const cardEl = document.getElementById(`postCard-${postId}`);
+        if (cardEl) {
+          // 마법 효과 클래스를 모두 제거 (magic-로 시작하는 클래스)
+          cardEl.className = cardEl.className.replace(/\bmagic-\S+\b/g, '');
+        }
+        bootstrap.Modal.getInstance(document.getElementById('magicModal')).hide();
+      } catch (err) {
+        showToast(err.message, '마법 해제 실패');
+      }
+    }
+
+    /********************************
+     * 실시간 글 UI 갱신 (좋아요/싫어요 및 마법 효과 업데이트)
      ********************************/
     function updatePostUI(postSnap) {
       const postId = postSnap.id;
@@ -1849,6 +2150,23 @@
         } else {
           dislikeBtn.classList.remove('btn-danger');
           dislikeBtn.classList.add('btn-outline-danger');
+        }
+      }
+
+      // 마법 효과 업데이트 – 만약 magic 필드가 존재하면 해당 효과 클래스를 적용하고, 만료되었으면 제거
+      const cardEl = document.getElementById(`postCard-${postId}`);
+      if (cardEl) {
+        if (data.magic && data.magic.expiresAt) {
+          const now = new Date();
+          const exp = new Date(data.magic.expiresAt.seconds * 1000);
+          if (now < exp) {
+            cardEl.className = cardEl.className.replace(/\bmagic-\S+\b/g, '');
+            cardEl.classList.add(data.magic.magicType);
+          } else {
+            cardEl.className = cardEl.className.replace(/\bmagic-\S+\b/g, '');
+          }
+        } else {
+          cardEl.className = cardEl.className.replace(/\bmagic-\S+\b/g, '');
         }
       }
     }
