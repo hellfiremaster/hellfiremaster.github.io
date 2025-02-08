@@ -1104,7 +1104,7 @@
     /********************************
      * Active 공지사항 로드 (실시간)
      ********************************/
-     function fetchActiveNotices() {
+    async function fetchActiveNotices() {
       // 현재 클라이언트 시각 기준 (단순화)
       const now = new Date();
 
@@ -1116,26 +1116,31 @@
         orderBy('startDate', 'desc')
       );
 
-      // 실시간 모니터링
-      onSnapshot(q, (snapshot) => {
-        // 기존 공지를 모두 제거
-        noticeContainer.innerHTML = '';
+      let celebrating = false;
+      const snapshot = await getDocs(q);
+      // 기존 공지를 모두 제거
+      noticeContainer.innerHTML = '';
 
-        snapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          // 공지 배너 DOM 생성
-          const bannerEl = document.createElement('div');
-          bannerEl.classList.add('notice-banner');
+      for(const docSnap of snapshot.docs) {
+        const data = docSnap.data();
+        // 공지 배너 DOM 생성
+        const bannerEl = document.createElement('div');
+        bannerEl.classList.add('notice-banner');
 
-          // 만약 HTML 내용이라면 DOMPurify로 정제 후 innerHTML 사용 가능
-          bannerEl.textContent = data.content;
-
+        // 만약 HTML 내용이라면 DOMPurify로 정제 후 innerHTML 사용 가능
+        bannerEl.textContent = data.content;
+        if(data.content.includes('🎉')) {
           // 공지사항 배너 클릭 시 폭죽 애니메이션 실행
           bannerEl.addEventListener('click', launchFireworks);
+          celebrating = true;
+        }  
 
-          noticeContainer.appendChild(bannerEl);
-        });
-      });
+        noticeContainer.appendChild(bannerEl);
+      }
+
+      if(celebrating) {
+        launchFireworks();
+      }
     }
 
     /********************************
@@ -2327,18 +2332,6 @@
       }, 250);
     }
 
-    let fireworkCount = 1;
-    function setTimeoutLaunchFireworks() {
-      launchFireworks();
-
-      // 다음 폭죽을 랜덤한 시간 후 실행 (1초~3초 사이)
-      fireworkCount--;
-      if(fireworkCount >= 0) {
-        let nextInterval = Math.random() * 2000 + 10000; 
-        setTimeout(setTimeoutLaunchFireworks, nextInterval);
-      }
-    }
-
     // 랭킹 모달 열 때 랭킹 리스트 초기화 및 첫 로드
     const rankingModalEl = document.getElementById('rankingModal');
     rankingModalEl.addEventListener('show.bs.modal', () => {
@@ -2387,7 +2380,6 @@
     fetchActiveNotices();
     // 페이지 첫 진입 시 5개 로드
     loadMorePosts();
-    setTimeoutLaunchFireworks();
   </script>
 </body>
 </html>
