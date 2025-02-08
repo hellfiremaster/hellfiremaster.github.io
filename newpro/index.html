@@ -1869,7 +1869,7 @@
           magicBtn.addEventListener('click', () => {
             // 만약 작성자가 아니면서 현재 포인트가 글 작성자보다 낮거나 같다면
             if (currentUser.uid !== data.uid && currentScore <= authorScore) {
-              showToast("작성자보다 포인트가 낮습니다..", "마법");
+              showToast("마력이 미치지 않습니다.", "마법");
               return;
             }
             openMagicModal(postId, data, authorScore);
@@ -1991,11 +1991,10 @@
 
       if (magic) {
         // 마법이 현재 적용 중인 경우
-        let expiresAt = magic.expiresAt ? new Date(magic.expiresAt.seconds * 1000) : null;
         magicInfoDiv.innerHTML = `
-          <p>현재 적용된 마법: <strong>${magic.magicType}</strong></p>
+          <p>현재 적용된 마법: <strong>${magicDisplayNames[magic.magicType]}</strong></p>
           <p>시전자: <strong>${magic.casterNickname || '알 수 없음'}</strong></p>
-          <p>종료 시각: <strong>${expiresAt ? expiresAt.toLocaleString() : '알 수 없음'}</strong></p>
+          <p>종료 시각: <strong>${magic.expiresAt ? formatDateTime(magic.expiresAt) : '알 수 없음'}</strong></p>
         `;
         // 시전자와 비교하여 현재 사용자가 해제할 수 있는지 확인 (자신과 같거나 점수가 높아야 함)
         const casterSnap = await getDoc(doc(db, 'users', magic.casterUid));
