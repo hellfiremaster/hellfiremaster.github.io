@@ -652,7 +652,6 @@
         <!-- 현재 내 점수, 계급, 사용 가능한 마법 -->
         <p><strong>내 점수</strong>: <span id="myScore">로딩중...</span></p>
         <p><strong>내 계급</strong>: <span id="myRank">로딩중...</span></p>
-        <p><strong>사용 가능한 마법</strong>: <span id="myMagic">로딩중...</span></p>
         <hr/>
         <!-- 앞으로 배울 마법 (각 계급별로 획득할 마법 목록 표시) -->
         <h6>계급 기준</h6>
@@ -660,7 +659,7 @@
           <!-- JavaScript에서 동적으로 채워집니다. -->
         </ul>
         <small class="text-muted">
-          행동별 점수: 글쓰기 +50, 댓글 +20, 좋아요 +10, 싫어요 -5.
+          행동별 점수: 글쓰기 +50, 댓글 +20, 좋아요 +10, 싫어요 -5
         </small>
         <!-- (회원탈퇴 등 다른 내용이 있다면 추가) -->
         <div class="mt-3">
@@ -1288,14 +1287,11 @@
     });
 
     rankModalEl.addEventListener('show.bs.modal', async () => {
-      const myMagicEl = document.getElementById('myMagic');
       const futureMagicListEl = document.getElementById('futureMagicList');
 
       if (!auth.currentUser) {
         myScoreEl.textContent = '(로그인 필요)';
         myRankEl.textContent = '-';
-        myMagicEl.textContent = '-';
-        futureMagicListEl.innerHTML = '<li>-</li>';
       } else {
         // 강제로 재조회: 캐시를 사용하지 않는 함수 호출하여 최신 사용자 정보를 가져옴
         const snap = await fetchUserDocWithoutCache(auth.currentUser.uid);
@@ -1309,36 +1305,31 @@
         myScoreEl.textContent = `${currentScore}점`;
         const rankInfo = getRankByScore(currentScore);
         myRankEl.textContent = `${rankInfo.name} ${rankInfo.icon}`;
-        
-        // 현재 사용 가능한 마법 (현재 내 계급에서 사용할 수 있는 마법 목록)
-        const availableMagic = getAvailableMagicTypes(rankInfo.name);
-        const magicNames = availableMagic.map(type => magicDisplayNames[type] || type);
-        myMagicEl.textContent = magicNames.join(', ');
-
-        // 앞으로 배울 마법 목록 – 계급 기준에 따른 각 단계별 마법
-        const lastMagicTypes = getAvailableMagicTypes('이터널');
-        const rankMagicMapping = [
-          { rank: '브론즈', icon: '🥉', range: '0~99', },
-          { rank: '실버', icon: '🥈', range: '100~499', },
-          { rank: '골드', icon: '🥇', range: '500~999', },
-          { rank: '플래티넘', icon: '🛡️', range: '1,000~4,999', },
-          { rank: '다이아몬드', icon: '💎', range: '5,000~9,999', },
-          { rank: '마스터', icon: '🏆', range: '10,000~24,999', },
-          { rank: '레전드', icon: '👑', range: '25,000~49,999', },
-          { rank: '이터널', icon: '🌌', range: '50,000+', }
-        ];
-        let futureMagicHTML = '';
-        rankMagicMapping.forEach((mapping, i) => {
-          // mapping.magic는 예를 들어 ['magic-basic', 'magic-shimmer', ...] 이므로,
-          // magicDisplayNames를 사용하여 사용자에게 보여질 이름으로 변환합니다.
-          mapping.magic = [ lastMagicTypes[i] ];
-          const magicList = mapping.magic
-            .map(type => magicDisplayNames[type] || type)
-            .join(', ');
-          futureMagicHTML += `<li>${mapping.icon} ${mapping.rank} (${mapping.range}): ${magicList}</li>`;
-        });
-        futureMagicListEl.innerHTML = futureMagicHTML;
       }
+
+      // 앞으로 배울 마법 목록 – 계급 기준에 따른 각 단계별 마법
+      const lastMagicTypes = getAvailableMagicTypes('이터널');
+      const rankMagicMapping = [
+        { rank: '브론즈', icon: '🥉', range: '0~99', },
+        { rank: '실버', icon: '🥈', range: '100~499', },
+        { rank: '골드', icon: '🥇', range: '500~999', },
+        { rank: '플래티넘', icon: '🛡️', range: '1,000~4,999', },
+        { rank: '다이아몬드', icon: '💎', range: '5,000~9,999', },
+        { rank: '마스터', icon: '🏆', range: '10,000~24,999', },
+        { rank: '레전드', icon: '👑', range: '25,000~49,999', },
+        { rank: '이터널', icon: '🌌', range: '50,000+', }
+      ];
+      let futureMagicHTML = '';
+      rankMagicMapping.forEach((mapping, i) => {
+        // mapping.magic는 예를 들어 ['magic-basic', 'magic-shimmer', ...] 이므로,
+        // magicDisplayNames를 사용하여 사용자에게 보여질 이름으로 변환합니다.
+        mapping.magic = [ lastMagicTypes[i] ];
+        const magicList = mapping.magic
+          .map(type => magicDisplayNames[type] || type)
+          .join(', ');
+        futureMagicHTML += `<li>${mapping.icon} ${mapping.rank} (${mapping.range}): ${magicList}</li>`;
+      });
+      futureMagicListEl.innerHTML = futureMagicHTML;
     });
 
 
