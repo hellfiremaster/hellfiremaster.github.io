@@ -42,7 +42,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.3/purify.min.js" integrity="sha512-Ll+TuDvrWDNNRnFFIM8dOiw7Go7dsHyxRp4RutiIFW/wm3DgDmCnRZow6AqbXnCbpWu93yM1O34q+4ggzGeXVA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <style>
-    /* 남색 계열 그라디언트 배경 */
+    /* CSS 스타일 (기존과 동일) */
     body {
       background: linear-gradient(135deg, #1f2945, #2a4065);
       min-height: 100vh;
@@ -53,12 +53,10 @@
     .navbar {
       background: rgba(10, 10, 20, 0.7) !important;
     }
-    /* 상단 왼쪽 "뉴프로" 폰트 적용 */
     .navbar-brand {
       font-family: 'Jua', sans-serif;
       font-size: 1.8rem;
     }
-    /* Hero 영역 */
     .hero-section {
       text-align: center;
       padding: 3rem 1rem;
@@ -79,15 +77,13 @@
       color: #d5d9e0;
       font-family: 'Jua', sans-serif;
     }
-    /* .glass-card: 반투명 흰색 배경 */
     .glass-card {
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(8px);
       border-radius: 1rem;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      color: #000; /* 카드 내부 텍스트 어두운색 */
+      color: #000;
     }
-    /* 토스트 - 중앙 하단 / 어두운 배경 + 밝은 글자 */
     .toast-container {
       position: fixed;
       bottom: 20px;
@@ -107,16 +103,13 @@
     .toast.dark-bg .btn-close {
       filter: invert(1);
     }
-    /* 숨김 상태 */
     .d-none {
       display: none !important;
     }
-    /* 모달 내용은 흰 배경 + 검정 텍스트 (가독성) */
     .modal-content {
       background-color: #fff !important;
       color: #000 !important;
     }
-    /* 댓글 영역 스타일 */
     .comment-item {
       background-color: #f8f9fa;
       border-radius: 0.5rem;
@@ -124,19 +117,16 @@
       margin-bottom: 0.5rem;
       color: #000;
     }
-    /* 작성자+시간 겹침 방지를 위한 (flex-wrap) */
     .post-subtitle {
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
     }
-    /* 로딩 시 회전 애니메이션 */
     @keyframes spin {
       to {
         transform: rotate(360deg);
       }
     }
-    /* 로딩 버튼에 적용할 클래스 */
     .auth-loading {
       animation: spin 1.0s linear infinite;
     }
@@ -144,12 +134,10 @@
       max-width: 100%;
       height: auto;
     }
-
-    /* "계급 안내" 버튼 --> 더 화려하게 */
     .shining-btn {
       position: relative;
       overflow: hidden;
-      background-color: #ff69b4; /* 기본 배경: 분홍빛 */
+      background-color: #ff69b4;
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -157,7 +145,6 @@
       font-weight: bold;
       cursor: pointer;
     }
-    /* 반짝이는 효과: 버튼 위를 가로지르는 그라디언트 애니메이션 */
     .shining-btn::before {
       content: "";
       position: absolute;
@@ -186,14 +173,10 @@
         transform: translate(-100%, -100%);
       }
     }
-
     .keep-line-breaks {
       white-space: pre-line;
     }
-
-    /* 공지사항 전체 컨테이너 */
     .notice-banner {
-      /* 다크 녹색 그라디언트 */
       background: linear-gradient(130deg, #002f2f, #004a3f);
       border: 1px solid #0a7f5f;  
       border-radius: 0.5rem;
@@ -201,40 +184,32 @@
       margin-bottom: 1rem;
       position: relative;
       overflow: hidden;
-      /* 약간의 그림자 */
       box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-      /* 텍스트는 밝은 초록 + 네온 효과 */
       color: #69ffa2;
       font-weight: bold;
       text-shadow: 0 0 5px #69ffa2, 0 0 10px #69ffa2;
-      /* 부드러운 호버 효과 (마우스 올리면 더 밝아짐) */
       transition: filter 0.3s;
       cursor: pointer;
     }
     .notice-banner:hover {
       filter: brightness(1.2);
     }
-
-    /* 텍스트가 길면 자동 줄바꿈 */
     .notice-banner p {
       margin: 0;
       white-space: pre-wrap;
       word-break: break-all;
     }
-
     .video-responsive {
       position: relative;
-      width: 560px;         /* 기본 너비 560px (데스크탑 기준) */
-      max-width: 100%;      /* 화면이 작으면 100%까지 줄어듦 */
-      margin: 1rem 0;       /* 위/아래 여백, 좌측 정렬 */
+      width: 560px;
+      max-width: 100%;
+      margin: 1rem 0;
     }
-
     .video-responsive::before {
       content: "";
       display: block;
-      padding-top: 56.25%;  /* 16:9 비율 (315/560 = 56.25%) */
+      padding-top: 56.25%;
     }
-
     .video-responsive iframe {
       position: absolute;
       top: 0;
@@ -243,9 +218,6 @@
       height: 100% !important;
       border: 0;
     }
-
-    /* ===== 마법 시스템 관련 CSS ===== */
-    /* 마법 버튼 스타일 – 배경색을 노랑(#FFD700)으로 지정하여 화려함을 강조 */
     .magic-btn {
       position: relative;
       overflow: hidden;
@@ -258,12 +230,10 @@
     .magic-btn:hover {
       box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.8);
     }
-    /* 비활성화된 마법 버튼의 테두리/그림자 제거 */
     .magic-btn:disabled {
       border: none !important;
       box-shadow: none !important;
     }
-    /* 반짝이는 마법: 더 강렬한 그라데이션 애니메이션 */
     .magic-shimmer {
       background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.1) 100%);
       background-size: 200% auto;
@@ -273,7 +243,6 @@
       0% { background-position: 200% center; }
       100% { background-position: -200% center; }
     }
-    /* 축복의 마법: 더욱 반짝거리고 화려하게 */
     .magic-blessing {
       background: linear-gradient(45deg, rgba(255,215,0,0.4), rgba(255,215,0,0.8));
       animation: blessingPulse 2s ease-in-out infinite;
@@ -282,47 +251,38 @@
       0%, 100% { box-shadow: 0 0 10px 2px rgba(255,215,0,0.8); }
       50% { box-shadow: 0 0 20px 4px rgba(255,215,0,1); }
     }
-    /* 저주의 마법는 그대로 유지 */
     .magic-curse {
       filter: invert(1) blur(2px);
     }
     .magic-font {
       font-family: 'Comic Neue', cursive, sans-serif !important;
-      color: #d9534f; /* 눈에 띄는 색상 */
+      color: #d9534f;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
-    /* 제목 반전 마법 → 대신 글자 순서를 뒤집어 표시 */
     .magic-title {
       direction: rtl;
       unicode-bidi: bidi-override;
     }
-    
     .magic-rainbow {
-      /* 무지개 그라데이션 배경 (rgba값으로 투명도 적용) */
       background: linear-gradient(45deg,
-        rgba(255, 0, 0, 0.4),       /* Red */
-        rgba(255, 165, 0, 0.4),     /* Orange */
-        rgba(255, 255, 0, 0.4),     /* Yellow */
-        rgba(0, 128, 0, 0.4),       /* Green */
-        rgba(0, 0, 255, 0.4),       /* Blue */
-        rgba(75, 0, 130, 0.4),      /* Indigo */
-        rgba(238, 130, 238, 0.4)    /* Violet */
+        rgba(255, 0, 0, 0.4),
+        rgba(255, 165, 0, 0.4),
+        rgba(255, 255, 0, 0.4),
+        rgba(0, 128, 0, 0.4),
+        rgba(0, 0, 255, 0.4),
+        rgba(75, 0, 130, 0.4),
+        rgba(238, 130, 238, 0.4)
       );
-      
-      /* 애니메이션 적용 */
       animation: rainbowPulse 2s ease-in-out infinite;
     }
     @keyframes rainbowPulse {
       0%, 100% {
-        /* 시작과 끝은 비교적 약한 그림자 (빨간 계열) */
         box-shadow: 0 0 10px 2px rgba(255, 0, 0, 0.8);
       }
       50% {
-        /* 중간에는 그림자 크기와 강도를 증가 (보라 계열) */
         box-shadow: 0 0 20px 4px rgba(238, 130, 238, 1);
       }
     }
-
     .magic-ultimate {
       background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0) 70%) !important;
       animation: ultimateGlow 2s infinite;
@@ -332,7 +292,6 @@
       50% { transform: scale(1.05); }
       100% { transform: scale(1); }
     }
-    /* 기본 마법: 간단한 푸른빛 글로우 효과 */
     .magic-basic {
       animation: basicGlow 2s infinite;
     }
@@ -341,8 +300,6 @@
       50% { box-shadow: 0 0 15px rgba(0, 255, 255, 1); }
       100% { box-shadow: 0 0 5px rgba(0, 255, 255, 0.5); }
     }
-
-    /* --- 추가: 모바일 화면에서 수정/삭제 (액션) 버튼 오른쪽 정렬 --- */
     @media (max-width: 576px) {
       .action-buttons {
         margin-left: auto;
@@ -359,12 +316,9 @@
     <div class="container">
       <span class="navbar-brand fw-bold">뉴프로</span>
       <div class="ms-auto">
-        <!-- 로딩중 상태를 보여줄 임시 버튼 (처음에만 보임) -->
         <button class="btn btn-outline-light me-2 auth-loading" id="authLoadingBtn">
           로딩중...
         </button>
-
-        <!-- 로그인/회원가입/로그아웃 버튼들 (초기에 숨김) -->
         <button class="btn btn-outline-light me-2 d-none" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
           로그인
         </button>
@@ -386,13 +340,10 @@
 
   <!-- 메인 컨테이너 -->
   <div class="container mb-5">
-    <!-- 글 목록 카드 상단에 "글쓰기" 버튼 + "계급 안내", "랭킹 보기" 버튼 (로그인 시에만 표시) -->
     <div class="d-flex justify-content-end mb-2">
-      <!-- 더 화려한 버튼 (계급 안내) -->
       <button class="btn shining-btn me-2" id="showRankBtn" data-bs-toggle="modal" data-bs-target="#rankModal">
         내 계급 보기
       </button>
-      <!-- 새로 추가한 랭킹 보기 버튼 -->
       <button class="btn btn-outline-info me-2" id="showRankingBtn" data-bs-toggle="modal" data-bs-target="#rankingModal">
         랭킹
       </button>
@@ -407,16 +358,10 @@
         <h5 class="card-title">새 글 작성</h5>
         <div class="mb-3">
           <label for="postTitle" class="form-label">제목</label>
-          <input
-            type="text"
-            class="form-control"
-            id="postTitle"
-            placeholder="제목을 입력하세요"
-          />
+          <input type="text" class="form-control" id="postTitle" placeholder="제목을 입력하세요" />
         </div>
         <div class="mb-3">
           <label for="editor" class="form-label">내용</label>
-          <!-- Toast UI Editor 삽입 영역 -->
           <div id="editor"></div>
         </div>
         <button class="btn btn-primary mt-2" id="savePostBtn">글 저장하기</button>
@@ -428,82 +373,46 @@
       <div class="card-body">
         <h4 class="card-title">글 목록</h4>
         <div id="postList" class="mt-3">
-          <!-- 처음 5개 불러오기 -> 스크롤 시 다음 5개 ... -->
+          <!-- 게시글 목록이 여기서 로드됩니다. -->
         </div>
       </div>
     </div>
   </div>
 
   <!-- [수정 모달] -->
-  <div
-    class="modal fade"
-    id="editModal"
-    tabindex="-1"
-    aria-labelledby="editModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="editModalLabel">글 수정</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <input type="hidden" id="editPostId" />
           <div class="mb-3">
             <label for="editTitle" class="form-label">제목</label>
-            <input
-              type="text"
-              class="form-control"
-              id="editTitle"
-              placeholder="제목을 입력하세요"
-            />
+            <input type="text" class="form-control" id="editTitle" placeholder="제목을 입력하세요" />
           </div>
           <div class="mb-3">
             <label for="editContentEditor" class="form-label">내용</label>
-            <!-- Toast UI Editor 수정용 영역 -->
             <div id="editContentEditor"></div>
           </div>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            닫기
-          </button>
-          <button type="button" class="btn btn-success" id="updatePostBtn">
-            수정하기
-          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+          <button type="button" class="btn btn-success" id="updatePostBtn">수정하기</button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- [댓글 삭제 확인 모달] -->
-  <div
-    class="modal fade"
-    id="deleteCommentModal"
-    tabindex="-1"
-    aria-labelledby="deleteCommentModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="deleteCommentModal" tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="deleteCommentModalLabel">댓글 삭제</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <p>해당 댓글을 삭제하시겠습니까?</p>
@@ -511,79 +420,39 @@
           <input type="hidden" id="deleteCommentId" />
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            닫기
-          </button>
-          <button type="button" class="btn btn-danger" id="confirmDeleteCommentBtn">
-            삭제
-          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteCommentBtn">삭제</button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- 회원가입 모달 -->
-  <div
-    class="modal fade"
-    id="signupModal"
-    tabindex="-1"
-    aria-labelledby="signupModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <form id="signupForm">
           <div class="modal-header">
             <h5 class="modal-title" id="signupModalLabel">회원가입</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="mb-3">
               <label for="signupEmail" class="form-label">이메일</label>
-              <input
-                type="email"
-                class="form-control"
-                id="signupEmail"
-                required
-              />
+              <input type="email" class="form-control" id="signupEmail" required />
               <small class="text-danger">올바른 이메일을 입력하지 않으면, 추후 비밀번호 복구가 불가능합니다.</small>
             </div>
             <div class="mb-3">
               <label for="signupPassword" class="form-label">비밀번호</label>
-              <input
-                type="password"
-                class="form-control"
-                id="signupPassword"
-                required
-              />
+              <input type="password" class="form-control" id="signupPassword" required />
             </div>
             <div class="mb-3">
               <label for="signupNickname" class="form-label">닉네임</label>
-              <input
-                type="text"
-                class="form-control"
-                id="signupNickname"
-                required
-              />
+              <input type="text" class="form-control" id="signupNickname" required />
             </div>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              닫기
-            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
             <button type="submit" class="btn btn-success">회원가입</button>
           </div>
         </form>
@@ -592,57 +461,29 @@
   </div>
 
   <!-- 로그인 모달 -->
-  <div
-    class="modal fade"
-    id="loginModal"
-    tabindex="-1"
-    aria-labelledby="loginModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <form id="loginForm">
           <div class="modal-header">
             <h5 class="modal-title" id="loginModalLabel">로그인</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="mb-3">
               <label for="loginEmail" class="form-label">이메일</label>
-              <input
-                type="email"
-                class="form-control"
-                id="loginEmail"
-                required
-              />
+              <input type="email" class="form-control" id="loginEmail" required />
             </div>
             <div class="mb-3">
               <label for="loginPassword" class="form-label">비밀번호</label>
-              <input
-                type="password"
-                class="form-control"
-                id="loginPassword"
-                required
-              />
+              <input type="password" class="form-control" id="loginPassword" required />
             </div>
-            <!-- 추가: 비밀번호 찾기 버튼 (btn-link, 작게) -->
             <div class="text-end">
               <button type="button" id="resetPasswordBtn" class="btn btn-link btn-sm">비밀번호 찾기</button>
             </div>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              닫기
-            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
             <button type="submit" class="btn btn-primary">로그인</button>
           </div>
         </form>
@@ -651,51 +492,36 @@
   </div>
 
   <!-- [계급 안내 모달] -->
-  <div
-  class="modal fade"
-  id="rankModal"
-  tabindex="-1"
-  aria-labelledby="rankModalLabel"
-  aria-hidden="true"
-  >
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="rankModalLabel">내 계급 안내</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <!-- 현재 내 점수, 계급, 사용 가능한 마법 -->
-        <p><strong>내 점수</strong>: <span id="myScore">로딩중...</span></p>
-        <p><strong>내 계급</strong>: <span id="myRank">로딩중...</span></p>
-        <hr/>
-        <!-- 앞으로 배울 마법 (각 계급별로 획득할 마법 목록 표시) -->
-        <h6>계급 기준</h6>
-        <ul style="font-size:0.95rem;" id="futureMagicList">
-          <!-- JavaScript에서 동적으로 채워집니다. -->
-        </ul>
-        <small class="text-muted">
-          행동별 점수: 글쓰기 +50, 댓글 +20, 좋아요 +10, 싫어요 -5
-        </small>
-        <!-- (회원탈퇴 등 다른 내용이 있다면 추가) -->
-        <div class="mt-3">
-          <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#accountCollapse" aria-expanded="false" aria-controls="accountCollapse">
-            계정 관리
-          </button>
-          <div class="collapse mt-2" id="accountCollapse">
-            <div class="card card-body">
-              <button id="deleteAccountBtn" class="btn btn-danger btn-sm">회원탈퇴</button>
+  <div class="modal fade" id="rankModal" tabindex="-1" aria-labelledby="rankModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="rankModalLabel">내 계급 안내</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>내 점수</strong>: <span id="myScore">로딩중...</span></p>
+          <p><strong>내 계급</strong>: <span id="myRank">로딩중...</span></p>
+          <hr/>
+          <h6>계급 기준</h6>
+          <ul style="font-size:0.95rem;" id="futureMagicList">
+          </ul>
+          <small class="text-muted">
+            행동별 점수: 글쓰기 +50, 댓글 +20, 좋아요 +10, 싫어요 -5
+          </small>
+          <div class="mt-3">
+            <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#accountCollapse" aria-expanded="false" aria-controls="accountCollapse">
+              계정 관리
+            </button>
+            <div class="collapse mt-2" id="accountCollapse">
+              <div class="card card-body">
+                <button id="deleteAccountBtn" class="btn btn-danger btn-sm">회원탈퇴</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
   </div>
 
   <!-- [랭킹 모달] -->
@@ -707,7 +533,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="rankingContainer" style="max-height: 70vh; overflow-y: auto;">
-          <!-- Firestore users 랭킹 항목들이 무한 스크롤로 로드됩니다 -->
         </div>
       </div>
     </div>
@@ -724,34 +549,21 @@
         <div class="modal-body">
           <input type="hidden" id="magicPostId" />
           <div id="magicInfo">
-            <!-- 마법 정보가 여기에 표시됩니다. -->
           </div>
         </div>
         <div class="modal-footer" id="magicModalFooter">
-          <!-- 버튼은 상황에 따라 동적으로 생성됩니다. -->
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Toast (중앙 하단, 어두운 배경+밝은 글자) -->
+  <!-- Toast -->
   <div class="toast-container">
-    <div
-      id="liveToast"
-      class="toast align-items-center dark-bg"
-      role="alert"
-      aria-live="assertive"
-      aria-atomic="true"
-    >
+    <div id="liveToast" class="toast align-items-center dark-bg" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
         <strong class="me-auto" id="toastTitle">알림</strong>
         <small class="text-muted" id="toastTime"></small>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="toast"
-          aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body" id="toastMessage">
         메시지 내용
@@ -759,58 +571,17 @@
     </div>
   </div>
 
-  <!-- canvas-confetti 라이브러리 (폭죽/컨페티 효과) -->
+  <!-- canvas-confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <!-- Bootstrap JS (Popper 포함) -->
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Firebase ES Modules (App, Auth, Firestore, AppCheck) -->
+  <!-- Firebase ES Modules -->
   <script type="module">
-    /********************************
-     * Firebase Import & Init
-     ********************************/
-    import {
-      initializeApp
-    } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js';
-
-    import {
-      initializeAppCheck,
-      ReCaptchaV3Provider
-    } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app-check.js';
-
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      signOut,
-      onAuthStateChanged,
-      sendPasswordResetEmail,
-      deleteUser
-    } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
-
-    import {
-      getFirestore,
-      collection,
-      doc,
-      setDoc,
-      getDoc,
-      addDoc,
-      updateDoc,
-      deleteDoc,
-      runTransaction,
-      serverTimestamp,
-      arrayUnion,
-      arrayRemove,
-      where,
-      query,
-      orderBy,
-      getDocs,
-      startAfter,
-      limit,
-      onSnapshot,
-      Timestamp,
-      deleteField
-    } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js';
+    import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app-check.js';
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
+    import { getFirestore, collection, doc, setDoc, getDoc, addDoc, updateDoc, deleteDoc, runTransaction, serverTimestamp, arrayUnion, arrayRemove, where, query, orderBy, getDocs, startAfter, limit, onSnapshot, Timestamp, deleteField } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
@@ -822,27 +593,18 @@
     };
 
     const app = initializeApp(firebaseConfig);
-
     initializeAppCheck(app, {
       provider: new ReCaptchaV3Provider('6LcKb8QqAAAAAKReI1hvkatzxiNvquuoryudyXi4'),
       isTokenAutoRefreshEnabled: true
     });
-
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    /********************************
-     * 전역 사용자 캐시 객체
-     ********************************/
-    const userCache = {}; // uid를 key로 사용자 데이터를 캐싱
+    const userCache = {};
 
-    // 기존 fetchUserDoc 함수 수정 – 캐시에 데이터가 있으면 Firestore 조회 없이 반환
     async function fetchUserDoc(uid) {
       if (userCache[uid]) {
-        return {
-          exists: () => true,
-          data: () => userCache[uid]
-        };
+        return { exists: () => true, data: () => userCache[uid] };
       }
       const userRef = doc(db, 'users', uid);
       const snap = await getDoc(userRef);
@@ -852,9 +614,6 @@
       return snap;
     }
 
-    /********************************
-     * DOMPurify 등 초기화 및 Toast UI Editor 초기화
-     ********************************/
     const { Editor } = toastui;
     const { codeSyntaxHighlight } = Editor.plugin;
 
@@ -872,28 +631,20 @@
       plugins: [codeSyntaxHighlight]
     });
 
-    /********************************
-     * 날짜/시간 포맷
-     ********************************/
     function formatDateTime(timestamp) {
       if (!timestamp || !timestamp.seconds) return '';
       const date = new Date(timestamp.seconds * 1000);
-
       let year = date.getFullYear();
       let month = date.getMonth() + 1;
       let day = date.getDate();
-
       let hours = date.getHours();
       let minutes = date.getMinutes();
       let seconds = date.getSeconds();
-
       const ampm = hours >= 12 ? 'PM' : 'AM';
       hours = hours % 12;
       hours = hours === 0 ? 12 : hours;
-
       minutes = minutes.toString().padStart(2, '0');
       seconds = seconds.toString().padStart(2, '0');
-
       return `${year}.${month}.${day}, ${hours}:${minutes}:${seconds} ${ampm}`;
     }
 
@@ -901,114 +652,74 @@
       let year = date.getFullYear();
       let month = date.getMonth() + 1;
       let day = date.getDate();
-
       let hours = date.getHours();
       let minutes = date.getMinutes();
       let seconds = date.getSeconds();
-
       const ampm = hours >= 12 ? 'PM' : 'AM';
       hours = hours % 12;
       hours = hours === 0 ? 12 : hours;
-
       minutes = minutes.toString().padStart(2, '0');
       seconds = seconds.toString().padStart(2, '0');
-
       return `${year}.${month}.${day}, ${hours}:${minutes}:${seconds} ${ampm}`;
     }
 
-    /********************************
-     * Toast 함수
-     ********************************/
     function showToast(message, title = '알림') {
       const toastEl = document.getElementById('liveToast');
       const toastTitle = document.getElementById('toastTitle');
       const toastMessage = document.getElementById('toastMessage');
       const toastTime = document.getElementById('toastTime');
-
       toastTitle.textContent = title;
       toastMessage.textContent = message;
       toastTime.textContent = formatDateForToast(new Date());
-
       const bsToast = new bootstrap.Toast(toastEl);
       bsToast.show();
     }
 
-    /********************************
-     * DOM 요소 참조
-     ********************************/
     const authLoadingBtn = document.getElementById('authLoadingBtn');
     const loginBtn = document.getElementById('loginBtn');
     const signupBtn = document.getElementById('signupBtn');
     const logoutBtn = document.getElementById('logoutBtn');
-
     const togglePostFormBtn = document.getElementById('togglePostFormBtn');
     const showRankBtn = document.getElementById('showRankBtn'); 
-
     const postCard = document.getElementById('postCard');
     const savePostBtn = document.getElementById('savePostBtn');
     const postList = document.getElementById('postList');
-
-    // 회원가입
     const signupForm = document.getElementById('signupForm');
     const signupEmail = document.getElementById('signupEmail');
     const signupPassword = document.getElementById('signupPassword');
     const signupNickname = document.getElementById('signupNickname');
-
-    // 로그인
     const loginForm = document.getElementById('loginForm');
     const loginEmail = document.getElementById('loginEmail');
     const loginPassword = document.getElementById('loginPassword');
-    // 비밀번호 찾기 버튼
     const resetPasswordBtn = document.getElementById('resetPasswordBtn');
-
-    // 글 작성
     const postTitle = document.getElementById('postTitle');
-
-    // 수정 모달
     const editModalEl = document.getElementById('editModal');
     const editModal = new bootstrap.Modal(editModalEl);
     const editPostId = document.getElementById('editPostId');
     const editTitle = document.getElementById('editTitle');
     const updatePostBtn = document.getElementById('updatePostBtn');
-
-    // 댓글 삭제 모달
     const deleteCommentModalEl = document.getElementById('deleteCommentModal');
     const deleteCommentModal = new bootstrap.Modal(deleteCommentModalEl);
     const deleteCommentPostId = document.getElementById('deleteCommentPostId');
     const deleteCommentId = document.getElementById('deleteCommentId');
     const confirmDeleteCommentBtn = document.getElementById('confirmDeleteCommentBtn');
-
-    // 계급 안내 모달
     const rankModalEl = document.getElementById('rankModal');
     const myScoreEl = document.getElementById('myScore');
     const myRankEl = document.getElementById('myRank');
-    // 회원탈퇴 버튼 (계정 관리 영역 내)
     const deleteAccountBtn = document.getElementById('deleteAccountBtn');
-
     const noticeContainer = document.getElementById('noticeContainer');
 
-    /********************************
-     * 전역 상태
-     ********************************/
     let currentNickname = null;
     let currentScore = 0;
-
-    // **댓글 리스너 중복 등록 방지를 위한 전역 객체**
     let commentUnsubscribers = {};
 
-    // <---- [추가] 기존 게시글 DOM과 연결된 댓글 리스너 해제를 위한 함수
     function clearPostList() {
-      // 등록된 모든 댓글 리스너 해제
       Object.values(commentUnsubscribers).forEach(unsub => unsub());
       commentUnsubscribers = {};
       postList.innerHTML = '';
       lastVisible = null;
     }
-    // ---->
 
-    /********************************
-     * 계급(Rank) 계산 함수
-     ********************************/
     function getRankByScore(score) {
       if (score >= 50000) {
         return { name: '이터널', icon: '🌌' };
@@ -1029,7 +740,6 @@
       }
     }
 
-    // 계급에 따라 사용 가능한 마법 종류 반환
     function getAvailableMagicTypes(rankName) {
       switch(rankName) {
           case '브론즈': return ['magic-basic'];
@@ -1044,7 +754,6 @@
       }
     }
 
-    // 마법 코드에 따른 표시명 매핑
     const magicDisplayNames = {
       'magic-basic': '기본 마법',
       'magic-shimmer': '반짝이는 마법',
@@ -1056,17 +765,14 @@
       'magic-ultimate': '궁극의 마법'
     };
 
-    // HTML 엔티티를 디코딩하는 함수
     function decodeHtml(html) {
       const txt = document.createElement("textarea");
       txt.innerHTML = html;
       return txt.value;
     }
 
-    // "3h20m10s" 또는 "90" 같은 문자열을 초 단위의 숫자로 변환하는 함수
     function parseTimeParameter(timeStr) {
       let seconds = 0;
-      // h, m, s 각각 추출
       const hMatch = timeStr.match(/(\d+)h/);
       if (hMatch) {
         seconds += parseInt(hMatch[1], 10) * 3600;
@@ -1079,31 +785,24 @@
       if (sMatch) {
         seconds += parseInt(sMatch[1], 10);
       }
-      // h, m, s가 없으면 숫자만 있는 경우 (초로 간주)
       if (!hMatch && !mMatch && !sMatch && /^\d+$/.test(timeStr)) {
         seconds = parseInt(timeStr, 10);
       }
       return seconds;
     }
 
-    // 유튜브 링크를 찾아서 iframe embed 코드로 변환하는 함수
     function convertYouTubeLinks(text) {
-      // 텍스트에 이미 iframe 태그(또는 인코딩된 iframe)가 포함되어 있다면 아무 작업도 하지 않고 원본을 반환합니다.
       if ( /(&lt;iframe|<iframe)/i.test(text) ) {
         return text;
       }
-
-      // 그렇지 않은 경우에만 HTML 엔티티 디코딩 후 youtube URL을 iframe으로 변환합니다.
       const decodedText = decodeHtml(text);
       return decodedText.replace(
         /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/watch\?v=)([A-Za-z0-9_-]{11})([^<\s]*)/g,
         (match, videoId, params) => {
           let startParam = '';
           if (params) {
-            // params의 맨 앞 ? 또는 & 를 제거한 후 파라미터들을 파싱합니다.
             const queryString = params.replace(/^[\?&]/, '');
             const searchParams = new URLSearchParams(queryString);
-            // "t" 파라미터 (유튜브의 시작시간) 처리
             const t = searchParams.get('t');
             if (t) {
               const seconds = parseTimeParameter(t);
@@ -1115,61 +814,38 @@
       );
     }
 
-    /********************************
-     * URL 링크 텍스트를 앵커 태그로 변환 (댓글 등)
-     ********************************/
     function convertLinks(text) {
-      // URL을 링크로 변환
       return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
     }
 
-    /********************************
-     * Active 공지사항 로드 (실시간)
-     ********************************/
     async function fetchActiveNotices() {
-      // 현재 클라이언트 시각 기준 (단순화)
       const now = new Date();
-
-      // 공지 조건: startDate <= now <= endDate
       const q = query(
         collection(db, 'notices'),
         where('startDate', '<=', now),
         where('endDate', '>=', now),
         orderBy('startDate', 'desc')
       );
-
       let celebrating = false;
       const snapshot = await getDocs(q);
-      // 기존 공지를 모두 제거
       noticeContainer.innerHTML = '';
-
       for(const docSnap of snapshot.docs) {
         const data = docSnap.data();
-        // 공지 배너 DOM 생성
         const bannerEl = document.createElement('div');
         bannerEl.classList.add('notice-banner');
-
-        // 만약 HTML 내용이라면 DOMPurify로 정제 후 innerHTML 사용 가능
         bannerEl.textContent = data.content;
         if(data.content.includes('🎉')) {
-          // 공지사항 배너 클릭 시 폭죽 애니메이션 실행
           bannerEl.addEventListener('click', launchFireworks);
           celebrating = true;
         }  
-
         noticeContainer.appendChild(bannerEl);
       }
-
       if(celebrating) {
         launchFireworks();
       }
     }
 
-    /********************************
-     * 사용자 정보(userDoc) 가져오기
-     ********************************/
     async function fetchUserDocWithoutCache(uid) {
-      // 기존 함수와 구분하여 캐시를 사용하지 않는 함수 (필요 시)
       const userRef = doc(db, 'users', uid);
       return await getDoc(userRef);
     }
@@ -1186,20 +862,15 @@
       return { nickname: null, score: 0 };
     }
 
-    /********************************
-     * 회원가입
-     ********************************/
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const emailVal = signupEmail.value.trim();
       const pwVal = signupPassword.value.trim();
       const nickVal = signupNickname.value.trim();
-
       if (!emailVal || !pwVal || !nickVal) {
         showToast('모든 항목을 입력하세요.', '회원가입 실패');
         return;
       }
-
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, emailVal, pwVal);
         const user = userCredential.user;
@@ -1216,14 +887,10 @@
       }
     });
 
-    /********************************
-     * 로그인
-     ********************************/
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const emailVal = loginEmail.value.trim();
       const pwVal = loginPassword.value.trim();
-
       if (!emailVal || !pwVal) {
         showToast('이메일/비밀번호를 입력하세요.', '로그인 실패');
         return;
@@ -1238,7 +905,6 @@
       }
     });
 
-    // 비밀번호 찾기 버튼 이벤트
     resetPasswordBtn.addEventListener('click', async () => {
       const emailVal = loginEmail.value.trim();
       if (!emailVal) {
@@ -1255,9 +921,6 @@
       }
     });
 
-    /********************************
-     * 로그아웃
-     ********************************/
     logoutBtn.addEventListener('click', async () => {
       try {
         await signOut(auth);
@@ -1268,20 +931,13 @@
       }
     });
 
-    /********************************
-     * Auth 상태 감지 -> UI 업데이트
-     ********************************/
     onAuthStateChanged(auth, async (user) => {
-      // 로딩 버튼은 숨김
       authLoadingBtn.classList.add('d-none');
-
       if (user) {
         loginBtn.classList.add('d-none');
         signupBtn.classList.add('d-none');
         logoutBtn.classList.remove('d-none');
         togglePostFormBtn.classList.remove('d-none');
-
-        // 닉네임 & 점수 로드
         const userData = await fetchUserNicknameAndScore(user.uid);
         currentNickname = userData.nickname;
         currentScore = userData.score;
@@ -1291,12 +947,9 @@
         logoutBtn.classList.add('d-none');
         togglePostFormBtn.classList.add('d-none');
         postCard.classList.add('d-none');
-
         currentNickname = null;
         currentScore = 0;
       }
-
-      // **** 로그인 상태에 따라 댓글 입력폼 UI 갱신 ****
       const commentForms = document.querySelectorAll('[id^="commentForm-"]');
       if (user) {
         commentForms.forEach(form => form.classList.remove('d-none'));
@@ -1305,25 +958,19 @@
       }
     });
 
-    /********************************
-     * 글쓰기 버튼 토글
-     ********************************/
     togglePostFormBtn.addEventListener('click', () => {
       postCard.classList.toggle('d-none');
     });
 
     rankModalEl.addEventListener('show.bs.modal', async () => {
       const futureMagicListEl = document.getElementById('futureMagicList');
-
       if (!auth.currentUser) {
         myScoreEl.textContent = '(로그인 필요)';
         myRankEl.textContent = '-';
       } else {
-        // 강제로 재조회: 캐시를 사용하지 않는 함수 호출하여 최신 사용자 정보를 가져옴
         const snap = await fetchUserDocWithoutCache(auth.currentUser.uid);
         if (snap.exists()) {
           const data = snap.data();
-          // 사용자 캐시 갱신
           userCache[auth.currentUser.uid] = data;
           currentScore = data.score || 0;
           currentNickname = data.nickname || null;
@@ -1332,8 +979,6 @@
         const rankInfo = getRankByScore(currentScore);
         myRankEl.textContent = `${rankInfo.name} ${rankInfo.icon}`;
       }
-
-      // 앞으로 배울 마법 목록 – 계급 기준에 따른 각 단계별 마법
       const lastMagicTypes = getAvailableMagicTypes('이터널');
       const rankMagicMapping = [
         { rank: '브론즈', icon: '🥉', range: '0~99', },
@@ -1347,8 +992,6 @@
       ];
       let futureMagicHTML = '';
       rankMagicMapping.forEach((mapping, i) => {
-        // mapping.magic는 예를 들어 ['magic-basic', 'magic-shimmer', ...] 이므로,
-        // magicDisplayNames를 사용하여 사용자에게 보여질 이름으로 변환합니다.
         mapping.magic = [ lastMagicTypes[i] ];
         const magicList = mapping.magic
           .map(type => magicDisplayNames[type] || type)
@@ -1358,10 +1001,241 @@
       futureMagicListEl.innerHTML = futureMagicHTML;
     });
 
+    // ─────────────────────────────────────
+    // [추가] 댓글의 댓글(답글) 및 댓글의 좋아요/싫어요 기능 구현
+    // ─────────────────────────────────────
 
-    /********************************
-     * 글 작성 (DOMPurify 적용 및 유튜브 링크 임베디드 변환)
-     ********************************/
+    // 댓글 등록 함수 (부모 댓글 ID 선택적 전달)
+    async function addComment(postId, content, parentCommentId = null) {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      const sanitizedContent = DOMPurify.sanitize(content);
+      if (!sanitizedContent.trim()) {
+        showToast('댓글 내용을 입력하세요.', '오류');
+        return;
+      }
+      try {
+        await runTransaction(db, async (transaction) => {
+          const userRef = doc(db, 'users', user.uid);
+          const userSnap = await transaction.get(userRef);
+          let oldScore = 0;
+          if (userSnap.exists()) {
+            oldScore = userSnap.data().score || 0;
+          }
+          const cmtRef = doc(collection(db, 'posts', postId, 'comments'));
+          transaction.set(cmtRef, {
+            uid: user.uid,
+            nickname: currentNickname,
+            content: sanitizedContent,
+            createdAt: serverTimestamp(),
+            parentCommentId: parentCommentId || null,
+            likes: [],
+            dislikes: []
+          });
+          transaction.update(userRef, {
+            score: oldScore + 20
+          });
+        });
+        showToast('댓글이 등록되었습니다.', '댓글 작성');
+      } catch (err) {
+        showToast(err.message, '댓글 등록 실패');
+      }
+    }
+
+    // 댓글 좋아요/싫어요 함수
+    let commentLikeDislikeInProgress = new Set();
+
+    async function toggleCommentLike(postId, commentId) {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      const key = `comment-${postId}-${commentId}`;
+      if (commentLikeDislikeInProgress.has(key)) return;
+      commentLikeDislikeInProgress.add(key);
+      try {
+        await runTransaction(db, async (transaction) => {
+          const commentRef = doc(db, 'posts', postId, 'comments', commentId);
+          const commentSnap = await transaction.get(commentRef);
+          if (!commentSnap.exists()) return;
+          const data = commentSnap.data();
+          const likes = data.likes || [];
+          const dislikes = data.dislikes || [];
+          let scoreDiff = 0;
+          const alreadyLiked = likes.includes(user.uid);
+          const alreadyDisliked = dislikes.includes(user.uid);
+          if (alreadyLiked) {
+            transaction.update(commentRef, {
+              likes: arrayRemove(user.uid)
+            });
+            scoreDiff -= 5;
+          } else {
+            transaction.update(commentRef, {
+              likes: arrayUnion(user.uid)
+            });
+            if (alreadyDisliked) {
+              transaction.update(commentRef, {
+                dislikes: arrayRemove(user.uid)
+              });
+              scoreDiff += 3; 
+            }
+            scoreDiff += 5; 
+          }
+        });
+      } catch (err) {
+        showToast(err.message, '오류');
+      } finally {
+        commentLikeDislikeInProgress.delete(key);
+      }
+    }
+
+    async function toggleCommentDislike(postId, commentId) {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      const key = `comment-${postId}-${commentId}`;
+      if (commentLikeDislikeInProgress.has(key)) return;
+      commentLikeDislikeInProgress.add(key);
+      try {
+        await runTransaction(db, async (transaction) => {
+          const commentRef = doc(db, 'posts', postId, 'comments', commentId);
+          const commentSnap = await transaction.get(commentRef);
+          if (!commentSnap.exists()) return;
+          const data = commentSnap.data();
+          const likes = data.likes || [];
+          const dislikes = data.dislikes || [];
+          let scoreDiff = 0;
+          const alreadyLiked = likes.includes(user.uid);
+          const alreadyDisliked = dislikes.includes(user.uid);
+          if (alreadyDisliked) {
+            transaction.update(commentRef, {
+              dislikes: arrayRemove(user.uid)
+            });
+            scoreDiff += 3;
+          } else {
+            transaction.update(commentRef, {
+              dislikes: arrayUnion(user.uid)
+            });
+            if (alreadyLiked) {
+              transaction.update(commentRef, {
+                likes: arrayRemove(user.uid)
+              });
+              scoreDiff -= 5; 
+            }
+            scoreDiff -= 3;  
+          }
+        });
+      } catch (err) {
+        showToast(err.message, '오류');
+      } finally {
+        commentLikeDislikeInProgress.delete(key);
+      }
+    }
+
+    // 댓글 렌더링 함수 (계층구조 처리)
+    async function renderComments(postId, comments, containerEl) {
+      containerEl.innerHTML = '';
+      const header = document.getElementById(`commentHeader-${postId}`);
+      if (comments.length === 0) {
+        if (header) header.style.display = 'none';
+      } else {
+        if (header) header.style.display = '';
+      }
+      const commentMap = {};
+      comments.forEach(c => {
+        c.children = [];
+        commentMap[c.commentId] = c;
+      });
+      const roots = [];
+      comments.forEach(c => {
+        if (c.parentCommentId && commentMap[c.parentCommentId]) {
+          commentMap[c.parentCommentId].children.push(c);
+        } else {
+          roots.push(c);
+        }
+      });
+      function renderCommentNode(comment, indent = 0) {
+        let rankIcon = '';
+        let commentNickname = comment.nickname || '익명';
+        const div = document.createElement('div');
+        div.className = 'comment-item';
+        div.style.marginLeft = indent + 'rem';
+        const safeContent = DOMPurify.sanitize(comment.content ?? '');
+        const finalContent = convertLinks(safeContent);
+        const dateStr = formatDateTime(comment.createdAt);
+        div.innerHTML = `
+          <div class="fw-bold">
+            ${commentNickname} <span style="cursor:pointer;" id="commentRankIcon-${postId}-${comment.commentId}">${rankIcon}</span>
+          </div>
+          <div class="small text-muted mb-1">
+            ${dateStr}
+          </div>
+          <div class="keep-line-breaks">${finalContent}</div>
+          <div class="mt-1 d-flex align-items-center gap-2">
+            <button class="btn btn-sm btn-outline-primary" id="commentLikeBtn-${postId}-${comment.commentId}">👍</button>
+            <span id="commentLikeCount-${postId}-${comment.commentId}">${comment.likes ? comment.likes.length : 0}</span>
+            <button class="btn btn-sm btn-outline-danger" id="commentDislikeBtn-${postId}-${comment.commentId}">👎</button>
+            <span id="commentDislikeCount-${postId}-${comment.commentId}">${comment.dislikes ? comment.dislikes.length : 0}</span>
+            <button class="btn btn-sm btn-link" id="replyBtn-${postId}-${comment.commentId}">답글</button>
+          </div>
+          <div class="reply-form d-none" id="replyForm-${postId}-${comment.commentId}">
+            <textarea class="form-control mb-2" rows="2" placeholder="댓글을 입력하세요" id="replyInput-${postId}-${comment.commentId}"></textarea>
+            <button class="btn btn-secondary btn-sm" id="replySubmitBtn-${postId}-${comment.commentId}">댓글 달기</button>
+          </div>
+        `;
+        const commentLikeBtn = div.querySelector(`#commentLikeBtn-${postId}-${comment.commentId}`);
+        const commentDislikeBtn = div.querySelector(`#commentDislikeBtn-${postId}-${comment.commentId}`);
+        commentLikeBtn.addEventListener('click', () => toggleCommentLike(postId, comment.commentId));
+        commentDislikeBtn.addEventListener('click', () => toggleCommentDislike(postId, comment.commentId));
+        const replyBtn = div.querySelector(`#replyBtn-${postId}-${comment.commentId}`);
+        const replyForm = div.querySelector(`#replyForm-${postId}-${comment.commentId}`);
+        replyBtn.addEventListener('click', () => {
+          replyForm.classList.toggle('d-none');
+        });
+        const replySubmitBtn = div.querySelector(`#replySubmitBtn-${postId}-${comment.commentId}`);
+        replySubmitBtn.addEventListener('click', () => {
+          const replyInput = div.querySelector(`#replyInput-${postId}-${comment.commentId}`);
+          const text = replyInput.value.trim();
+          if(text) {
+            addComment(postId, text, comment.commentId);
+            replyInput.value = '';
+            replyForm.classList.add('d-none');
+          }
+        });
+        const rankIconEl = div.querySelector(`#commentRankIcon-${postId}-${comment.commentId}`);
+        if (comment.uid) {
+          fetchUserDoc(comment.uid).then(snap => {
+            if (snap.exists()) {
+              const userData = snap.data();
+              const userScore = userData.score || 0;
+              const rankInfo = getRankByScore(userScore);
+              rankIconEl.textContent = rankInfo.icon;
+              rankIconEl.addEventListener('click', () => {
+                showToast(`계급: ${rankInfo.name} (${userScore}점)`, userData.nickname || '익명');
+              });
+            }
+          });
+        }
+        if(comment.children && comment.children.length > 0) {
+          comment.children.forEach(child => {
+            const childDiv = renderCommentNode(child, indent + 2);
+            div.appendChild(childDiv);
+          });
+        }
+        return div;
+      }
+      roots.forEach(comment => {
+        const commentNode = renderCommentNode(comment, 0);
+        containerEl.appendChild(commentNode);
+      });
+    }
+
     savePostBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
       if (!user) {
@@ -1372,13 +1246,9 @@
         showToast('닉네임을 불러오지 못했습니다.', '오류');
         return;
       }
-
       const titleVal = DOMPurify.sanitize(postTitle.value.trim());
-      // 원본 Toast UI Editor HTML
       const unsafeContent = createEditor ? createEditor.getHTML() : '';
-      // DOMPurify로 정제
       const contentVal = DOMPurify.sanitize(unsafeContent);
-
       if (!titleVal) {
         showToast('제목을 입력하세요.', '오류');
         return;
@@ -1387,46 +1257,34 @@
         showToast('내용을 입력하세요.', '오류');
         return;
       }
-
       try {
         await runTransaction(db, async (transaction) => {
-          // 1) 먼저 userRef 읽기
           const userRef = doc(db, 'users', user.uid);
           const userSnap = await transaction.get(userRef);
-
           let oldScore = 0;
           if (userSnap.exists()) {
             oldScore = userSnap.data().score || 0;
           }
-
-          // 2) 새 게시글 쓰기
           const newPostRef = doc(collection(db, 'posts'));
           transaction.set(newPostRef, {
             uid: user.uid,
             nickname: currentNickname,
             title: titleVal,
-            content: contentVal, // 이미 Purify된 HTML
+            content: contentVal,
             createdAt: serverTimestamp(),
             likes: [],
             dislikes: []
           });
-
-          // 3) 점수 +50
           transaction.update(userRef, {
             score: oldScore + 50
           });
         });
-
         showToast('글이 등록되었습니다.', '글 작성');
         postTitle.value = '';
         createEditor.setHTML('');
         postCard.classList.add('d-none');
-
-        // 목록 리셋 & 다시 가져오기 (기존 댓글 리스너 해제)
         clearPostList();
         await loadMorePosts();
-
-        // 내 점수 갱신
         const userData = await fetchUserNicknameAndScore(user.uid);
         currentScore = userData.score;
       } catch (err) {
@@ -1434,9 +1292,6 @@
       }
     });
 
-    /********************************
-     * 글 수정 모달 열기
-     ********************************/
     async function openEditModal(postDoc) {
       editPostId.value = postDoc.id;
       editTitle.value = postDoc.data().title;
@@ -1446,9 +1301,6 @@
       editModal.show();
     }
 
-    /********************************
-     * 글 수정 시 (DOMPurify 적용)
-     ********************************/
     updatePostBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
       if (!user) {
@@ -1457,17 +1309,12 @@
       }
       const docId = editPostId.value;
       const newTitle = editTitle.value.trim();
-
-      // 원본 수정내용
       const unsafeContent = editEditor ? editEditor.getHTML() : '';
-      // Purify
       const newContent = DOMPurify.sanitize(unsafeContent);
-
       if (!newTitle || !newContent.trim()) {
         showToast('제목과 내용을 입력하세요.', '오류');
         return;
       }
-
       try {
         const postRef = doc(db, 'posts', docId);
         const postSnap = await getDoc(postRef);
@@ -1483,11 +1330,8 @@
           title: newTitle,
           content: newContent
         });
-
         showToast('글이 수정되었습니다.', '성공');
         editModal.hide();
-
-        // 수정 직후 목록 갱신 (기존 댓글 리스너 해제)
         clearPostList();
         await loadMorePosts();
       } catch (err) {
@@ -1495,9 +1339,6 @@
       }
     });
 
-    /********************************
-     * 글 삭제
-     ********************************/
     async function deletePost(postDoc) {
       const user = auth.currentUser;
       if (!user) {
@@ -1515,8 +1356,6 @@
       try {
         await deleteDoc(postDoc.ref);
         showToast('글이 삭제되었습니다.', '삭제');
-
-        // 목록 리로드 (기존 댓글 리스너 해제)
         clearPostList();
         await loadMorePosts();
       } catch (err) {
@@ -1524,59 +1363,6 @@
       }
     }
 
-    /********************************
-     * 댓글 등록 (트랜잭션) + DOMPurify
-     ********************************/
-    async function addComment(postId, content) {
-      const user = auth.currentUser;
-      if (!user) {
-        showToast('로그인이 필요합니다.', '오류');
-        return;
-      }
-
-      // DOMPurify로 댓글 내용 정제
-      const sanitizedContent = DOMPurify.sanitize(content);
-
-      if (!sanitizedContent.trim()) {
-        showToast('댓글 내용을 입력하세요.', '오류');
-        return;
-      }
-
-      try {
-        await runTransaction(db, async (transaction) => {
-          // (1) 먼저 읽기
-          const userRef = doc(db, 'users', user.uid);
-          const userSnap = await transaction.get(userRef);
-          
-          let oldScore = 0;
-          if (userSnap.exists()) {
-            oldScore = userSnap.data().score || 0;
-          }
-
-          // (2) 댓글 추가
-          const cmtRef = doc(collection(db, 'posts', postId, 'comments'));
-          transaction.set(cmtRef, {
-            uid: user.uid,
-            nickname: currentNickname,
-            content: sanitizedContent,
-            createdAt: serverTimestamp()
-          });
-
-          // (3) 점수 +20
-          transaction.update(userRef, {
-            score: oldScore + 20
-          });
-        });
-
-        showToast('댓글이 등록되었습니다.', '댓글 작성');
-      } catch (err) {
-        showToast(err.message, '댓글 등록 실패');
-      }
-    }
-
-    /********************************
-     * 댓글 삭제 모달 열기
-     ********************************/
     function openDeleteCommentModal(postId, commentId) {
       deleteCommentPostId.value = postId;
       deleteCommentId.value = commentId;
@@ -1610,233 +1396,12 @@
       }
     });
 
-    /********************************
-     * 댓글 목록 렌더링 (출력 시 DOMPurify 적용)
-     ********************************/
-     async function renderComments(postId, comments, containerEl) {
-      containerEl.innerHTML = '';
-
-      // 댓글이 없으면 댓글 헤더(h6 요소)를 숨기고, 있으면 보이게 함
-      const header = document.getElementById(`commentHeader-${postId}`);
-      if (comments.length === 0) {
-        if (header) header.style.display = 'none';
-      } else {
-        if (header) header.style.display = '';
-      }
-
-      for (const c of comments) {
-        let rankIcon = '';
-        let commentNickname = c.nickname || '익명';
-
-        // (작성자 랭크 이모지) – 캐시를 활용하여 사용자 정보 조회
-        if (c.uid) {
-          try {
-            const snap = await fetchUserDoc(c.uid);
-            if (snap.exists()) {
-              const userData = snap.data();
-              const userScore = userData.score || 0;
-              const rankInfo = getRankByScore(userData.score || 0);
-              rankIcon = rankInfo.icon;
-              commentNickname = userData.nickname || commentNickname;
-            }
-          } catch (err) {
-            console.error('유저 정보 로드 실패:', err);
-          }
-        }
-
-        // 댓글 내용 DOMPurify + convertLinks (댓글에는 임베디드 변환X)
-        const safeContent = DOMPurify.sanitize(c.content ?? '');
-        const finalContent = convertLinks(safeContent);
-
-        const div = document.createElement('div');
-        div.className = 'comment-item';
-        div.innerHTML = `
-          <div class="fw-bold">
-            ${commentNickname} 
-            <span style="cursor:pointer;" id="commentRankIcon-${postId}-${c.commentId}">
-              ${rankIcon}
-            </span>
-          </div>
-          <div class="small text-muted mb-1">
-            ${formatDateTime(c.createdAt)}
-          </div>
-          <div class="keep-line-breaks">${finalContent}</div>
-        `;
-
-        const rankIconEl = div.querySelector(`#commentRankIcon-${postId}-${c.commentId}`);
-        if (rankIconEl && rankIcon) {
-          rankIconEl.addEventListener('click', async () => {
-            try {
-              const snap = await fetchUserDoc(c.uid);
-              if (snap.exists()) {
-                const uData = snap.data();
-                const s = uData.score || 0;
-                const rInfo = getRankByScore(s);
-                showToast(`계급: ${rInfo.name} (${s}점)`, commentNickname);
-              } else {
-                showToast('유저 정보 없음', '알림');
-              }
-            } catch (err) {
-              showToast(err.message, '알림');
-            }
-          });
-        }
-
-        if (auth.currentUser && auth.currentUser.uid === c.uid) {
-          const delBtn = document.createElement('button');
-          delBtn.className = 'btn btn-sm btn-danger ms-2';
-          delBtn.textContent = '삭제';
-          delBtn.addEventListener('click', () => {
-            openDeleteCommentModal(postId, c.commentId);
-          });
-          div.appendChild(delBtn);
-        }
-
-        containerEl.appendChild(div);
-      }
-    }
-
-    /********************************
-     * 좋아요/싫어요 (score 변경 포함)
-     ********************************/
-    let likeDislikeInProgress = new Set();
-
-    async function toggleLike(postId) {
-      const user = auth.currentUser;
-      if (!user) {
-        showToast('로그인이 필요합니다.', '오류');
-        return;
-      }
-      if (likeDislikeInProgress.has(postId)) return;
-      likeDislikeInProgress.add(postId);
-
-      try {
-        await runTransaction(db, async (transaction) => {
-          const postRef = doc(db, 'posts', postId);
-          const postSnap = await transaction.get(postRef);
-          if (!postSnap.exists()) return;
-
-          const data = postSnap.data();
-          const likes = data.likes || [];
-          const dislikes = data.dislikes || [];
-
-          const userRef = doc(db, 'users', user.uid);
-          const userSnap = await transaction.get(userRef);
-          let oldScore = 0;
-          if (userSnap.exists()) {
-            oldScore = userSnap.data().score || 0;
-          }
-
-          let scoreDiff = 0;
-          const alreadyLiked = likes.includes(user.uid);
-          const alreadyDisliked = dislikes.includes(user.uid);
-
-          if (alreadyLiked) {
-            transaction.update(postRef, {
-              likes: arrayRemove(user.uid)
-            });
-            scoreDiff -= 10;
-          } else {
-            transaction.update(postRef, {
-              likes: arrayUnion(user.uid)
-            });
-            if (alreadyDisliked) {
-              transaction.update(postRef, {
-                dislikes: arrayRemove(user.uid)
-              });
-              scoreDiff += 5; 
-            }
-            scoreDiff += 10; 
-          }
-
-          transaction.update(userRef, {
-            score: oldScore + scoreDiff
-          });
-        });
-
-        const userData = await fetchUserNicknameAndScore(user.uid);
-        currentScore = userData.score;
-      } catch (err) {
-        showToast(err.message, '오류');
-      } finally {
-        likeDislikeInProgress.delete(postId);
-      }
-    }
-
-    async function toggleDislike(postId) {
-      const user = auth.currentUser;
-      if (!user) {
-        showToast('로그인이 필요합니다.', '오류');
-        return;
-      }
-      if (likeDislikeInProgress.has(postId)) return;
-      likeDislikeInProgress.add(postId);
-
-      try {
-        await runTransaction(db, async (transaction) => {
-          const postRef = doc(db, 'posts', postId);
-          const postSnap = await transaction.get(postRef);
-          if (!postSnap.exists()) return;
-
-          const data = postSnap.data();
-          const likes = data.likes || [];
-          const dislikes = data.dislikes || [];
-
-          const userRef = doc(db, 'users', user.uid);
-          const userSnap = await transaction.get(userRef);
-          let oldScore = 0;
-          if (userSnap.exists()) {
-            oldScore = userSnap.data().score || 0;
-          }
-
-          let scoreDiff = 0;
-          const alreadyLiked = likes.includes(user.uid);
-          const alreadyDisliked = dislikes.includes(user.uid);
-
-          if (alreadyDisliked) {
-            transaction.update(postRef, {
-              dislikes: arrayRemove(user.uid)
-            });
-            scoreDiff += 5;
-          } else {
-            transaction.update(postRef, {
-              dislikes: arrayUnion(user.uid)
-            });
-            if (alreadyLiked) {
-              transaction.update(postRef, {
-                likes: arrayRemove(user.uid)
-              });
-              scoreDiff -= 10; 
-            }
-            scoreDiff -= 5;  
-          }
-
-          transaction.update(userRef, {
-            score: oldScore + scoreDiff
-          });
-        });
-
-        const userData = await fetchUserNicknameAndScore(user.uid);
-        currentScore = userData.score;
-      } catch (err) {
-        showToast(err.message, '오류');
-      } finally {
-        likeDislikeInProgress.delete(postId);
-      }
-    }
-
-    /********************************
-     * 개별 글 DOM 생성 함수 (게시글 내용에 유튜브 임베디드 적용 및 마법 버튼 추가)
-     ********************************/
     async function createPostItem(docSnap) {
       const data = docSnap.data();
       const postId = docSnap.id;
-
-      // 카드 요소에 고유 ID 부여 (마법 효과 UI 업데이트를 위해)
       const card = document.createElement('div');
       card.className = 'card mb-3';
       card.id = 'postCard-' + postId;
-
       let authorNickname = data.nickname || '익명';
       let authorRankEmoji = '';
       let authorScore = 0;
@@ -1849,22 +1414,16 @@
           authorRankEmoji = rankInfo.icon; 
           authorNickname = userData.nickname || authorNickname;
         }
-      } catch (_) { /* 무시 */ }
-
+      } catch (_) { }
       let isAuthor = false;
       const currentUser = auth.currentUser;
       if (currentUser && currentUser.uid === data.uid) {
         isAuthor = true; 
       }
-
       const likeCount = data.likes ? data.likes.length : 0;
       const dislikeCount = data.dislikes ? data.dislikes.length : 0;
-
-      // 게시글 본문도 DOMPurify로 재차 정제한 후 유튜브 링크 임베디드 변환 적용
       const safeContent = DOMPurify.sanitize(data.content ?? '');
       const finalContent = convertYouTubeLinks(safeContent);
-
-      // 카드 헤더에 제목 및 수정/삭제/마법 버튼들을 포함
       card.innerHTML = `
         <div class="card-header fw-bold d-flex justify-content-between align-items-center">
           <span>${data.title}</span>
@@ -1885,40 +1444,28 @@
             <span>${formatDateTime(data.createdAt)}</span>
           </h6>
           <div class="card-text mt-2">${finalContent}</div>
-          
-          <!-- 추천/비추천 -->
           <div class="mt-3 d-flex align-items-center gap-2">
             <button class="btn btn-sm btn-outline-primary" id="likeBtn-${postId}">👍</button>
             <span id="likeCount-${postId}">${likeCount}</span>
             <button class="btn btn-sm btn-outline-danger" id="dislikeBtn-${postId}">👎</button>
             <span id="dislikeCount-${postId}">${dislikeCount}</span>
-
             <span class="vr mx-2"></span>
             <button class="btn btn-sm btn-outline-secondary" id="shareBtn-${postId}">🔗</button>
           </div>
-
-          <!-- 댓글 리스트 -->
           <div class="mt-3">
             <h6 id="commentHeader-${postId}">댓글</h6>
             <div id="commentList-${postId}"></div>
           </div>
-
-          <!-- 댓글 작성 폼 (로그인 시만 보이게) -->
           <div class="mt-2 d-none" id="commentForm-${postId}">
             <textarea class="form-control mb-2" rows="2" placeholder="댓글을 입력하세요" id="commentInput-${postId}"></textarea>
             <button class="btn btn-secondary" id="commentBtn-${postId}">댓글 달기</button>
           </div>
         </div>
       `;
-
-      // 마법 버튼 – 현재 사용자가 있을 경우에만 처리
       if (currentUser) {
         const magicBtn = card.querySelector(`#magicBtn-${postId}`);
         if (magicBtn) {
-          // 버튼은 항상 활성화 상태로 두고,
-          // 클릭 시 현재 사용자의 포인트와 글 작성자의 포인트를 비교하여 조건 미충족 시 토스트 메시지 표시
           magicBtn.addEventListener('click', () => {
-            // 만약 작성자가 아니면서 현재 포인트가 글 작성자보다 낮거나 같다면
             if (currentUser.uid !== data.uid && currentScore <= authorScore) {
               showToast("마력이 미치지 않습니다.", "마법");
               return;
@@ -1927,8 +1474,6 @@
           });
         }
       }
-
-      // 수정/삭제 버튼 이벤트
       if (isAuthor) {
         const editBtn = card.querySelector(`#editBtn-${postId}`);
         editBtn.addEventListener('click', async () => {
@@ -1939,7 +1484,6 @@
             showToast('글 정보를 불러오지 못했습니다.', '오류');
           }
         });
-
         const deleteBtn = card.querySelector(`#deleteBtn-${postId}`);
         deleteBtn.addEventListener('click', async () => {
           const postSnap = await getDoc(doc(db, 'posts', postId));
@@ -1948,16 +1492,12 @@
           }
         });
       }
-
-      // 좋아요/싫어요 이벤트
       const likeBtn = card.querySelector(`#likeBtn-${postId}`);
       const dislikeBtn = card.querySelector(`#dislikeBtn-${postId}`);
       likeBtn.addEventListener('click', () => toggleLike(postId));
       dislikeBtn.addEventListener('click', () => toggleDislike(postId));
-
       const shareBtn = card.querySelector(`#shareBtn-${postId}`);
       shareBtn.addEventListener('click', () => {
-        console.log('hi');
         const shareUrl = window.location.origin + window.location.pathname + '?postId=' + postId;
         navigator.clipboard.writeText(shareUrl).then(() => {
           showToast('URL 복사되었습니다.', '공유');
@@ -1965,7 +1505,6 @@
           showToast('URL 복사 실패: ' + err, '공유');
         });
       });
-
       if (currentUser) {
         if (data.likes?.includes(currentUser.uid)) {
           likeBtn.classList.remove('btn-outline-primary');
@@ -1976,8 +1515,6 @@
           dislikeBtn.classList.add('btn-danger');
         }
       }
-
-      // 댓글 작성 폼 처리
       const commentListEl = card.querySelector(`#commentList-${postId}`);
       const commentFormEl = card.querySelector(`#commentForm-${postId}`);
       const commentInputEl = card.querySelector(`#commentInput-${postId}`);
@@ -1990,8 +1527,6 @@
         addComment(postId, text);
         commentInputEl.value = '';
       });
-
-      // "계급 이모티콘" 클릭 시 -> 토스트로 계급명+점수 표시
       const rankIconEl = card.querySelector(`#rankIcon-${postId}`);
       rankIconEl.addEventListener('click', async () => {
         try {
@@ -2008,8 +1543,6 @@
           showToast(err.message, '알림');
         }
       });
-
-      // 만약 글에 이미 마법이 적용되어 있다면, 해당 마법 효과 클래스를 추가
       if (data.magic && data.magic.expiresAt) {
         const now = new Date();
         const exp = new Date(data.magic.expiresAt.seconds * 1000);
@@ -2017,13 +1550,9 @@
           card.classList.add(data.magic.magicType);
         }
       }
-
       return card;
     }
 
-    /********************************
-     * 마법 관련 함수
-     ********************************/
     async function openMagicModal(postId, postData, authorScore) {
       const magicModalEl = document.getElementById('magicModal');
       const magicModal = new bootstrap.Modal(magicModalEl);
@@ -2031,14 +1560,10 @@
       const magicInfoDiv = document.getElementById('magicInfo');
       const magicModalFooter = document.getElementById('magicModalFooter');
       magicPostIdInput.value = postId;
-
-      // 최신 게시글 정보를 가져옴
       const postRef = doc(db, 'posts', postId);
       const postSnap = await getDoc(postRef);
       const postDocData = postSnap.data();
       let magic = postDocData.magic || null;
-
-      // <--- [추가] 마법 지속 시간이 지난 경우, magic을 null 처리하여 새 마법 시전 UI 표시
       if (magic && magic.expiresAt) {
         const now = new Date();
         const exp = new Date(magic.expiresAt.seconds * 1000);
@@ -2046,23 +1571,17 @@
           magic = null;
         }
       }
-      // --->
-
       magicInfoDiv.innerHTML = "";
       magicModalFooter.innerHTML = "";
-
       if (magic) {
-        // 마법이 현재 적용 중인 경우
         magicInfoDiv.innerHTML = `
           <p>현재 적용된 마법: <strong>${magicDisplayNames[magic.magicType]}</strong></p>
           <p>시전자: <strong>${magic.casterNickname || '알 수 없음'}</strong></p>
           <p>종료 시각: <strong>${magic.expiresAt ? formatDateTime(magic.expiresAt) : '알 수 없음'}</strong></p>
         `;
-        // 시전자와 비교하여 현재 사용자가 해제할 수 있는지 확인 (자신과 같거나 점수가 높아야 함)
         const casterSnap = await getDoc(doc(db, 'users', magic.casterUid));
         const casterData = casterSnap.exists() ? casterSnap.data() : null;
         const casterScore = casterData ? (casterData.score || 0) : 0;
-
         if (currentScore >= casterScore) {
           const removeBtn = document.createElement('button');
           removeBtn.className = 'btn btn-danger';
@@ -2076,12 +1595,9 @@
         closeBtn.setAttribute('data-bs-dismiss', 'modal');
         magicModalFooter.appendChild(closeBtn);
       } else {
-        // 마법이 적용되어 있지 않은 경우 (또는 이미 만료된 경우)
         if (auth.currentUser.uid === postData.uid || currentScore > authorScore) {
-          // 현재 사용자의 계급에 따른 사용 가능한 마법 종류를 가져옴
           const rankInfo = getRankByScore(currentScore);
           const availableMagic = getAvailableMagicTypes(rankInfo.name);
-          // 라디오 버튼으로 마법 선택 UI 구성
           let radioHTML = `<p>이 글에 시전할 마법을 선택하세요:</p>`;
           availableMagic.forEach((magicType, index) => {
               const displayName = magicDisplayNames[magicType] || magicType;
@@ -2125,7 +1641,6 @@
         showToast('로그인이 필요합니다.', '오류');
         return;
       }
-      // 각 마법 효과별 지속 시간 매핑 (초 단위)
       const durationMapping = {
         'magic-basic': 3000,
         'magic-shimmer': 3000,
@@ -2138,7 +1653,6 @@
       };
       const duration = durationMapping[magicType] || 300;
       const expiresAt = Timestamp.fromDate(new Date(Date.now() + duration * 1000));
-
       try {
         await runTransaction(db, async (transaction) => {
           const postRef = doc(db, 'posts', postId);
@@ -2158,7 +1672,6 @@
           });
         });
         showToast('마법이 시전되었습니다!', '마법');
-        // 즉시 UI 업데이트 – 해당 카드에 마법 효과 클래스를 추가
         const cardEl = document.getElementById(`postCard-${postId}`);
         if (cardEl) {
           cardEl.classList.add(magicType);
@@ -2184,7 +1697,6 @@
         showToast('마법이 해제되었습니다.', '마법');
         const cardEl = document.getElementById(`postCard-${postId}`);
         if (cardEl) {
-          // 마법 효과 클래스를 모두 제거 (magic-로 시작하는 클래스)
           cardEl.className = cardEl.className.replace(/\bmagic-\S+\b/g, '');
         }
         bootstrap.Modal.getInstance(document.getElementById('magicModal')).hide();
@@ -2193,22 +1705,16 @@
       }
     }
 
-    /********************************
-     * 실시간 글 UI 갱신 (좋아요/싫어요 및 마법 효과 업데이트)
-     ********************************/
     function updatePostUI(postSnap) {
       const postId = postSnap.id;
       const data = postSnap.data();
-
       const likeCountEl = document.getElementById(`likeCount-${postId}`);
       const dislikeCountEl = document.getElementById(`dislikeCount-${postId}`);
       if (likeCountEl) likeCountEl.textContent = data.likes?.length || 0;
       if (dislikeCountEl) dislikeCountEl.textContent = data.dislikes?.length || 0;
-
       const likeBtn = document.getElementById(`likeBtn-${postId}`);
       const dislikeBtn = document.getElementById(`dislikeBtn-${postId}`);
       const currentUser = auth.currentUser;
-
       if (likeBtn && dislikeBtn && currentUser) {
         if (data.likes?.includes(currentUser.uid)) {
           likeBtn.classList.remove('btn-outline-primary');
@@ -2225,8 +1731,6 @@
           dislikeBtn.classList.add('btn-outline-danger');
         }
       }
-
-      // 마법 효과 업데이트 – 만약 magic 필드가 존재하면 해당 효과 클래스를 적용하고, 만료되었으면 제거
       const cardEl = document.getElementById(`postCard-${postId}`);
       if (cardEl) {
         if (data.magic && data.magic.expiresAt) {
@@ -2244,9 +1748,6 @@
       }
     }
 
-    /********************************
-     * 무한 스크롤 -> 5개씩 조회 (게시글)
-     ********************************/
     let lastVisible = null;
     let isLoading = false;
     const PAGE_SIZE = 5;
@@ -2254,13 +1755,11 @@
     async function loadMorePosts() {
       if (isLoading) return;
       isLoading = true;
-
       let q = query(
         collection(db, 'posts'),
         orderBy('createdAt', 'desc'),
         limit(PAGE_SIZE)
       );
-
       if (lastVisible) {
         q = query(
           collection(db, 'posts'),
@@ -2269,23 +1768,17 @@
           limit(PAGE_SIZE)
         );
       }
-
       const snapshot = await getDocs(q);
       if (!snapshot.empty) {
         let newLastDoc = null;
-
         for (let docSnap of snapshot.docs) {
           const item = await createPostItem(docSnap);
           postList.appendChild(item);
-
-          // 글 문서 실시간 모니터링
           onSnapshot(doc(db, 'posts', docSnap.id), (updatedSnap) => {
             if (updatedSnap.exists()) {
               updatePostUI(updatedSnap);
             }
           });
-
-          // 댓글 실시간 (이미 리스너가 등록되지 않은 경우에만 등록)
           if (!commentUnsubscribers[docSnap.id]) {
             const cmtQuery = query(
               collection(db, 'posts', docSnap.id, 'comments'),
@@ -2304,25 +1797,19 @@
               }
             });
           }
-
           newLastDoc = docSnap;
         }
         lastVisible = newLastDoc;
       }
-
       isLoading = false;
     }
 
-    // 스크롤 바닥 근접 -> 다음 5개 로드
     window.addEventListener('scroll', () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
         loadMorePosts();
       }
     });
 
-    /********************************
-     * [추가] 랭킹 무한 스크롤 (Firestore users)
-     ********************************/
     let rankingLastVisible = null;
     let isRankingLoading = false;
     let rankingCount = 0;
@@ -2331,13 +1818,11 @@
     async function loadMoreRanking() {
       if (isRankingLoading) return;
       isRankingLoading = true;
-
       let q = query(
         collection(db, 'users'),
         orderBy('score', 'desc'),
         limit(RANKING_PAGE_SIZE)
       );
-
       if (rankingLastVisible) {
         q = query(
           collection(db, 'users'),
@@ -2346,7 +1831,6 @@
           limit(RANKING_PAGE_SIZE)
         );
       }
-
       const snapshot = await getDocs(q);
       const rankingContainer = document.getElementById('rankingContainer');
       if (!snapshot.empty) {
@@ -2364,12 +1848,10 @@
       isRankingLoading = false;
     }
 
-    // 폭죽(Confetti) 애니메이션 함수
     function launchFireworks() {
-      const duration = 2000; // 애니메이션 지속 시간 (밀리초)
+      const duration = 2000;
       const animationEnd = Date.now() + duration;
       const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
-
       const interval = setInterval(() => {
         const timeLeft = animationEnd - Date.now();
         if (timeLeft <= 0) {
@@ -2377,35 +1859,27 @@
           return;
         }
         const particleCount = 50 * (timeLeft / duration);
-        // 화면 전체에서 랜덤하게 효과 발생
         confetti(Object.assign({}, defaults, {
           particleCount,
           origin: {
             x: Math.random(),
-            // y는 화면 상단에서 약간 벗어난 위치부터 효과를 내도록
             y: Math.random() - 0.2
           }
         }));
       }, 250);
     }
 
-    /********************************
-     * [추가] URL 쿼리 파라미터로 전달된 post id가 있을 경우 해당 글을 최상단에 노출
-     ********************************/
     async function highlightPostFromQuery() {
       const urlParams = new URLSearchParams(window.location.search);
       const highlightPostId = urlParams.get('postId');
       if (!highlightPostId) return;
-      
       const existingCard = document.getElementById('postCard-' + highlightPostId);
       if (existingCard) {
-        // 이미 로드된 경우 최상단으로 이동 및 하이라이트 효과 추가
         if (postList.firstChild !== existingCard) {
           postList.insertBefore(existingCard, postList.firstChild);
         }
         existingCard.style.border = '3px solid gold';
       } else {
-        // 아직 로드되지 않은 경우 Firestore에서 직접 가져와서 최상단에 추가
         const postRef = doc(db, 'posts', highlightPostId);
         const postSnap = await getDoc(postRef);
         if (postSnap.exists()) {
@@ -2416,7 +1890,6 @@
       }
     }
 
-    // 랭킹 모달 열 때 랭킹 리스트 초기화 및 첫 로드
     const rankingModalEl = document.getElementById('rankingModal');
     rankingModalEl.addEventListener('show.bs.modal', () => {
       rankingLastVisible = null;
@@ -2425,7 +1898,6 @@
       loadMoreRanking();
     });
 
-    // 랭킹 모달 내부 스크롤 이벤트 (무한 스크롤)
     const rankingContainer = document.getElementById('rankingContainer');
     rankingContainer.addEventListener('scroll', () => {
       if (rankingContainer.scrollTop + rankingContainer.clientHeight >= rankingContainer.scrollHeight - 50) {
@@ -2433,7 +1905,6 @@
       }
     });
 
-    // 회원탈퇴 버튼 이벤트
     deleteAccountBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
       if (!user) {
@@ -2444,17 +1915,13 @@
         return;
       }
       try {
-        // 사용자가 작성한 posts 삭제 (댓글은 삭제하지 않음)
         const postsQuery = query(collection(db, 'posts'), where('uid', '==', user.uid));
         const postsSnapshot = await getDocs(postsQuery);
         const deletePromises = postsSnapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
         await Promise.all(deletePromises);
-        // users 콜렉션의 사용자 문서 삭제
         await deleteDoc(doc(db, 'users', user.uid));
-        // Firebase Auth 계정 삭제
         await deleteUser(user);
         showToast('회원탈퇴가 완료되었습니다.', '회원탈퇴');
-        // 로그아웃 처리
         await signOut(auth);
       } catch (err) {
         showToast(err.message, '회원탈퇴 실패');
@@ -2462,7 +1929,6 @@
     });
 
     fetchActiveNotices();
-    // 페이지 첫 진입 시 5개 로드 후 URL 파라미터에 따른 하이라이트 글 노출
     loadMorePosts().then(() => {
       highlightPostFromQuery();
     });
