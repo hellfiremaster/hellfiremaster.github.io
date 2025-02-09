@@ -15,34 +15,25 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link 
-  href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
-  rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
+    rel="stylesheet"
   />
   <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- Bootstrap CSS -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
 
   <!-- Toast UI Editor: CSS/JS, 코드블록 하이라이트 플러그인 -->
-  <link
-    rel="stylesheet"
-    href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"
-  />
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
   <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-  <link
-    rel="stylesheet"
-    href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css"
-  />
+  <link rel="stylesheet" href="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css" />
   <script src="https://uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.js"></script>
 
-  <!-- DOMPurify (3.2.3) -->
+  <!-- DOMPurify -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.3/purify.min.js" integrity="sha512-Ll+TuDvrWDNNRnFFIM8dOiw7Go7dsHyxRp4RutiIFW/wm3DgDmCnRZow6AqbXnCbpWu93yM1O34q+4ggzGeXVA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <style>
-    /* CSS 스타일 (기존과 동일) */
+    /* 기본 배경 및 글꼴 등 */
     body {
       background: linear-gradient(135deg, #1f2945, #2a4065);
       min-height: 100vh;
@@ -68,7 +59,7 @@
       margin-bottom: 1rem;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
       color: #fff;
-      font-family: 'Jua', sans-serif; 
+      font-family: 'Jua', sans-serif;
     }
     .hero-subtitle {
       font-size: 1.25rem;
@@ -178,7 +169,7 @@
     }
     .notice-banner {
       background: linear-gradient(130deg, #002f2f, #004a3f);
-      border: 1px solid #0a7f5f;  
+      border: 1px solid #0a7f5f;
       border-radius: 0.5rem;
       padding: 1rem;
       margin-bottom: 1rem;
@@ -316,15 +307,9 @@
     <div class="container">
       <span class="navbar-brand fw-bold">뉴프로</span>
       <div class="ms-auto">
-        <button class="btn btn-outline-light me-2 auth-loading" id="authLoadingBtn">
-          로딩중...
-        </button>
-        <button class="btn btn-outline-light me-2 d-none" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
-          로그인
-        </button>
-        <button class="btn btn-success me-2 d-none" id="signupBtn" data-bs-toggle="modal" data-bs-target="#signupModal">
-          회원가입
-        </button>
+        <button class="btn btn-outline-light me-2 auth-loading" id="authLoadingBtn">로딩중...</button>
+        <button class="btn btn-outline-light me-2 d-none" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">로그인</button>
+        <button class="btn btn-success me-2 d-none" id="signupBtn" data-bs-toggle="modal" data-bs-target="#signupModal">회원가입</button>
         <button class="btn btn-danger d-none" id="logoutBtn">로그아웃</button>
       </div>
     </div>
@@ -333,26 +318,20 @@
   <!-- Hero Section -->
   <section class="hero-section">
     <h1 class="hero-title">코딩은 모험이다!</h1>
-    <p class="hero-subtitle">
-      뉴프로 커뮤니티에서 아이디어를 마음껏 나누고, 즐거운 코드 토크를 펼쳐보세요!
-    </p>
+    <p class="hero-subtitle">뉴프로 커뮤니티에서 아이디어를 마음껏 나누고, 즐거운 코드 토크를 펼쳐보세요!</p>
   </section>
 
   <!-- 메인 컨테이너 -->
   <div class="container mb-5">
     <div class="d-flex justify-content-end mb-2">
-      <button class="btn shining-btn me-2" id="showRankBtn" data-bs-toggle="modal" data-bs-target="#rankModal">
-        내 계급 보기
-      </button>
-      <button class="btn btn-outline-info me-2" id="showRankingBtn" data-bs-toggle="modal" data-bs-target="#rankingModal">
-        랭킹
-      </button>
+      <button class="btn shining-btn me-2" id="showRankBtn" data-bs-toggle="modal" data-bs-target="#rankModal">내 계급 보기</button>
+      <button class="btn btn-outline-info me-2" id="showRankingBtn" data-bs-toggle="modal" data-bs-target="#rankingModal">랭킹</button>
       <button class="btn btn-light d-none" id="togglePostFormBtn">글쓰기</button>
     </div>
 
     <div id="noticeContainer" class="notice-container mb-3"></div>
 
-    <!-- 글쓰기 카드 (기본 숨김) -->
+    <!-- 글쓰기 카드 (숨김) -->
     <div class="card glass-card p-3 d-none" id="postCard">
       <div class="card-body">
         <h5 class="card-title">새 글 작성</h5>
@@ -372,9 +351,7 @@
     <div class="card glass-card mt-4">
       <div class="card-body">
         <h4 class="card-title">글 목록</h4>
-        <div id="postList" class="mt-3">
-          <!-- 게시글 목록이 여기서 로드됩니다. -->
-        </div>
+        <div id="postList" class="mt-3"><!-- 게시글 목록이 로드됩니다 --></div>
       </div>
     </div>
   </div>
@@ -504,8 +481,7 @@
           <p><strong>내 계급</strong>: <span id="myRank">로딩중...</span></p>
           <hr/>
           <h6>계급 기준</h6>
-          <ul style="font-size:0.95rem;" id="futureMagicList">
-          </ul>
+          <ul style="font-size:0.95rem;" id="futureMagicList"><!-- 동적 채움 --></ul>
           <small class="text-muted">
             행동별 점수: 글쓰기 +50, 댓글 +20, 좋아요 +10, 싫어요 -5
           </small>
@@ -533,6 +509,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="rankingContainer" style="max-height: 70vh; overflow-y: auto;">
+          <!-- Firestore users 랭킹 항목들이 무한 스크롤로 로드됩니다 -->
         </div>
       </div>
     </div>
@@ -548,16 +525,16 @@
         </div>
         <div class="modal-body">
           <input type="hidden" id="magicPostId" />
-          <div id="magicInfo">
-          </div>
+          <div id="magicInfo"><!-- 동적 채움 --></div>
         </div>
         <div class="modal-footer" id="magicModalFooter">
+          <!-- 버튼은 상황에 따라 동적으로 생성됩니다 -->
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Toast -->
+  <!-- Toast (알림) -->
   <div class="toast-container">
     <div id="liveToast" class="toast align-items-center dark-bg" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
@@ -565,9 +542,7 @@
         <small class="text-muted" id="toastTime"></small>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
-      <div class="toast-body" id="toastMessage">
-        메시지 내용
-      </div>
+      <div class="toast-body" id="toastMessage">메시지 내용</div>
     </div>
   </div>
 
@@ -576,12 +551,15 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- Firebase ES Modules -->
+  <!-- Firebase ES Modules (모듈 방식) -->
   <script type="module">
+    /********************************
+     * Firebase 초기화 및 모듈 임포트
+     ********************************/
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js';
     import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app-check.js';
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
-    import { getFirestore, collection, doc, setDoc, getDoc, addDoc, updateDoc, deleteDoc, runTransaction, serverTimestamp, arrayUnion, arrayRemove, where, query, orderBy, getDocs, startAfter, limit, onSnapshot, Timestamp, deleteField } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
+    import { getFirestore, collection, doc, setDoc, getDoc, updateDoc, deleteDoc, runTransaction, serverTimestamp, arrayUnion, arrayRemove, where, query, orderBy, getDocs, startAfter, limit, onSnapshot, Timestamp, deleteField } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
@@ -600,8 +578,10 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const userCache = {};
-
+    /********************************
+     * 전역 사용자 캐시 및 함수
+     ********************************/
+    const userCache = {}; // uid별 캐시
     async function fetchUserDoc(uid) {
       if (userCache[uid]) {
         return { exists: () => true, data: () => userCache[uid] };
@@ -613,17 +593,26 @@
       }
       return snap;
     }
+    async function fetchUserNicknameAndScore(uid) {
+      const snap = await fetchUserDoc(uid);
+      if (snap.exists()) {
+        const data = snap.data();
+        return { nickname: data.nickname || null, score: data.score || 0 };
+      }
+      return { nickname: null, score: 0 };
+    }
 
+    /********************************
+     * Toast UI Editor 및 DOMPurify 초기화
+     ********************************/
     const { Editor } = toastui;
     const { codeSyntaxHighlight } = Editor.plugin;
-
     let createEditor = new Editor({
       el: document.querySelector('#editor'),
       initialEditType: 'wysiwyg',
       previewStyle: 'vertical',
       plugins: [codeSyntaxHighlight]
     });
-
     let editEditor = new Editor({
       el: document.querySelector('#editContentEditor'),
       initialEditType: 'wysiwyg',
@@ -631,38 +620,31 @@
       plugins: [codeSyntaxHighlight]
     });
 
+    /********************************
+     * 날짜/시간 포맷 함수
+     ********************************/
     function formatDateTime(timestamp) {
       if (!timestamp || !timestamp.seconds) return '';
       const date = new Date(timestamp.seconds * 1000);
-      let year = date.getFullYear();
-      let month = date.getMonth() + 1;
-      let day = date.getDate();
-      let hours = date.getHours();
-      let minutes = date.getMinutes();
-      let seconds = date.getSeconds();
+      let year = date.getFullYear(), month = date.getMonth() + 1, day = date.getDate();
+      let hours = date.getHours(), minutes = date.getMinutes(), seconds = date.getSeconds();
       const ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12;
-      hours = hours === 0 ? 12 : hours;
-      minutes = minutes.toString().padStart(2, '0');
-      seconds = seconds.toString().padStart(2, '0');
+      hours = hours % 12; hours = hours === 0 ? 12 : hours;
+      minutes = minutes.toString().padStart(2, '0'); seconds = seconds.toString().padStart(2, '0');
       return `${year}.${month}.${day}, ${hours}:${minutes}:${seconds} ${ampm}`;
     }
-
     function formatDateForToast(date) {
-      let year = date.getFullYear();
-      let month = date.getMonth() + 1;
-      let day = date.getDate();
-      let hours = date.getHours();
-      let minutes = date.getMinutes();
-      let seconds = date.getSeconds();
+      let year = date.getFullYear(), month = date.getMonth() + 1, day = date.getDate();
+      let hours = date.getHours(), minutes = date.getMinutes(), seconds = date.getSeconds();
       const ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12;
-      hours = hours === 0 ? 12 : hours;
-      minutes = minutes.toString().padStart(2, '0');
-      seconds = seconds.toString().padStart(2, '0');
+      hours = hours % 12; hours = hours === 0 ? 12 : hours;
+      minutes = minutes.toString().padStart(2, '0'); seconds = seconds.toString().padStart(2, '0');
       return `${year}.${month}.${day}, ${hours}:${minutes}:${seconds} ${ampm}`;
     }
 
+    /********************************
+     * Toast 함수
+     ********************************/
     function showToast(message, title = '알림') {
       const toastEl = document.getElementById('liveToast');
       const toastTitle = document.getElementById('toastTitle');
@@ -675,12 +657,15 @@
       bsToast.show();
     }
 
+    /********************************
+     * DOM 요소 참조
+     ********************************/
     const authLoadingBtn = document.getElementById('authLoadingBtn');
     const loginBtn = document.getElementById('loginBtn');
     const signupBtn = document.getElementById('signupBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const togglePostFormBtn = document.getElementById('togglePostFormBtn');
-    const showRankBtn = document.getElementById('showRankBtn'); 
+    const showRankBtn = document.getElementById('showRankBtn');
     const postCard = document.getElementById('postCard');
     const savePostBtn = document.getElementById('savePostBtn');
     const postList = document.getElementById('postList');
@@ -709,6 +694,9 @@
     const deleteAccountBtn = document.getElementById('deleteAccountBtn');
     const noticeContainer = document.getElementById('noticeContainer');
 
+    /********************************
+     * 전역 상태 변수
+     ********************************/
     let currentNickname = null;
     let currentScore = 0;
     let commentUnsubscribers = {};
@@ -720,40 +708,32 @@
       lastVisible = null;
     }
 
+    /********************************
+     * 계급(Rank) 계산 및 마법 관련 함수
+     ********************************/
     function getRankByScore(score) {
-      if (score >= 50000) {
-        return { name: '이터널', icon: '🌌' };
-      } else if (score >= 25000) {
-        return { name: '레전드', icon: '👑' };
-      } else if (score >= 10000) {
-        return { name: '마스터', icon: '🏆' };
-      } else if (score >= 5000) {
-        return { name: '다이아몬드', icon: '💎' };
-      } else if (score >= 1000) {
-        return { name: '플래티넘', icon: '🛡️' };
-      } else if (score >= 500) {
-        return { name: '골드', icon: '🥇' };
-      } else if (score >= 100) {
-        return { name: '실버', icon: '🥈' };
-      } else {
-        return { name: '브론즈', icon: '🥉' };
-      }
+      if (score >= 50000) return { name: '이터널', icon: '🌌' };
+      else if (score >= 25000) return { name: '레전드', icon: '👑' };
+      else if (score >= 10000) return { name: '마스터', icon: '🏆' };
+      else if (score >= 5000) return { name: '다이아몬드', icon: '💎' };
+      else if (score >= 1000) return { name: '플래티넘', icon: '🛡️' };
+      else if (score >= 500) return { name: '골드', icon: '🥇' };
+      else if (score >= 100) return { name: '실버', icon: '🥈' };
+      else return { name: '브론즈', icon: '🥉' };
     }
-
     function getAvailableMagicTypes(rankName) {
       switch(rankName) {
-          case '브론즈': return ['magic-basic'];
-          case '실버': return ['magic-basic', 'magic-shimmer'];
-          case '골드': return ['magic-basic', 'magic-shimmer', 'magic-blessing'];
-          case '플래티넘': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse'];
-          case '다이아몬드': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse', 'magic-font'];
-          case '마스터': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse', 'magic-font', 'magic-title'];
-          case '레전드': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse', 'magic-font', 'magic-title', 'magic-rainbow'];
-          case '이터널': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse', 'magic-font', 'magic-title', 'magic-rainbow', 'magic-ultimate'];
-          default: return ['magic-basic'];
+        case '브론즈': return ['magic-basic'];
+        case '실버': return ['magic-basic', 'magic-shimmer'];
+        case '골드': return ['magic-basic', 'magic-shimmer', 'magic-blessing'];
+        case '플래티넘': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse'];
+        case '다이아몬드': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse', 'magic-font'];
+        case '마스터': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse', 'magic-font', 'magic-title'];
+        case '레전드': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse', 'magic-font', 'magic-title', 'magic-rainbow'];
+        case '이터널': return ['magic-basic', 'magic-shimmer', 'magic-blessing', 'magic-curse', 'magic-font', 'magic-title', 'magic-rainbow', 'magic-ultimate'];
+        default: return ['magic-basic'];
       }
     }
-
     const magicDisplayNames = {
       'magic-basic': '기본 마법',
       'magic-shimmer': '반짝이는 마법',
@@ -764,37 +744,24 @@
       'magic-rainbow': '무지개 마법',
       'magic-ultimate': '궁극의 마법'
     };
-
     function decodeHtml(html) {
       const txt = document.createElement("textarea");
       txt.innerHTML = html;
       return txt.value;
     }
-
     function parseTimeParameter(timeStr) {
       let seconds = 0;
       const hMatch = timeStr.match(/(\d+)h/);
-      if (hMatch) {
-        seconds += parseInt(hMatch[1], 10) * 3600;
-      }
+      if (hMatch) seconds += parseInt(hMatch[1], 10) * 3600;
       const mMatch = timeStr.match(/(\d+)m/);
-      if (mMatch) {
-        seconds += parseInt(mMatch[1], 10) * 60;
-      }
+      if (mMatch) seconds += parseInt(mMatch[1], 10) * 60;
       const sMatch = timeStr.match(/(\d+)s/);
-      if (sMatch) {
-        seconds += parseInt(sMatch[1], 10);
-      }
-      if (!hMatch && !mMatch && !sMatch && /^\d+$/.test(timeStr)) {
-        seconds = parseInt(timeStr, 10);
-      }
+      if (sMatch) seconds += parseInt(sMatch[1], 10);
+      if (!hMatch && !mMatch && !sMatch && /^\d+$/.test(timeStr)) seconds = parseInt(timeStr, 10);
       return seconds;
     }
-
     function convertYouTubeLinks(text) {
-      if ( /(&lt;iframe|<iframe)/i.test(text) ) {
-        return text;
-      }
+      if (/(&lt;iframe|<iframe)/i.test(text)) return text;
       const decodedText = decodeHtml(text);
       return decodedText.replace(
         /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/watch\?v=)([A-Za-z0-9_-]{11})([^<\s]*)/g,
@@ -813,11 +780,13 @@
         }
       );
     }
-
     function convertLinks(text) {
       return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
     }
 
+    /********************************
+     * 공지사항 로드
+     ********************************/
     async function fetchActiveNotices() {
       const now = new Date();
       const q = query(
@@ -829,39 +798,23 @@
       let celebrating = false;
       const snapshot = await getDocs(q);
       noticeContainer.innerHTML = '';
-      for(const docSnap of snapshot.docs) {
+      for (const docSnap of snapshot.docs) {
         const data = docSnap.data();
         const bannerEl = document.createElement('div');
         bannerEl.classList.add('notice-banner');
         bannerEl.textContent = data.content;
-        if(data.content.includes('🎉')) {
+        if (data.content.includes('🎉')) {
           bannerEl.addEventListener('click', launchFireworks);
           celebrating = true;
-        }  
+        }
         noticeContainer.appendChild(bannerEl);
       }
-      if(celebrating) {
-        launchFireworks();
-      }
+      if (celebrating) launchFireworks();
     }
 
-    async function fetchUserDocWithoutCache(uid) {
-      const userRef = doc(db, 'users', uid);
-      return await getDoc(userRef);
-    }
-
-    async function fetchUserNicknameAndScore(uid) {
-      const snap = await fetchUserDoc(uid);
-      if (snap.exists()) {
-        const data = snap.data();
-        return {
-          nickname: data.nickname || null,
-          score: data.score || 0
-        };
-      }
-      return { nickname: null, score: 0 };
-    }
-
+    /********************************
+     * 회원가입, 로그인, 비밀번호 초기화, 로그아웃
+     ********************************/
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const emailVal = signupEmail.value.trim();
@@ -886,7 +839,6 @@
         showToast(err.message, '회원가입 실패');
       }
     });
-
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const emailVal = loginEmail.value.trim();
@@ -904,7 +856,6 @@
         showToast(err.message, '로그인 실패');
       }
     });
-
     resetPasswordBtn.addEventListener('click', async () => {
       const emailVal = loginEmail.value.trim();
       if (!emailVal) {
@@ -920,7 +871,6 @@
         }
       }
     });
-
     logoutBtn.addEventListener('click', async () => {
       try {
         await signOut(auth);
@@ -930,7 +880,6 @@
         showToast(error.message, '로그아웃 실패');
       }
     });
-
     onAuthStateChanged(auth, async (user) => {
       authLoadingBtn.classList.add('d-none');
       if (user) {
@@ -957,7 +906,6 @@
         commentForms.forEach(form => form.classList.add('d-none'));
       }
     });
-
     togglePostFormBtn.addEventListener('click', () => {
       postCard.classList.toggle('d-none');
     });
@@ -968,7 +916,7 @@
         myScoreEl.textContent = '(로그인 필요)';
         myRankEl.textContent = '-';
       } else {
-        const snap = await fetchUserDocWithoutCache(auth.currentUser.uid);
+        const snap = await getDoc(doc(db, 'users', auth.currentUser.uid));
         if (snap.exists()) {
           const data = snap.data();
           userCache[auth.currentUser.uid] = data;
@@ -981,31 +929,147 @@
       }
       const lastMagicTypes = getAvailableMagicTypes('이터널');
       const rankMagicMapping = [
-        { rank: '브론즈', icon: '🥉', range: '0~99', },
-        { rank: '실버', icon: '🥈', range: '100~499', },
-        { rank: '골드', icon: '🥇', range: '500~999', },
-        { rank: '플래티넘', icon: '🛡️', range: '1,000~4,999', },
-        { rank: '다이아몬드', icon: '💎', range: '5,000~9,999', },
-        { rank: '마스터', icon: '🏆', range: '10,000~24,999', },
-        { rank: '레전드', icon: '👑', range: '25,000~49,999', },
-        { rank: '이터널', icon: '🌌', range: '50,000+', }
+        { rank: '브론즈', icon: '🥉', range: '0~99' },
+        { rank: '실버', icon: '🥈', range: '100~499' },
+        { rank: '골드', icon: '🥇', range: '500~999' },
+        { rank: '플래티넘', icon: '🛡️', range: '1,000~4,999' },
+        { rank: '다이아몬드', icon: '💎', range: '5,000~9,999' },
+        { rank: '마스터', icon: '🏆', range: '10,000~24,999' },
+        { rank: '레전드', icon: '👑', range: '25,000~49,999' },
+        { rank: '이터널', icon: '🌌', range: '50,000+' }
       ];
       let futureMagicHTML = '';
       rankMagicMapping.forEach((mapping, i) => {
         mapping.magic = [ lastMagicTypes[i] ];
-        const magicList = mapping.magic
-          .map(type => magicDisplayNames[type] || type)
-          .join(', ');
+        const magicList = mapping.magic.map(type => magicDisplayNames[type] || type).join(', ');
         futureMagicHTML += `<li>${mapping.icon} ${mapping.rank} (${mapping.range}): ${magicList}</li>`;
       });
       futureMagicListEl.innerHTML = futureMagicHTML;
     });
 
-    // ─────────────────────────────────────
-    // [추가] 댓글의 댓글(답글) 및 댓글의 좋아요/싫어요 기능 구현
-    // ─────────────────────────────────────
+    /********************************
+     * 글 작성 (DOMPurify 및 유튜브 임베디드 적용)
+     ********************************/
+    savePostBtn.addEventListener('click', async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      if (!currentNickname) {
+        showToast('닉네임을 불러오지 못했습니다.', '오류');
+        return;
+      }
+      const titleVal = DOMPurify.sanitize(postTitle.value.trim());
+      const unsafeContent = createEditor ? createEditor.getHTML() : '';
+      const contentVal = DOMPurify.sanitize(unsafeContent);
+      if (!titleVal) {
+        showToast('제목을 입력하세요.', '오류');
+        return;
+      }
+      if (!contentVal.trim()) {
+        showToast('내용을 입력하세요.', '오류');
+        return;
+      }
+      try {
+        await runTransaction(db, async (transaction) => {
+          const userRef = doc(db, 'users', user.uid);
+          const userSnap = await transaction.get(userRef);
+          let oldScore = 0;
+          if (userSnap.exists()) oldScore = userSnap.data().score || 0;
+          const newPostRef = doc(collection(db, 'posts'));
+          transaction.set(newPostRef, {
+            uid: user.uid,
+            nickname: currentNickname,
+            title: titleVal,
+            content: contentVal,
+            createdAt: serverTimestamp(),
+            likes: [],
+            dislikes: []
+          });
+          transaction.update(userRef, { score: oldScore + 50 });
+        });
+        showToast('글이 등록되었습니다.', '글 작성');
+        postTitle.value = '';
+        createEditor.setHTML('');
+        postCard.classList.add('d-none');
+        clearPostList();
+        await loadMorePosts();
+        const userData = await fetchUserNicknameAndScore(user.uid);
+        currentScore = userData.score;
+      } catch (err) {
+        showToast(err.message, '글 작성 실패');
+      }
+    });
 
-    // 댓글 등록 함수 (부모 댓글 ID 선택적 전달)
+    /********************************
+     * 글 수정 및 삭제
+     ********************************/
+    async function openEditModal(postDoc) {
+      editPostId.value = postDoc.id;
+      editTitle.value = postDoc.data().title;
+      if (editEditor) editEditor.setHTML(postDoc.data().content);
+      editModal.show();
+    }
+    updatePostBtn.addEventListener('click', async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      const docId = editPostId.value;
+      const newTitle = editTitle.value.trim();
+      const unsafeContent = editEditor ? editEditor.getHTML() : '';
+      const newContent = DOMPurify.sanitize(unsafeContent);
+      if (!newTitle || !newContent.trim()) {
+        showToast('제목과 내용을 입력하세요.', '오류');
+        return;
+      }
+      try {
+        const postRef = doc(db, 'posts', docId);
+        const postSnap = await getDoc(postRef);
+        if (!postSnap.exists()) {
+          showToast('존재하지 않는 글입니다.', '오류');
+          return;
+        }
+        if (postSnap.data().uid !== user.uid) {
+          showToast('본인 글만 수정할 수 있습니다.', '오류');
+          return;
+        }
+        await updateDoc(postRef, { title: newTitle, content: newContent });
+        showToast('글이 수정되었습니다.', '성공');
+        editModal.hide();
+        clearPostList();
+        await loadMorePosts();
+      } catch (err) {
+        showToast(err.message, '수정 실패');
+      }
+    });
+    async function deletePost(postDoc) {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
+      const postData = postDoc.data();
+      if (postData.uid !== user.uid) {
+        showToast('본인 글만 삭제할 수 있습니다.', '오류');
+        return;
+      }
+      if (!confirm('이 글을 삭제하시겠습니까?')) return;
+      try {
+        await deleteDoc(postDoc.ref);
+        showToast('글이 삭제되었습니다.', '삭제');
+        clearPostList();
+        await loadMorePosts();
+      } catch (err) {
+        showToast(err.message, '삭제 실패');
+      }
+    }
+
+    /********************************
+     * 댓글 등록 (부모 댓글 ID 선택적)
+     ********************************/
     async function addComment(postId, content, parentCommentId = null) {
       const user = auth.currentUser;
       if (!user) {
@@ -1022,9 +1086,7 @@
           const userRef = doc(db, 'users', user.uid);
           const userSnap = await transaction.get(userRef);
           let oldScore = 0;
-          if (userSnap.exists()) {
-            oldScore = userSnap.data().score || 0;
-          }
+          if (userSnap.exists()) oldScore = userSnap.data().score || 0;
           const cmtRef = doc(collection(db, 'posts', postId, 'comments'));
           transaction.set(cmtRef, {
             uid: user.uid,
@@ -1035,9 +1097,7 @@
             likes: [],
             dislikes: []
           });
-          transaction.update(userRef, {
-            score: oldScore + 20
-          });
+          transaction.update(userRef, { score: oldScore + 20 });
         });
         showToast('댓글이 등록되었습니다.', '댓글 작성');
       } catch (err) {
@@ -1045,101 +1105,45 @@
       }
     }
 
-    // 댓글 좋아요/싫어요 함수
-    let commentLikeDislikeInProgress = new Set();
-
-    async function toggleCommentLike(postId, commentId) {
+    /********************************
+     * 댓글 삭제
+     ********************************/
+    function openDeleteCommentModal(postId, commentId) {
+      deleteCommentPostId.value = postId;
+      deleteCommentId.value = commentId;
+      deleteCommentModal.show();
+    }
+    confirmDeleteCommentBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
       if (!user) {
         showToast('로그인이 필요합니다.', '오류');
         return;
       }
-      const key = `comment-${postId}-${commentId}`;
-      if (commentLikeDislikeInProgress.has(key)) return;
-      commentLikeDislikeInProgress.add(key);
+      const postId = deleteCommentPostId.value;
+      const commentId = deleteCommentId.value;
       try {
-        await runTransaction(db, async (transaction) => {
-          const commentRef = doc(db, 'posts', postId, 'comments', commentId);
-          const commentSnap = await transaction.get(commentRef);
-          if (!commentSnap.exists()) return;
-          const data = commentSnap.data();
-          const likes = data.likes || [];
-          const dislikes = data.dislikes || [];
-          let scoreDiff = 0;
-          const alreadyLiked = likes.includes(user.uid);
-          const alreadyDisliked = dislikes.includes(user.uid);
-          if (alreadyLiked) {
-            transaction.update(commentRef, {
-              likes: arrayRemove(user.uid)
-            });
-            scoreDiff -= 5;
-          } else {
-            transaction.update(commentRef, {
-              likes: arrayUnion(user.uid)
-            });
-            if (alreadyDisliked) {
-              transaction.update(commentRef, {
-                dislikes: arrayRemove(user.uid)
-              });
-              scoreDiff += 3; 
-            }
-            scoreDiff += 5; 
-          }
-        });
+        const commentRef = doc(db, 'posts', postId, 'comments', commentId);
+        const commentSnap = await getDoc(commentRef);
+        if (!commentSnap.exists()) {
+          showToast('존재하지 않는 댓글입니다.', '오류');
+          return;
+        }
+        if (commentSnap.data().uid !== user.uid) {
+          showToast('본인 댓글만 삭제할 수 있습니다.', '오류');
+          return;
+        }
+        await deleteDoc(commentRef);
+        showToast('댓글이 삭제되었습니다.', '댓글 삭제');
+        deleteCommentModal.hide();
       } catch (err) {
-        showToast(err.message, '오류');
-      } finally {
-        commentLikeDislikeInProgress.delete(key);
+        showToast(err.message, '댓글 삭제 실패');
       }
-    }
+    });
 
-    async function toggleCommentDislike(postId, commentId) {
-      const user = auth.currentUser;
-      if (!user) {
-        showToast('로그인이 필요합니다.', '오류');
-        return;
-      }
-      const key = `comment-${postId}-${commentId}`;
-      if (commentLikeDislikeInProgress.has(key)) return;
-      commentLikeDislikeInProgress.add(key);
-      try {
-        await runTransaction(db, async (transaction) => {
-          const commentRef = doc(db, 'posts', postId, 'comments', commentId);
-          const commentSnap = await transaction.get(commentRef);
-          if (!commentSnap.exists()) return;
-          const data = commentSnap.data();
-          const likes = data.likes || [];
-          const dislikes = data.dislikes || [];
-          let scoreDiff = 0;
-          const alreadyLiked = likes.includes(user.uid);
-          const alreadyDisliked = dislikes.includes(user.uid);
-          if (alreadyDisliked) {
-            transaction.update(commentRef, {
-              dislikes: arrayRemove(user.uid)
-            });
-            scoreDiff += 3;
-          } else {
-            transaction.update(commentRef, {
-              dislikes: arrayUnion(user.uid)
-            });
-            if (alreadyLiked) {
-              transaction.update(commentRef, {
-                likes: arrayRemove(user.uid)
-              });
-              scoreDiff -= 5; 
-            }
-            scoreDiff -= 3;  
-          }
-        });
-      } catch (err) {
-        showToast(err.message, '오류');
-      } finally {
-        commentLikeDislikeInProgress.delete(key);
-      }
-    }
-
-    // 댓글 렌더링 함수 (계층구조 처리)
-    async function renderComments(postId, comments, containerEl) {
+    /********************************
+     * 댓글 렌더링 (계층구조 처리)
+     ********************************/
+     async function renderComments(postId, comments, containerEl) {
       containerEl.innerHTML = '';
       const header = document.getElementById(`commentHeader-${postId}`);
       if (comments.length === 0) {
@@ -1181,7 +1185,8 @@
             <button class="btn btn-sm btn-outline-primary" id="commentLikeBtn-${postId}-${comment.commentId}">👍</button>
             <span id="commentLikeCount-${postId}-${comment.commentId}">${comment.likes ? comment.likes.length : 0}</span>
             <button class="btn btn-sm btn-outline-danger" id="commentDislikeBtn-${postId}-${comment.commentId}">👎</button>
-            <span id="commentDislikeCount-${postId}-${comment.commentId}">${comment.dislikes ? comment.dislikes.length : 0}</span>
+            <span id="commentDislikeCount-${postId}-${comment.commentId}">${comment.dislikes ? comment.dislikes.length : 0}</span>            
+            ${auth.currentUser && auth.currentUser.uid === comment.uid ? `<button id="delBtn-${postId}-${comment.commentId}" class="btn btn-sm btn-danger ms-2">삭제</button>` : ''}
             <button class="btn btn-sm btn-link" id="replyBtn-${postId}-${comment.commentId}">답글</button>
           </div>
           <div class="reply-form d-none" id="replyForm-${postId}-${comment.commentId}">
@@ -1189,6 +1194,14 @@
             <button class="btn btn-secondary btn-sm" id="replySubmitBtn-${postId}-${comment.commentId}">댓글 달기</button>
           </div>
         `;
+
+        const delBtn = div.querySelector(`#delBtn-${postId}-${comment.commentId}`);
+        if(delBtn) {
+          delBtn.addEventListener('click', () => {
+            openDeleteCommentModal(postId, comment.commentId);
+          });
+        }
+
         const commentLikeBtn = div.querySelector(`#commentLikeBtn-${postId}-${comment.commentId}`);
         const commentDislikeBtn = div.querySelector(`#commentDislikeBtn-${postId}-${comment.commentId}`);
         commentLikeBtn.addEventListener('click', () => toggleCommentLike(postId, comment.commentId));
@@ -1236,166 +1249,184 @@
       });
     }
 
-    savePostBtn.addEventListener('click', async () => {
+
+    /********************************
+     * 좋아요/싫어요 (게시글)
+     ********************************/
+    let likeDislikeInProgress = new Set();
+    async function toggleLike(postId) {
       const user = auth.currentUser;
       if (!user) {
         showToast('로그인이 필요합니다.', '오류');
         return;
       }
-      if (!currentNickname) {
-        showToast('닉네임을 불러오지 못했습니다.', '오류');
-        return;
-      }
-      const titleVal = DOMPurify.sanitize(postTitle.value.trim());
-      const unsafeContent = createEditor ? createEditor.getHTML() : '';
-      const contentVal = DOMPurify.sanitize(unsafeContent);
-      if (!titleVal) {
-        showToast('제목을 입력하세요.', '오류');
-        return;
-      }
-      if (!contentVal.trim()) {
-        showToast('내용을 입력하세요.', '오류');
-        return;
-      }
+      if (likeDislikeInProgress.has(postId)) return;
+      likeDislikeInProgress.add(postId);
       try {
         await runTransaction(db, async (transaction) => {
+          const postRef = doc(db, 'posts', postId);
+          const postSnap = await transaction.get(postRef);
+          if (!postSnap.exists()) return;
+          const data = postSnap.data();
+          const likes = data.likes || [];
+          const dislikes = data.dislikes || [];
           const userRef = doc(db, 'users', user.uid);
           const userSnap = await transaction.get(userRef);
           let oldScore = 0;
-          if (userSnap.exists()) {
-            oldScore = userSnap.data().score || 0;
+          if (userSnap.exists()) oldScore = userSnap.data().score || 0;
+          let scoreDiff = 0;
+          const alreadyLiked = likes.includes(user.uid);
+          const alreadyDisliked = dislikes.includes(user.uid);
+          if (alreadyLiked) {
+            transaction.update(postRef, { likes: arrayRemove(user.uid) });
+            scoreDiff -= 10;
+          } else {
+            transaction.update(postRef, { likes: arrayUnion(user.uid) });
+            if (alreadyDisliked) {
+              transaction.update(postRef, { dislikes: arrayRemove(user.uid) });
+              scoreDiff += 5;
+            }
+            scoreDiff += 10;
           }
-          const newPostRef = doc(collection(db, 'posts'));
-          transaction.set(newPostRef, {
-            uid: user.uid,
-            nickname: currentNickname,
-            title: titleVal,
-            content: contentVal,
-            createdAt: serverTimestamp(),
-            likes: [],
-            dislikes: []
-          });
-          transaction.update(userRef, {
-            score: oldScore + 50
-          });
+          transaction.update(userRef, { score: oldScore + scoreDiff });
         });
-        showToast('글이 등록되었습니다.', '글 작성');
-        postTitle.value = '';
-        createEditor.setHTML('');
-        postCard.classList.add('d-none');
-        clearPostList();
-        await loadMorePosts();
         const userData = await fetchUserNicknameAndScore(user.uid);
         currentScore = userData.score;
       } catch (err) {
-        showToast(err.message, '글 작성 실패');
+        showToast(err.message, '오류');
+      } finally {
+        likeDislikeInProgress.delete(postId);
       }
-    });
-
-    async function openEditModal(postDoc) {
-      editPostId.value = postDoc.id;
-      editTitle.value = postDoc.data().title;
-      if (editEditor) {
-        editEditor.setHTML(postDoc.data().content);
-      }
-      editModal.show();
     }
-
-    updatePostBtn.addEventListener('click', async () => {
+    async function toggleDislike(postId) {
       const user = auth.currentUser;
       if (!user) {
         showToast('로그인이 필요합니다.', '오류');
         return;
       }
-      const docId = editPostId.value;
-      const newTitle = editTitle.value.trim();
-      const unsafeContent = editEditor ? editEditor.getHTML() : '';
-      const newContent = DOMPurify.sanitize(unsafeContent);
-      if (!newTitle || !newContent.trim()) {
-        showToast('제목과 내용을 입력하세요.', '오류');
-        return;
-      }
+      if (likeDislikeInProgress.has(postId)) return;
+      likeDislikeInProgress.add(postId);
       try {
-        const postRef = doc(db, 'posts', docId);
-        const postSnap = await getDoc(postRef);
-        if (!postSnap.exists()) {
-          showToast('존재하지 않는 글입니다.', '오류');
-          return;
-        }
-        if (postSnap.data().uid !== user.uid) {
-          showToast('본인 글만 수정할 수 있습니다.', '오류');
-          return;
-        }
-        await updateDoc(postRef, {
-          title: newTitle,
-          content: newContent
+        await runTransaction(db, async (transaction) => {
+          const postRef = doc(db, 'posts', postId);
+          const postSnap = await transaction.get(postRef);
+          if (!postSnap.exists()) return;
+          const data = postSnap.data();
+          const likes = data.likes || [];
+          const dislikes = data.dislikes || [];
+          const userRef = doc(db, 'users', user.uid);
+          const userSnap = await transaction.get(userRef);
+          let oldScore = 0;
+          if (userSnap.exists()) oldScore = userSnap.data().score || 0;
+          let scoreDiff = 0;
+          const alreadyLiked = likes.includes(user.uid);
+          const alreadyDisliked = dislikes.includes(user.uid);
+          if (alreadyDisliked) {
+            transaction.update(postRef, { dislikes: arrayRemove(user.uid) });
+            scoreDiff += 5;
+          } else {
+            transaction.update(postRef, { dislikes: arrayUnion(user.uid) });
+            if (alreadyLiked) {
+              transaction.update(postRef, { likes: arrayRemove(user.uid) });
+              scoreDiff -= 10;
+            }
+            scoreDiff -= 5;
+          }
+          transaction.update(userRef, { score: oldScore + scoreDiff });
         });
-        showToast('글이 수정되었습니다.', '성공');
-        editModal.hide();
-        clearPostList();
-        await loadMorePosts();
+        const userData = await fetchUserNicknameAndScore(user.uid);
+        currentScore = userData.score;
       } catch (err) {
-        showToast(err.message, '수정 실패');
+        showToast(err.message, '오류');
+      } finally {
+        likeDislikeInProgress.delete(postId);
       }
-    });
+    }
 
-    async function deletePost(postDoc) {
+    /********************************
+     * 좋아요/싫어요 (댓글)
+     ********************************/
+    let commentLikeDislikeInProgress = new Set();
+    async function toggleCommentLike(postId, commentId) {
       const user = auth.currentUser;
       if (!user) {
         showToast('로그인이 필요합니다.', '오류');
         return;
       }
-      const postData = postDoc.data();
-      if (postData.uid !== user.uid) {
-        showToast('본인 글만 삭제할 수 있습니다.', '오류');
-        return;
-      }
-      if (!confirm('이 글을 삭제하시겠습니까?')) {
-        return;
-      }
+      const key = `comment-${postId}-${commentId}`;
+      if (commentLikeDislikeInProgress.has(key)) return;
+      commentLikeDislikeInProgress.add(key);
       try {
-        await deleteDoc(postDoc.ref);
-        showToast('글이 삭제되었습니다.', '삭제');
-        clearPostList();
-        await loadMorePosts();
+        await runTransaction(db, async (transaction) => {
+          const commentRef = doc(db, 'posts', postId, 'comments', commentId);
+          const commentSnap = await transaction.get(commentRef);
+          if (!commentSnap.exists()) return;
+          const data = commentSnap.data();
+          const likes = data.likes || [];
+          const dislikes = data.dislikes || [];
+          let scoreDiff = 0;
+          const alreadyLiked = likes.includes(user.uid);
+          const alreadyDisliked = dislikes.includes(user.uid);
+          if (alreadyLiked) {
+            transaction.update(commentRef, { likes: arrayRemove(user.uid) });
+            scoreDiff -= 5;
+          } else {
+            transaction.update(commentRef, { likes: arrayUnion(user.uid) });
+            if (alreadyDisliked) {
+              transaction.update(commentRef, { dislikes: arrayRemove(user.uid) });
+              scoreDiff += 3;
+            }
+            scoreDiff += 5;
+          }
+        });
       } catch (err) {
-        showToast(err.message, '삭제 실패');
+        showToast(err.message, '오류');
+      } finally {
+        commentLikeDislikeInProgress.delete(`comment-${postId}-${commentId}`);
       }
     }
-
-    function openDeleteCommentModal(postId, commentId) {
-      deleteCommentPostId.value = postId;
-      deleteCommentId.value = commentId;
-      deleteCommentModal.show();
-    }
-
-    confirmDeleteCommentBtn.addEventListener('click', async () => {
+    async function toggleCommentDislike(postId, commentId) {
       const user = auth.currentUser;
       if (!user) {
         showToast('로그인이 필요합니다.', '오류');
         return;
       }
-      const postId = deleteCommentPostId.value;
-      const commentId = deleteCommentId.value;
+      const key = `comment-${postId}-${commentId}`;
+      if (commentLikeDislikeInProgress.has(key)) return;
+      commentLikeDislikeInProgress.add(key);
       try {
-        const commentRef = doc(db, 'posts', postId, 'comments', commentId);
-        const commentSnap = await getDoc(commentRef);
-        if (!commentSnap.exists()) {
-          showToast('존재하지 않는 댓글입니다.', '오류');
-          return;
-        }
-        if (commentSnap.data().uid !== user.uid) {
-          showToast('본인 댓글만 삭제할 수 있습니다.', '오류');
-          return;
-        }
-        await deleteDoc(commentRef);
-        showToast('댓글이 삭제되었습니다.', '댓글 삭제');
-        deleteCommentModal.hide();
+        await runTransaction(db, async (transaction) => {
+          const commentRef = doc(db, 'posts', postId, 'comments', commentId);
+          const commentSnap = await transaction.get(commentRef);
+          if (!commentSnap.exists()) return;
+          const data = commentSnap.data();
+          const likes = data.likes || [];
+          const dislikes = data.dislikes || [];
+          let scoreDiff = 0;
+          const alreadyLiked = likes.includes(user.uid);
+          const alreadyDisliked = dislikes.includes(user.uid);
+          if (alreadyDisliked) {
+            transaction.update(commentRef, { dislikes: arrayRemove(user.uid) });
+            scoreDiff += 3;
+          } else {
+            transaction.update(commentRef, { dislikes: arrayUnion(user.uid) });
+            if (alreadyLiked) {
+              transaction.update(commentRef, { likes: arrayRemove(user.uid) });
+              scoreDiff -= 5;
+            }
+            scoreDiff -= 3;
+          }
+        });
       } catch (err) {
-        showToast(err.message, '댓글 삭제 실패');
+        showToast(err.message, '오류');
+      } finally {
+        commentLikeDislikeInProgress.delete(`comment-${postId}-${commentId}`);
       }
-    });
+    }
 
+    /********************************
+     * 개별 글 DOM 생성 (게시글 내용, 좋아요/싫어요, 수정/삭제, 마법, 댓글 등)
+     ********************************/
     async function createPostItem(docSnap) {
       const data = docSnap.data();
       const postId = docSnap.id;
@@ -1411,15 +1442,13 @@
           const userData = snap.data();
           authorScore = userData.score || 0;
           const rankInfo = getRankByScore(userData.score || 0);
-          authorRankEmoji = rankInfo.icon; 
+          authorRankEmoji = rankInfo.icon;
           authorNickname = userData.nickname || authorNickname;
         }
-      } catch (_) { }
+      } catch (_) {}
       let isAuthor = false;
       const currentUser = auth.currentUser;
-      if (currentUser && currentUser.uid === data.uid) {
-        isAuthor = true; 
-      }
+      if (currentUser && currentUser.uid === data.uid) isAuthor = true;
       const likeCount = data.likes ? data.likes.length : 0;
       const dislikeCount = data.dislikes ? data.dislikes.length : 0;
       const safeContent = DOMPurify.sanitize(data.content ?? '');
@@ -1430,17 +1459,14 @@
           <div class="action-buttons">
             ${isAuthor ? `
               <button class="btn btn-sm btn-warning me-2" id="editBtn-${postId}">수정</button>
-              <button class="btn btn-sm btn-danger me-2" id="deleteBtn-${postId}">삭제</button>              
+              <button class="btn btn-sm btn-danger me-2" id="deleteBtn-${postId}">삭제</button>
             ` : ''}
             ${currentUser ? `<button class="btn btn-sm magic-btn" id="magicBtn-${postId}">💫</button>` : ''}
           </div>
         </div>
         <div class="card-body">
           <h6 class="card-subtitle text-muted mb-2 post-subtitle">
-            <span>
-              작성자: ${authorNickname}
-              <span style="cursor:pointer;" id="rankIcon-${postId}">${authorRankEmoji}</span>
-            </span>
+            <span>작성자: ${authorNickname} <span style="cursor:pointer;" id="rankIcon-${postId}">${authorRankEmoji}</span></span>
             <span>${formatDateTime(data.createdAt)}</span>
           </h6>
           <div class="card-text mt-2">${finalContent}</div>
@@ -1478,18 +1504,13 @@
         const editBtn = card.querySelector(`#editBtn-${postId}`);
         editBtn.addEventListener('click', async () => {
           const postSnap = await getDoc(doc(db, 'posts', postId));
-          if (postSnap.exists()) {
-            openEditModal(postSnap);
-          } else {
-            showToast('글 정보를 불러오지 못했습니다.', '오류');
-          }
+          if (postSnap.exists()) openEditModal(postSnap);
+          else showToast('글 정보를 불러오지 못했습니다.', '오류');
         });
         const deleteBtn = card.querySelector(`#deleteBtn-${postId}`);
         deleteBtn.addEventListener('click', async () => {
           const postSnap = await getDoc(doc(db, 'posts', postId));
-          if (postSnap.exists()) {
-            await deletePost(postSnap);
-          }
+          if (postSnap.exists()) await deletePost(postSnap);
         });
       }
       const likeBtn = card.querySelector(`#likeBtn-${postId}`);
@@ -1519,9 +1540,7 @@
       const commentFormEl = card.querySelector(`#commentForm-${postId}`);
       const commentInputEl = card.querySelector(`#commentInput-${postId}`);
       const commentBtn = card.querySelector(`#commentBtn-${postId}`);
-      if (currentUser) {
-        commentFormEl.classList.remove('d-none');
-      }
+      if (currentUser) commentFormEl.classList.remove('d-none');
       commentBtn.addEventListener('click', () => {
         const text = commentInputEl.value.trim();
         addComment(postId, text);
@@ -1546,13 +1565,14 @@
       if (data.magic && data.magic.expiresAt) {
         const now = new Date();
         const exp = new Date(data.magic.expiresAt.seconds * 1000);
-        if (now < exp) {
-          card.classList.add(data.magic.magicType);
-        }
+        if (now < exp) card.classList.add(data.magic.magicType);
       }
       return card;
     }
 
+    /********************************
+     * 마법 관련 함수
+     ********************************/
     async function openMagicModal(postId, postData, authorScore) {
       const magicModalEl = document.getElementById('magicModal');
       const magicModal = new bootstrap.Modal(magicModalEl);
@@ -1567,9 +1587,7 @@
       if (magic && magic.expiresAt) {
         const now = new Date();
         const exp = new Date(magic.expiresAt.seconds * 1000);
-        if (now >= exp) {
-          magic = null;
-        }
+        if (now >= exp) magic = null;
       }
       magicInfoDiv.innerHTML = "";
       magicModalFooter.innerHTML = "";
@@ -1600,8 +1618,8 @@
           const availableMagic = getAvailableMagicTypes(rankInfo.name);
           let radioHTML = `<p>이 글에 시전할 마법을 선택하세요:</p>`;
           availableMagic.forEach((magicType, index) => {
-              const displayName = magicDisplayNames[magicType] || magicType;
-              radioHTML += `
+            const displayName = magicDisplayNames[magicType] || magicType;
+            radioHTML += `
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="magicRadio" id="magicRadio-${magicType}" value="${magicType}" ${index===0 ? 'checked' : ''}>
                 <label class="form-check-label" for="magicRadio-${magicType}">${displayName}</label>
@@ -1614,11 +1632,8 @@
           castBtn.addEventListener('click', () => {
             const radios = document.getElementsByName('magicRadio');
             let selectedMagic;
-            for(let radio of radios) {
-              if(radio.checked) {
-                selectedMagic = radio.value;
-                break;
-              }
+            for (let radio of radios) {
+              if (radio.checked) { selectedMagic = radio.value; break; }
             }
             castMagic(postId, postData, selectedMagic);
           });
@@ -1634,7 +1649,6 @@
       }
       magicModal.show();
     }
-
     async function castMagic(postId, postData, magicType) {
       const user = auth.currentUser;
       if (!user) {
@@ -1657,9 +1671,7 @@
         await runTransaction(db, async (transaction) => {
           const postRef = doc(db, 'posts', postId);
           const postSnap = await transaction.get(postRef);
-          if (!postSnap.exists()) {
-            throw new Error('글을 찾을 수 없습니다.');
-          }
+          if (!postSnap.exists()) throw new Error('글을 찾을 수 없습니다.');
           transaction.update(postRef, {
             magic: {
               magicType: magicType,
@@ -1673,38 +1685,32 @@
         });
         showToast('마법이 시전되었습니다!', '마법');
         const cardEl = document.getElementById(`postCard-${postId}`);
-        if (cardEl) {
-          cardEl.classList.add(magicType);
-        }
+        if (cardEl) cardEl.classList.add(magicType);
         bootstrap.Modal.getInstance(document.getElementById('magicModal')).hide();
       } catch (err) {
         showToast(err.message, '마법 시전 실패');
       }
     }
-
     async function removeMagic(postId) {
       try {
         await runTransaction(db, async (transaction) => {
           const postRef = doc(db, 'posts', postId);
           const postSnap = await transaction.get(postRef);
-          if (!postSnap.exists()) {
-            throw new Error('글을 찾을 수 없습니다.');
-          }
-          transaction.update(postRef, {
-            magic: deleteField()
-          });
+          if (!postSnap.exists()) throw new Error('글을 찾을 수 없습니다.');
+          transaction.update(postRef, { magic: deleteField() });
         });
         showToast('마법이 해제되었습니다.', '마법');
         const cardEl = document.getElementById(`postCard-${postId}`);
-        if (cardEl) {
-          cardEl.className = cardEl.className.replace(/\bmagic-\S+\b/g, '');
-        }
+        if (cardEl) cardEl.className = cardEl.className.replace(/\bmagic-\S+\b/g, '');
         bootstrap.Modal.getInstance(document.getElementById('magicModal')).hide();
       } catch (err) {
         showToast(err.message, '마법 해제 실패');
       }
     }
 
+    /********************************
+     * 실시간 글 UI 및 댓글 업데이트, 무한 스크롤
+     ********************************/
     function updatePostUI(postSnap) {
       const postId = postSnap.id;
       const data = postSnap.data();
@@ -1751,7 +1757,6 @@
     let lastVisible = null;
     let isLoading = false;
     const PAGE_SIZE = 5;
-
     async function loadMorePosts() {
       if (isLoading) return;
       isLoading = true;
@@ -1775,9 +1780,7 @@
           const item = await createPostItem(docSnap);
           postList.appendChild(item);
           onSnapshot(doc(db, 'posts', docSnap.id), (updatedSnap) => {
-            if (updatedSnap.exists()) {
-              updatePostUI(updatedSnap);
-            }
+            if (updatedSnap.exists()) updatePostUI(updatedSnap);
           });
           if (!commentUnsubscribers[docSnap.id]) {
             const cmtQuery = query(
@@ -1792,9 +1795,7 @@
                 cmtData.push(cdata);
               });
               const commentListEl = document.querySelector(`#commentList-${docSnap.id}`);
-              if (commentListEl) {
-                renderComments(docSnap.id, cmtData, commentListEl);
-              }
+              if (commentListEl) renderComments(docSnap.id, cmtData, commentListEl);
             });
           }
           newLastDoc = docSnap;
@@ -1803,18 +1804,17 @@
       }
       isLoading = false;
     }
-
     window.addEventListener('scroll', () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-        loadMorePosts();
-      }
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) loadMorePosts();
     });
 
+    /********************************
+     * 랭킹 관련 (무한 스크롤)
+     ********************************/
     let rankingLastVisible = null;
     let isRankingLoading = false;
     let rankingCount = 0;
     const RANKING_PAGE_SIZE = 10;
-
     async function loadMoreRanking() {
       if (isRankingLoading) return;
       isRankingLoading = true;
@@ -1847,28 +1847,35 @@
       }
       isRankingLoading = false;
     }
+    const rankingModalEl = document.getElementById('rankingModal');
+    rankingModalEl.addEventListener('show.bs.modal', () => {
+      rankingLastVisible = null;
+      rankingCount = 0;
+      document.getElementById('rankingContainer').innerHTML = '';
+      loadMoreRanking();
+    });
+    const rankingContainer = document.getElementById('rankingContainer');
+    rankingContainer.addEventListener('scroll', () => {
+      if (rankingContainer.scrollTop + rankingContainer.clientHeight >= rankingContainer.scrollHeight - 50) loadMoreRanking();
+    });
 
+    /********************************
+     * 폭죽(Confetti) 애니메이션
+     ********************************/
     function launchFireworks() {
       const duration = 2000;
       const animationEnd = Date.now() + duration;
       const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
       const interval = setInterval(() => {
         const timeLeft = animationEnd - Date.now();
-        if (timeLeft <= 0) {
-          clearInterval(interval);
-          return;
-        }
+        if (timeLeft <= 0) { clearInterval(interval); return; }
         const particleCount = 50 * (timeLeft / duration);
         confetti(Object.assign({}, defaults, {
           particleCount,
-          origin: {
-            x: Math.random(),
-            y: Math.random() - 0.2
-          }
+          origin: { x: Math.random(), y: Math.random() - 0.2 }
         }));
       }, 250);
     }
-
     async function highlightPostFromQuery() {
       const urlParams = new URLSearchParams(window.location.search);
       const highlightPostId = urlParams.get('postId');
@@ -1889,31 +1896,13 @@
         }
       }
     }
-
-    const rankingModalEl = document.getElementById('rankingModal');
-    rankingModalEl.addEventListener('show.bs.modal', () => {
-      rankingLastVisible = null;
-      rankingCount = 0;
-      document.getElementById('rankingContainer').innerHTML = '';
-      loadMoreRanking();
-    });
-
-    const rankingContainer = document.getElementById('rankingContainer');
-    rankingContainer.addEventListener('scroll', () => {
-      if (rankingContainer.scrollTop + rankingContainer.clientHeight >= rankingContainer.scrollHeight - 50) {
-        loadMoreRanking();
-      }
-    });
-
     deleteAccountBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
       if (!user) {
         showToast('로그인 상태가 아닙니다.', '오류');
         return;
       }
-      if (!confirm('회원탈퇴 시, 작성하신 댓글은 삭제되지 않고 남습니다.\n댓글은 별도로 직접 삭제하셔야 하며,\n댓글을 제외한 모든 작성글과 계정이 완전히 삭제됩니다.\n정말로 탈퇴하시겠습니까?')) {
-        return;
-      }
+      if (!confirm('회원탈퇴 시, 작성하신 댓글은 삭제되지 않고 남습니다.\n댓글은 별도로 직접 삭제하셔야 하며,\n댓글을 제외한 모든 작성글과 계정이 완전히 삭제됩니다.\n정말로 탈퇴하시겠습니까?')) return;
       try {
         const postsQuery = query(collection(db, 'posts'), where('uid', '==', user.uid));
         const postsSnapshot = await getDocs(postsQuery);
@@ -1927,11 +1916,14 @@
         showToast(err.message, '회원탈퇴 실패');
       }
     });
-
     fetchActiveNotices();
-    loadMorePosts().then(() => {
-      highlightPostFromQuery();
-    });
+    loadMorePosts().then(() => { highlightPostFromQuery(); });
+
+    // ※ 필요 시, 전역 함수로 접근할 수 있도록 window에 할당 (모듈 스코프 문제 방지)
+    window.toggleLike = toggleLike;
+    window.toggleDislike = toggleDislike;
+    window.toggleCommentLike = toggleCommentLike;
+    window.toggleCommentDislike = toggleCommentDislike;
   </script>
 </body>
 </html>
