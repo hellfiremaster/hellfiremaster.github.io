@@ -296,15 +296,33 @@
       direction: rtl;
       unicode-bidi: bidi-override;
     }
+    
     .magic-rainbow {
-      border: 3px solid;
-      border-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet) 1;
-      animation: rainbow 3s linear infinite;
+      /* 무지개 그라데이션 배경 (rgba값으로 투명도 적용) */
+      background: linear-gradient(45deg,
+        rgba(255, 0, 0, 0.4),       /* Red */
+        rgba(255, 165, 0, 0.4),     /* Orange */
+        rgba(255, 255, 0, 0.4),     /* Yellow */
+        rgba(0, 128, 0, 0.4),       /* Green */
+        rgba(0, 0, 255, 0.4),       /* Blue */
+        rgba(75, 0, 130, 0.4),      /* Indigo */
+        rgba(238, 130, 238, 0.4)    /* Violet */
+      );
+      
+      /* 애니메이션 적용 */
+      animation: rainbowPulse 2s ease-in-out infinite;
     }
-    @keyframes rainbow {
-      0% { border-image-source: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet); }
-      100% { border-image-source: linear-gradient(45deg, violet, indigo, blue, green, yellow, orange, red); }
+    @keyframes rainbowPulse {
+      0%, 100% {
+        /* 시작과 끝은 비교적 약한 그림자 (빨간 계열) */
+        box-shadow: 0 0 10px 2px rgba(255, 0, 0, 0.8);
+      }
+      50% {
+        /* 중간에는 그림자 크기와 강도를 증가 (보라 계열) */
+        box-shadow: 0 0 20px 4px rgba(238, 130, 238, 1);
+      }
     }
+
     .magic-ultimate {
       background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0) 70%) !important;
       animation: ultimateGlow 2s infinite;
