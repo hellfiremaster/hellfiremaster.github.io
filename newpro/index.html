@@ -1871,7 +1871,7 @@
           <div class="action-buttons">
             ${isAuthor ? `
               <button class="btn btn-sm btn-warning me-2" id="editBtn-${postId}">수정</button>
-              <button class="btn btn-sm btn-danger me-2" id="deleteBtn-${postId}">삭제</button>
+              <button class="btn btn-sm btn-danger me-2" id="deleteBtn-${postId}">삭제</button>              
             ` : ''}
             ${currentUser ? `<button class="btn btn-sm magic-btn" id="magicBtn-${postId}">💫</button>` : ''}
           </div>
@@ -1892,6 +1892,9 @@
             <span id="likeCount-${postId}">${likeCount}</span>
             <button class="btn btn-sm btn-outline-danger" id="dislikeBtn-${postId}">👎</button>
             <span id="dislikeCount-${postId}">${dislikeCount}</span>
+
+            <span class="vr mx-2"></span>
+            <button class="btn btn-sm btn-outline-secondary" id="shareBtn-${postId}">🔗</button>
           </div>
 
           <!-- 댓글 리스트 -->
@@ -1951,6 +1954,17 @@
       const dislikeBtn = card.querySelector(`#dislikeBtn-${postId}`);
       likeBtn.addEventListener('click', () => toggleLike(postId));
       dislikeBtn.addEventListener('click', () => toggleDislike(postId));
+
+      const shareBtn = card.querySelector(`#shareBtn-${postId}`);
+      shareBtn.addEventListener('click', () => {
+        console.log('hi');
+        const shareUrl = window.location.origin + window.location.pathname + '?postId=' + postId;
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          showToast('URL 복사되었습니다.', '공유');
+        }).catch((err) => {
+          showToast('URL 복사 실패: ' + err, '공유');
+        });
+      });
 
       if (currentUser) {
         if (data.likes?.includes(currentUser.uid)) {
@@ -2375,6 +2389,33 @@
       }, 250);
     }
 
+    /********************************
+     * [추가] URL 쿼리 파라미터로 전달된 post id가 있을 경우 해당 글을 최상단에 노출
+     ********************************/
+    async function highlightPostFromQuery() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const highlightPostId = urlParams.get('postId');
+      if (!highlightPostId) return;
+      
+      const existingCard = document.getElementById('postCard-' + highlightPostId);
+      if (existingCard) {
+        // 이미 로드된 경우 최상단으로 이동 및 하이라이트 효과 추가
+        if (postList.firstChild !== existingCard) {
+          postList.insertBefore(existingCard, postList.firstChild);
+        }
+        existingCard.style.border = '3px solid gold';
+      } else {
+        // 아직 로드되지 않은 경우 Firestore에서 직접 가져와서 최상단에 추가
+        const postRef = doc(db, 'posts', highlightPostId);
+        const postSnap = await getDoc(postRef);
+        if (postSnap.exists()) {
+          const card = await createPostItem(postSnap);
+          card.style.border = '3px solid gold';
+          postList.insertBefore(card, postList.firstChild);
+        }
+      }
+    }
+
     // 랭킹 모달 열 때 랭킹 리스트 초기화 및 첫 로드
     const rankingModalEl = document.getElementById('rankingModal');
     rankingModalEl.addEventListener('show.bs.modal', () => {
@@ -2421,8 +2462,10 @@
     });
 
     fetchActiveNotices();
-    // 페이지 첫 진입 시 5개 로드
-    loadMorePosts();
+    // 페이지 첫 진입 시 5개 로드 후 URL 파라미터에 따른 하이라이트 글 노출
+    loadMorePosts().then(() => {
+      highlightPostFromQuery();
+    });
   </script>
 </body>
 </html>
