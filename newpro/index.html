@@ -1151,138 +1151,152 @@
      * 댓글 렌더링 (계층구조 처리)
      ********************************/
      async function renderComments(postId, comments, containerEl) {
-  containerEl.innerHTML = '';
-  const header = document.getElementById(`commentHeader-${postId}`);
-  if (comments.length === 0) {
-    if (header) header.style.display = 'none';
-  } else {
-    if (header) header.style.display = '';
-  }
-  const commentMap = {};
-  comments.forEach(c => {
-    c.children = [];
-    commentMap[c.commentId] = c;
-  });
-  const roots = [];
-  comments.forEach(c => {
-    if (c.parentCommentId && commentMap[c.parentCommentId]) {
-      commentMap[c.parentCommentId].children.push(c);
-    } else {
-      roots.push(c);
-    }
-  });
-
-  function renderCommentNode(comment, indent = 0) {
-    let rankIcon = '';
-    let commentNickname = comment.nickname || '익명';
-    const div = document.createElement('div');
-    div.className = 'comment-item';
-    // indent는 rem 단위로 적용되며, 최대 2rem까지만 들여쓰기합니다.
-    div.style.marginLeft = indent + 'rem';
-
-    const safeContent = DOMPurify.sanitize(comment.content ?? '', { ALLOWED_TAGS: [] });
-    const finalContent = convertLinks(safeContent);
-    const dateStr = formatDateTime(comment.createdAt);
-
-    // 최상위 댓글(indent가 0인 경우)에만 답글 버튼과 폼을 노출
-    const replyButtonHtml = indent === 0
-      ? `<button class="btn btn-sm btn-link" id="replyBtn-${postId}-${comment.commentId}">답글</button>`
-      : '';
-    const replyFormHtml = indent === 0
-      ? `<div class="reply-form d-none" id="replyForm-${postId}-${comment.commentId}">
-           <textarea class="form-control mb-2" rows="2" placeholder="댓글을 입력하세요" id="replyInput-${postId}-${comment.commentId}"></textarea>
-           <button class="btn btn-secondary btn-sm" id="replySubmitBtn-${postId}-${comment.commentId}">댓글 달기</button>
-         </div>`
-      : '';
-
-    div.innerHTML = `
-      <div class="fw-bold">
-        ${commentNickname} <span style="cursor:pointer;" id="commentRankIcon-${postId}-${comment.commentId}">${rankIcon}</span>
-      </div>
-      <div class="small text-muted mb-1">
-        ${dateStr}
-      </div>
-      <div class="keep-line-breaks">${finalContent}</div>
-      <div class="mt-1 d-flex align-items-center gap-2">
-        <button class="btn btn-sm btn-outline-primary" id="commentLikeBtn-${postId}-${comment.commentId}">👍</button>
-        <span id="commentLikeCount-${postId}-${comment.commentId}">${comment.likes ? comment.likes.length : 0}</span>
-        <button class="btn btn-sm btn-outline-danger" id="commentDislikeBtn-${postId}-${comment.commentId}">👎</button>
-        <span id="commentDislikeCount-${postId}-${comment.commentId}">${comment.dislikes ? comment.dislikes.length : 0}</span>            
-        ${auth.currentUser && auth.currentUser.uid === comment.uid ? `<button id="delBtn-${postId}-${comment.commentId}" class="btn btn-sm btn-danger ms-2">삭제</button>` : ''}
-        ${replyButtonHtml}
-      </div>
-      ${replyFormHtml}
-    `;
-
-    // 삭제 버튼 이벤트
-    const delBtn = div.querySelector(`#delBtn-${postId}-${comment.commentId}`);
-    if (delBtn) {
-      delBtn.addEventListener('click', () => {
-        openDeleteCommentModal(postId, comment.commentId);
+      containerEl.innerHTML = '';
+      const header = document.getElementById(`commentHeader-${postId}`);
+      if (comments.length === 0) {
+        if (header) header.style.display = 'none';
+      } else {
+        if (header) header.style.display = '';
+      }
+      const commentMap = {};
+      comments.forEach(c => {
+        c.children = [];
+        commentMap[c.commentId] = c;
       });
-    }
-
-    // 좋아요 / 싫어요 버튼 이벤트
-    const commentLikeBtn = div.querySelector(`#commentLikeBtn-${postId}-${comment.commentId}`);
-    const commentDislikeBtn = div.querySelector(`#commentDislikeBtn-${postId}-${comment.commentId}`);
-    commentLikeBtn.addEventListener('click', () => toggleCommentLike(postId, comment.commentId));
-    commentDislikeBtn.addEventListener('click', () => toggleCommentDislike(postId, comment.commentId));
-
-    // 답글 버튼과 폼은 indent가 0인 경우(최상위 댓글)일 때만 이벤트를 등록합니다.
-    if (indent === 0) {
-      const replyBtn = div.querySelector(`#replyBtn-${postId}-${comment.commentId}`);
-      const replyForm = div.querySelector(`#replyForm-${postId}-${comment.commentId}`);
-      replyBtn.addEventListener('click', () => {
-        replyForm.classList.toggle('d-none');
-      });
-      const replySubmitBtn = div.querySelector(`#replySubmitBtn-${postId}-${comment.commentId}`);
-      replySubmitBtn.addEventListener('click', () => {
-        const replyInput = div.querySelector(`#replyInput-${postId}-${comment.commentId}`);
-        const text = replyInput.value.trim();
-        if (text) {
-          addComment(postId, text, comment.commentId);
-          replyInput.value = '';
-          replyForm.classList.add('d-none');
+      const roots = [];
+      comments.forEach(c => {
+        if (c.parentCommentId && commentMap[c.parentCommentId]) {
+          commentMap[c.parentCommentId].children.push(c);
+        } else {
+          roots.push(c);
         }
       });
-    }
 
-    // 계급 아이콘 설정
-    const rankIconEl = div.querySelector(`#commentRankIcon-${postId}-${comment.commentId}`);
-    if (comment.uid) {
-      fetchUserDoc(comment.uid).then(snap => {
-        if (snap.exists()) {
-          const userData = snap.data();
-          const userScore = userData.score || 0;
-          const rankInfo = getRankByScore(userScore);
-          rankIconEl.textContent = rankInfo.icon;
-          rankIconEl.addEventListener('click', () => {
-            showToast(`계급: ${rankInfo.name} (${userScore}점)`, userData.nickname || '익명');
+      function renderCommentNode(comment, indent = 0) {
+        let rankIcon = '';
+        let commentNickname = comment.nickname || '익명';
+        const div = document.createElement('div');
+        div.className = 'comment-item';
+        // indent는 rem 단위로 적용되며, 최대 2rem까지만 들여쓰기합니다.
+        div.style.marginLeft = indent + 'rem';
+
+        const safeContent = DOMPurify.sanitize(comment.content ?? '', { ALLOWED_TAGS: [] });
+        const finalContent = convertLinks(safeContent);
+        const dateStr = formatDateTime(comment.createdAt);
+
+        // 최상위 댓글(indent가 0인 경우)에만 답글 버튼과 폼을 노출
+        const replyButtonHtml = indent === 0
+          ? `<button class="btn btn-sm btn-link" id="replyBtn-${postId}-${comment.commentId}">답글</button>`
+          : '';
+        const replyFormHtml = indent === 0
+          ? `<div class="reply-form d-none" id="replyForm-${postId}-${comment.commentId}">
+              <textarea class="form-control mb-2" rows="2" placeholder="댓글을 입력하세요" id="replyInput-${postId}-${comment.commentId}"></textarea>
+              <button class="btn btn-secondary btn-sm" id="replySubmitBtn-${postId}-${comment.commentId}">댓글 달기</button>
+            </div>`
+          : '';
+
+        div.innerHTML = `
+          <div class="fw-bold">
+            ${commentNickname} <span style="cursor:pointer;" id="commentRankIcon-${postId}-${comment.commentId}">${rankIcon}</span>
+          </div>
+          <div class="small text-muted mb-1">
+            ${dateStr}
+          </div>
+          <div class="keep-line-breaks">${finalContent}</div>
+          <div class="mt-1 d-flex align-items-center gap-2">
+            <button class="btn btn-sm btn-outline-primary" id="commentLikeBtn-${postId}-${comment.commentId}">👍</button>
+            <span id="commentLikeCount-${postId}-${comment.commentId}">${comment.likes ? comment.likes.length : 0}</span>
+            <button class="btn btn-sm btn-outline-danger" id="commentDislikeBtn-${postId}-${comment.commentId}">👎</button>
+            <span id="commentDislikeCount-${postId}-${comment.commentId}">${comment.dislikes ? comment.dislikes.length : 0}</span>            
+            ${auth.currentUser && auth.currentUser.uid === comment.uid ? `<button id="delBtn-${postId}-${comment.commentId}" class="btn btn-sm btn-danger ms-2">삭제</button>` : ''}
+            ${replyButtonHtml}
+          </div>
+          ${replyFormHtml}
+        `;
+
+        // --- 추가된 부분: 현재 사용자가 이미 좋아요/싫어요 한 경우 버튼 활성화 처리 ---
+        if (auth.currentUser) {
+          const userId = auth.currentUser.uid;
+          const commentLikeBtn = div.querySelector(`#commentLikeBtn-${postId}-${comment.commentId}`);
+          const commentDislikeBtn = div.querySelector(`#commentDislikeBtn-${postId}-${comment.commentId}`);
+          if (comment.likes && comment.likes.includes(userId)) {
+            commentLikeBtn.classList.remove('btn-outline-primary');
+            commentLikeBtn.classList.add('btn-primary');
+          }
+          if (comment.dislikes && comment.dislikes.includes(userId)) {
+            commentDislikeBtn.classList.remove('btn-outline-danger');
+            commentDislikeBtn.classList.add('btn-danger');
+          }
+        }
+        // ---------------------------------------------------------------------------
+
+        // 삭제 버튼 이벤트
+        const delBtn = div.querySelector(`#delBtn-${postId}-${comment.commentId}`);
+        if (delBtn) {
+          delBtn.addEventListener('click', () => {
+            openDeleteCommentModal(postId, comment.commentId);
           });
         }
+
+        // 좋아요 / 싫어요 버튼 이벤트
+        const commentLikeBtn = div.querySelector(`#commentLikeBtn-${postId}-${comment.commentId}`);
+        const commentDislikeBtn = div.querySelector(`#commentDislikeBtn-${postId}-${comment.commentId}`);
+        commentLikeBtn.addEventListener('click', () => toggleCommentLike(postId, comment.commentId));
+        commentDislikeBtn.addEventListener('click', () => toggleCommentDislike(postId, comment.commentId));
+
+        // 답글 버튼과 폼은 indent가 0인 경우(최상위 댓글)일 때만 이벤트를 등록합니다.
+        if (indent === 0) {
+          const replyBtn = div.querySelector(`#replyBtn-${postId}-${comment.commentId}`);
+          const replyForm = div.querySelector(`#replyForm-${postId}-${comment.commentId}`);
+          replyBtn.addEventListener('click', () => {
+            replyForm.classList.toggle('d-none');
+          });
+          const replySubmitBtn = div.querySelector(`#replySubmitBtn-${postId}-${comment.commentId}`);
+          replySubmitBtn.addEventListener('click', () => {
+            const replyInput = div.querySelector(`#replyInput-${postId}-${comment.commentId}`);
+            const text = replyInput.value.trim();
+            if (text) {
+              addComment(postId, text, comment.commentId);
+              replyInput.value = '';
+              replyForm.classList.add('d-none');
+            }
+          });
+        }
+
+        // 계급 아이콘 설정
+        const rankIconEl = div.querySelector(`#commentRankIcon-${postId}-${comment.commentId}`);
+        if (comment.uid) {
+          fetchUserDoc(comment.uid).then(snap => {
+            if (snap.exists()) {
+              const userData = snap.data();
+              const userScore = userData.score || 0;
+              const rankInfo = getRankByScore(userScore);
+              rankIconEl.textContent = rankInfo.icon;
+              rankIconEl.addEventListener('click', () => {
+                showToast(`계급: ${rankInfo.name} (${userScore}점)`, userData.nickname || '익명');
+              });
+            }
+          });
+        }
+
+        // 자식 댓글 렌더링
+        // indent가 0인 경우에만 2rem 들여쓰기로 증가하고, 그 이후엔 최대 들여쓰기를 유지합니다.
+        if (comment.children && comment.children.length > 0) {
+          // 최상위 댓글일 때는 indent 0 → 2, 답글인 경우는 계속 2rem을 유지
+          const newIndent = indent === 0 ? indent + 2 : indent;
+          comment.children.forEach(child => {
+            const childDiv = renderCommentNode(child, newIndent);
+            div.appendChild(childDiv);
+          });
+        }
+        return div;
+      }
+
+      roots.forEach(comment => {
+        const commentNode = renderCommentNode(comment, 0);
+        containerEl.appendChild(commentNode);
       });
     }
-
-    // 자식 댓글 렌더링
-    // indent가 0인 경우에만 2rem 들여쓰기로 증가하고, 그 이후엔 최대 들여쓰기를 유지합니다.
-    if (comment.children && comment.children.length > 0) {
-      // 최상위 댓글일 때는 indent 0 → 2, 답글인 경우는 계속 2rem을 유지
-      const newIndent = indent === 0 ? indent + 2 : indent;
-      comment.children.forEach(child => {
-        const childDiv = renderCommentNode(child, newIndent);
-        div.appendChild(childDiv);
-      });
-    }
-    return div;
-  }
-
-  roots.forEach(comment => {
-    const commentNode = renderCommentNode(comment, 0);
-    containerEl.appendChild(commentNode);
-  });
-}
-
-
 
     /********************************
      * 좋아요/싫어요 (게시글)
