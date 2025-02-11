@@ -1829,7 +1829,30 @@
       if (likeCountEl) likeCountEl.textContent = data.likes?.length || 0;
       if (dislikeCountEl) dislikeCountEl.textContent = data.dislikes?.length || 0;
       
-      // 기존의 마법 효과 관련 코드 (있다면) 그대로 유지
+      // → 추가: 좋아요/싫어요 버튼 상태 업데이트
+      const currentUser = auth.currentUser;
+      const likeBtn = document.getElementById(`likeBtn-${postId}`);
+      const dislikeBtn = document.getElementById(`dislikeBtn-${postId}`);
+      if (likeBtn) {
+        if (currentUser && data.likes && data.likes.includes(currentUser.uid)) {
+          likeBtn.classList.remove('btn-outline-primary');
+          likeBtn.classList.add('btn-primary');
+        } else {
+          likeBtn.classList.remove('btn-primary');
+          likeBtn.classList.add('btn-outline-primary');
+        }
+      }
+      if (dislikeBtn) {
+        if (currentUser && data.dislikes && data.dislikes.includes(currentUser.uid)) {
+          dislikeBtn.classList.remove('btn-outline-danger');
+          dislikeBtn.classList.add('btn-danger');
+        } else {
+          dislikeBtn.classList.remove('btn-danger');
+          dislikeBtn.classList.add('btn-outline-danger');
+        }
+      }
+      
+      // 기존의 마법 효과 및 burning 효과 처리
       const cardEl = document.getElementById(`postCard-${postId}`);
       if (cardEl) {
         if (data.magic && data.magic.expiresAt) {
@@ -1844,7 +1867,6 @@
         } else {
           cardEl.className = cardEl.className.replace(/\bmagic-\S+\b/g, '');
         }
-
         if (data.likes && data.likes.length >= 2) {
           cardEl.classList.add('burning');
         } else {
@@ -1992,9 +2014,33 @@
           const card = await createPostItem(postSnap);
           card.style.border = '3px solid gold';
           postList.insertBefore(card, postList.firstChild);
+          
+          // → 추가: 실시간 업데이트를 위한 onSnapshot 리스너 등록 (게시글)
+          onSnapshot(postRef, (updatedSnap) => {
+            if (updatedSnap.exists()) updatePostUI(updatedSnap);
+          });
+          
+          // → 추가: 댓글 리스너 등록 (댓글이 보이지 않는 버그 수정)
+          if (!commentUnsubscribers[highlightPostId]) {
+            const cmtQuery = query(
+              collection(db, 'posts', highlightPostId, 'comments'),
+              orderBy('createdAt', 'asc')
+            );
+            commentUnsubscribers[highlightPostId] = onSnapshot(cmtQuery, (cmtSnapshot) => {
+              const cmtData = [];
+              cmtSnapshot.forEach((cmtDoc) => {
+                const cdata = cmtDoc.data();
+                cdata.commentId = cmtDoc.id;
+                cmtData.push(cdata);
+              });
+              const commentListEl = document.querySelector(`#commentList-${highlightPostId}`);
+              if (commentListEl) renderComments(highlightPostId, cmtData, commentListEl);
+            });
+          }
         }
       }
-    }
+}
+
     deleteAccountBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
       if (!user) {
