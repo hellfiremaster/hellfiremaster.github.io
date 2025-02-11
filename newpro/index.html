@@ -299,6 +299,25 @@
         gap: 0.1rem;
       }
     }
+
+    /* 좋아요(추천) 버튼 타오르는 애니메이션 */
+    @keyframes likeFlame {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4); /* 파란색 (Bootstrap primary 색상 계열) */
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px 6px rgba(0, 123, 255, 0.4);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4);
+      }
+    }
+    .like-flame {
+      animation: likeFlame 0.5s ease-in-out;
+    }
   </style>
 </head>
 <body>
@@ -931,6 +950,9 @@
     });
     togglePostFormBtn.addEventListener('click', () => {
       postCard.classList.toggle('d-none');
+      if (!postCard.classList.contains('d-none')) {
+        postTitle.focus();
+      }
     });
 
     rankModalEl.addEventListener('show.bs.modal', async () => {
@@ -1255,7 +1277,9 @@
         // 좋아요 / 싫어요 버튼 이벤트
         const commentLikeBtn = div.querySelector(`#commentLikeBtn-${postId}-${comment.commentId}`);
         const commentDislikeBtn = div.querySelector(`#commentDislikeBtn-${postId}-${comment.commentId}`);
-        commentLikeBtn.addEventListener('click', () => toggleCommentLike(postId, comment.commentId));
+        commentLikeBtn.addEventListener('click', () => {
+          toggleCommentLike(postId, comment.commentId)
+        });
         commentDislikeBtn.addEventListener('click', () => toggleCommentDislike(postId, comment.commentId));
 
         // 답글 버튼과 폼은 indent가 0인 경우(최상위 댓글)일 때만 이벤트를 등록합니다.
@@ -1577,7 +1601,13 @@
       }
       const likeBtn = card.querySelector(`#likeBtn-${postId}`);
       const dislikeBtn = card.querySelector(`#dislikeBtn-${postId}`);
-      likeBtn.addEventListener('click', () => toggleLike(postId));
+      likeBtn.addEventListener('click', () => {
+        likeBtn.classList.add('like-flame');
+        toggleLike(postId);
+        setTimeout(() => {
+          likeBtn.classList.remove('like-flame');
+        }, 500);
+      });
       dislikeBtn.addEventListener('click', () => toggleDislike(postId));
       const shareBtn = card.querySelector(`#shareBtn-${postId}`);
       shareBtn.addEventListener('click', () => {
