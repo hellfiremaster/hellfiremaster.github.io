@@ -321,6 +321,21 @@
     .adventure {
       font-family: 'Jua', sans-serif !important;
     }
+
+    @keyframes burningAnimation {
+      0% {
+        filter: brightness(1) drop-shadow(0 0 5px rgba(255, 69, 0, 0.8));
+      }
+      50% {
+        filter: brightness(1) drop-shadow(0 0 15px rgba(255, 69, 0, 1));
+      }
+      100% {
+        filter: brightness(1) drop-shadow(0 0 5px rgba(255, 69, 0, 0.8));
+      }
+    }
+    .burning {
+      animation: burningAnimation 1.5s infinite;
+    }
   </style>
 </head>
 <body>
@@ -1806,32 +1821,15 @@
     /********************************
      * 실시간 글 UI 및 댓글 업데이트, 무한 스크롤
      ********************************/
-    function updatePostUI(postSnap) {
+     function updatePostUI(postSnap) {
       const postId = postSnap.id;
       const data = postSnap.data();
       const likeCountEl = document.getElementById(`likeCount-${postId}`);
       const dislikeCountEl = document.getElementById(`dislikeCount-${postId}`);
       if (likeCountEl) likeCountEl.textContent = data.likes?.length || 0;
       if (dislikeCountEl) dislikeCountEl.textContent = data.dislikes?.length || 0;
-      const likeBtn = document.getElementById(`likeBtn-${postId}`);
-      const dislikeBtn = document.getElementById(`dislikeBtn-${postId}`);
-      const currentUser = auth.currentUser;
-      if (likeBtn && dislikeBtn && currentUser) {
-        if (data.likes?.includes(currentUser.uid)) {
-          likeBtn.classList.remove('btn-outline-primary');
-          likeBtn.classList.add('btn-primary');
-        } else {
-          likeBtn.classList.remove('btn-primary');
-          likeBtn.classList.add('btn-outline-primary');
-        }
-        if (data.dislikes?.includes(currentUser.uid)) {
-          dislikeBtn.classList.remove('btn-outline-danger');
-          dislikeBtn.classList.add('btn-danger');
-        } else {
-          dislikeBtn.classList.remove('btn-danger');
-          dislikeBtn.classList.add('btn-outline-danger');
-        }
-      }
+      
+      // 기존의 마법 효과 관련 코드 (있다면) 그대로 유지
       const cardEl = document.getElementById(`postCard-${postId}`);
       if (cardEl) {
         if (data.magic && data.magic.expiresAt) {
@@ -1845,6 +1843,12 @@
           }
         } else {
           cardEl.className = cardEl.className.replace(/\bmagic-\S+\b/g, '');
+        }
+
+        if (data.likes && data.likes.length >= 2) {
+          cardEl.classList.add('burning');
+        } else {
+          cardEl.classList.remove('burning');
         }
       }
     }
