@@ -336,6 +336,12 @@
     .burning {
       animation: burningAnimation 1.5s infinite;
     }
+
+    /* 단일 이모지일 경우 크게 보이도록 하는 CSS */
+    .emoji-large {
+      font-size: 4rem; /* 원하는 크기로 조정 */
+      line-height: 1;
+    }
   </style>
 </head>
 <body>
@@ -1226,6 +1232,13 @@
         }
       });
 
+      function isOnlyEmoji(text) {
+        const trimmed = text.trim();
+        // 정규표현식: 텍스트가 단일 이모지(필수적으로 FE0F 선택적 포함)만 포함하는지 검사
+        const regex = /^(?:\p{Extended_Pictographic}(?:\uFE0F)?)$/u;
+        return regex.test(trimmed);
+      }
+
       function renderCommentNode(comment, indent = 0) {
         let rankIcon = '';
         let commentNickname = comment.nickname || '익명';
@@ -1235,7 +1248,12 @@
         div.style.marginLeft = indent + 'rem';
 
         const safeContent = DOMPurify.sanitize(comment.content ?? '', { ALLOWED_TAGS: [] });
-        const finalContent = convertLinks(safeContent);
+        let finalContent;
+        if (isOnlyEmoji(safeContent)) {
+          finalContent = `<span class="emoji-large">${safeContent}</span>`;
+        } else {
+          finalContent = convertLinks(safeContent);
+        }
         const dateStr = formatDateTime(comment.createdAt);
 
         // 최상위 댓글(indent가 0인 경우)에만 답글 버튼과 폼을 노출
