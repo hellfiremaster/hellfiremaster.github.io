@@ -342,6 +342,11 @@
       font-size: 4rem; /* 원하는 크기로 조정 */
       line-height: 1;
     }
+
+    /* Toast UI Editor 컨텐츠의 기본 글씨 크기를 18px로 설정 */
+    .toastui-editor-contents {
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -1591,7 +1596,7 @@
             <span>작성자: ${authorNickname} <span style="cursor:pointer;" id="rankIcon-${postId}">${authorRankEmoji}</span></span>
             <span>${formatDateTime(data.createdAt)}</span>
           </h6>
-          <div class="card-text mt-2">${finalContent}</div>
+          <div class="card-text mt-2 toastui-editor-contents">${finalContent}</div>
           <div class="mt-3 d-flex align-items-center gap-2">
             <button class="btn btn-sm btn-outline-primary" id="likeBtn-${postId}">👍</button>
             <span id="likeCount-${postId}">${likeCount}</span>
