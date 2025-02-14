@@ -959,7 +959,8 @@
               optionsDiv.querySelectorAll('button').forEach(function(b) { b.disabled = true; });
               await awardQuizPoint();
               card.quizCount++;
-              if (card.quizCount < 1) {
+              
+              if (card.quizCount < 2) {
                 resultEl.innerHTML = '정답입니다! 포인트 1점 획득! ';
                 var nextBtn = document.createElement('button');
                 nextBtn.className = 'btn btn-primary btn-sm';
