@@ -929,12 +929,13 @@
       const card = document.createElement('div');
       card.className = 'card glass-card mb-3 quiz-card';
       card.quizCount = 0; // 정답 횟수를 추적 (최대 3회)
-      
+
       const cardBody = document.createElement('div');
       cardBody.className = 'card-body';
       card.appendChild(cardBody);
-      
+
       function loadQuiz() {
+        cardBody.innerHTML = '';
         const quiz = quizQuestionsAll[Math.floor(Math.random() * quizQuestionsAll.length)];
         cardBody.innerHTML = `
           <h5 class="card-title">퀴즈 타임!</h5>
@@ -944,18 +945,28 @@
         `;
         const optionsDiv = cardBody.querySelector('.quiz-options');
         const resultEl = cardBody.querySelector('.quiz-result');
-        quiz.options.forEach(option => {
+        quiz.options.forEach(function(option) {
           const btn = document.createElement('button');
           btn.className = 'btn btn-outline-primary quiz-option';
           btn.textContent = option;
-          btn.addEventListener('click', async () => {
+          btn.addEventListener('click', async function() {
             if (option === quiz.answer) {
-              resultEl.textContent = '정답입니다! 포인트 1점 획득!';
-              optionsDiv.querySelectorAll('button').forEach(b => b.disabled = true);
+              // 정답일 경우
+              optionsDiv.querySelectorAll('button').forEach(function(b) { b.disabled = true; });
               await awardQuizPoint();
               card.quizCount++;
-              if (card.quizCount < 2) {
-                setTimeout(() => { loadQuiz(); }, 1000); // 1초 후 새 문제 로드
+              if (card.quizCount < 1) {
+                // "다음" 버튼을 결과 문구 오른쪽에 인라인으로 추가
+                resultEl.innerHTML = '정답입니다! 포인트 1점 획득! ';
+                var nextBtn = document.createElement('button');
+                nextBtn.className = 'btn btn-primary btn-sm';
+                nextBtn.textContent = '다음';
+                nextBtn.style.marginLeft = '10px';
+                nextBtn.addEventListener('click', function() { loadQuiz(); });
+                resultEl.appendChild(nextBtn);
+              } else {
+                // 3문제 모두 정답 시 성취감 있는 메시지 표시
+                resultEl.textContent = '훌륭합니다! 😊';
               }
             } else {
               resultEl.textContent = '오답입니다. 다시 시도해보세요!';
@@ -964,7 +975,7 @@
           optionsDiv.appendChild(btn);
         });
       }
-      
+
       loadQuiz();
       return card;
     }
