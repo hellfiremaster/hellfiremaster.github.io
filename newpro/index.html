@@ -954,7 +954,7 @@
               optionsDiv.querySelectorAll('button').forEach(b => b.disabled = true);
               await awardQuizPoint();
               card.quizCount++;
-              if (card.quizCount < 3) {
+              if (card.quizCount < 2) {
                 setTimeout(() => { loadQuiz(); }, 1000); // 1초 후 새 문제 로드
               }
             } else {
