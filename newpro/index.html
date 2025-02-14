@@ -926,40 +926,46 @@
     ];
 
     function createQuizCard() {
-      // 100문제 배열에서 랜덤으로 문제 선택
-      const randomIndex = Math.floor(Math.random() * quizQuestionsAll.length);
-      const quiz = quizQuestionsAll[randomIndex];
-      
-      // 퀴즈 카드 DOM 생성 (glass-card 스타일 적용)
       const card = document.createElement('div');
       card.className = 'card glass-card mb-3 quiz-card';
-      card.innerHTML = `
-        <div class="card-body">
+      card.quizCount = 0; // 정답 횟수를 추적 (최대 3회)
+      
+      const cardBody = document.createElement('div');
+      cardBody.className = 'card-body';
+      card.appendChild(cardBody);
+      
+      function loadQuiz() {
+        const quiz = quizQuestionsAll[Math.floor(Math.random() * quizQuestionsAll.length)];
+        cardBody.innerHTML = `
           <h5 class="card-title">퀴즈 타임!</h5>
           <p class="card-text quiz-question">${quiz.question}</p>
           <div class="quiz-options mb-3"></div>
           <p class="quiz-result text-info"></p>
-        </div>
-      `;
-      const optionsDiv = card.querySelector('.quiz-options');
-      quiz.options.forEach(option => {
-        const btn = document.createElement('button');
-        btn.className = 'btn btn-outline-primary quiz-option';
-        btn.textContent = option;
-        btn.addEventListener('click', async () => {
-          const resultEl = card.querySelector('.quiz-result');
-          if (option === quiz.answer) {
-            resultEl.textContent = '정답입니다! 포인트 1점 획득!';
-            // 모든 선택 버튼 비활성화
-            optionsDiv.querySelectorAll('button').forEach(b => b.disabled = true);
-            // 포인트 지급 함수 호출
-            await awardQuizPoint();
-          } else {
-            resultEl.textContent = '오답입니다. 다시 시도해보세요!';
-          }
+        `;
+        const optionsDiv = cardBody.querySelector('.quiz-options');
+        const resultEl = cardBody.querySelector('.quiz-result');
+        quiz.options.forEach(option => {
+          const btn = document.createElement('button');
+          btn.className = 'btn btn-outline-primary quiz-option';
+          btn.textContent = option;
+          btn.addEventListener('click', async () => {
+            if (option === quiz.answer) {
+              resultEl.textContent = '정답입니다! 포인트 1점 획득!';
+              optionsDiv.querySelectorAll('button').forEach(b => b.disabled = true);
+              await awardQuizPoint();
+              card.quizCount++;
+              if (card.quizCount < 3) {
+                setTimeout(() => { loadQuiz(); }, 1000); // 1초 후 새 문제 로드
+              }
+            } else {
+              resultEl.textContent = '오답입니다. 다시 시도해보세요!';
+            }
+          });
+          optionsDiv.appendChild(btn);
         });
-        optionsDiv.appendChild(btn);
-      });
+      }
+      
+      loadQuiz();
       return card;
     }
 
@@ -2207,6 +2213,13 @@
         let newLastDoc = null;
         for (let docSnap of snapshot.docs) {
           const item = await createPostItem(docSnap);
+
+          // 퀴즈 카드 하나 삽입
+          if(Math.random() < 0.3) {
+            const quizCard = createQuizCard();
+            postList.appendChild(quizCard);
+          }
+
           postList.appendChild(item);
           onSnapshot(doc(db, 'posts', docSnap.id), (updatedSnap) => {
             if (updatedSnap.exists()) updatePostUI(updatedSnap);
@@ -2229,9 +2242,6 @@
           }
           newLastDoc = docSnap;
         }
-        // 글 목록 배치 끝에 퀴즈 카드 하나 삽입
-        const quizCard = createQuizCard();
-        postList.appendChild(quizCard);
         lastVisible = newLastDoc;
       }
       isLoading = false;
