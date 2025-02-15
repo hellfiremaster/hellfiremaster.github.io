@@ -928,7 +928,8 @@
     function createQuizCard() {
       const card = document.createElement('div');
       card.className = 'card glass-card mb-3 quiz-card';
-      card.quizCount = 0; // 정답 횟수를 추적 (최대 3회)
+      card.continueClicks = 0; // "계속" 버튼 클릭 횟수
+      card.currentPoints = 1;  // 초기 누적 포인트: 1점
 
       const cardBody = document.createElement('div');
       cardBody.className = 'card-body';
@@ -938,41 +939,60 @@
         cardBody.innerHTML = '';
         var quiz = quizQuestionsAll[Math.floor(Math.random() * quizQuestionsAll.length)];
         cardBody.innerHTML = `
-          <h5 class="card-title">퀴즈 타임!</h5>
+          <div>
+            <h5 class="card-title" style="display: inline;">퀴즈 타임!</h5>
+            <span class="quiz-points badge bg-info" style="margin-left: 10px;">누적 ${card.currentPoints}점</span>
+          </div>
           <p class="card-text quiz-question">${quiz.question}</p>
           <div class="quiz-options mb-3"></div>
-          <p class="quiz-result text-info"></p>
+          <p class="quiz-result text-info" style="display: inline;"></p>
         `;
-        var optionsDiv = cardBody.querySelector('.quiz-options');
-        var resultEl = cardBody.querySelector('.quiz-result');
-        
-        // quiz.options 배열을 복사한 후 섞어서 사용합니다.
-        var options = quiz.options.slice();
+        const optionsDiv = cardBody.querySelector('.quiz-options');
+        const resultEl = cardBody.querySelector('.quiz-result');
+
+        let options = quiz.options.slice();
         options = shuffleArray(options);
-        
+
         options.forEach(function(option) {
-          var btn = document.createElement('button');
+          const btn = document.createElement('button');
           btn.className = 'btn btn-outline-primary quiz-option';
           btn.textContent = option;
-          btn.addEventListener('click', async function() {
+          btn.addEventListener('click', function() {
+            // 모든 선택지 버튼 비활성화
+            optionsDiv.querySelectorAll('button').forEach(b => b.disabled = true);
             if (option === quiz.answer) {
-              optionsDiv.querySelectorAll('button').forEach(function(b) { b.disabled = true; });
-              await awardQuizPoint();
-              card.quizCount++;
-              
-              if (card.quizCount < 2) {
-                resultEl.innerHTML = '정답입니다! 포인트 1점 획득! ';
-                var nextBtn = document.createElement('button');
-                nextBtn.className = 'btn btn-primary btn-sm';
-                nextBtn.textContent = '다음';
-                nextBtn.style.marginLeft = '10px';
-                nextBtn.addEventListener('click', function() { loadQuiz(); });
-                resultEl.appendChild(nextBtn);
-              } else {
-                resultEl.textContent = '정답입니다! 포인트 1점 획득! 😎';
+              // 정답 시, "정답입니다! 2점"처럼 표시 (현재 누적 포인트 대신 현재 문제에 추가될 포인트만 표시)
+              resultEl.innerHTML = `정답입니다! 누적점수: ${card.currentPoints}점 `;
+              const continueBtn = document.createElement('button');
+              continueBtn.className = 'btn btn-primary btn-sm';
+              continueBtn.textContent = '계속';
+              continueBtn.style.marginLeft = '10px';
+              const confirmBtn = document.createElement('button');
+              confirmBtn.className = 'btn btn-success btn-sm';
+              confirmBtn.textContent = '확정';
+              confirmBtn.style.marginLeft = '5px';
+
+              continueBtn.addEventListener('click', function() {
+                card.continueClicks++;
+                let newPoints = Math.pow(2, card.continueClicks);
+                card.currentPoints = Math.min(newPoints, 50);
+                loadQuiz();
+              });
+
+              confirmBtn.addEventListener('click', async function() {
+                await awardQuizPoints(card.currentPoints);
+                resultEl.innerHTML = `확정하였습니다! ${card.currentPoints}점 획득!`;
+                // 확정 후에도 선택지는 그대로 남아 있음.
+              });
+
+              if(card.currentPoints < 50) {
+                resultEl.appendChild(continueBtn);
               }
+              resultEl.appendChild(confirmBtn);
             } else {
-              resultEl.textContent = '오답입니다. 다시 시도해보세요!';
+              resultEl.innerHTML = `오답입니다. 정답은: ${quiz.answer}`;
+              card.continueClicks = 0;
+              card.currentPoints = 1;
             }
           });
           optionsDiv.appendChild(btn);
@@ -981,6 +1001,26 @@
 
       loadQuiz();
       return card;
+    }
+
+    async function awardQuizPoints(points) {
+      const user = auth.currentUser;
+      if (!user) {
+        showToast("로그인이 필요합니다.", "오류");
+        return;
+      }
+      try {
+        await runTransaction(db, async (transaction) => {
+          const userRef = doc(db, 'users', user.uid);
+          const userSnap = await transaction.get(userRef);
+          let oldScore = 0;
+          if (userSnap.exists()) oldScore = userSnap.data().score || 0;
+          transaction.update(userRef, { score: oldScore + points });
+        });
+        showToast(`퀴즈 포인트 ${points}점 획득!`, "퀴즈 챌린지");
+      } catch (err) {
+        showToast(err.message, "오류");
+      }
     }
 
     function shuffleArray(array) {
@@ -2269,26 +2309,6 @@
         lastVisible = newLastDoc;
       }
       isLoading = false;
-    }
-
-    async function awardQuizPoint() {
-      const user = auth.currentUser;
-      if (!user) {
-        showToast("로그인이 필요합니다.", "오류");
-        return;
-      }
-      try {
-        await runTransaction(db, async (transaction) => {
-          const userRef = doc(db, 'users', user.uid);
-          const userSnap = await transaction.get(userRef);
-          let oldScore = 0;
-          if (userSnap.exists()) oldScore = userSnap.data().score || 0;
-          transaction.update(userRef, { score: oldScore + 1 });
-        });
-        showToast("퀴즈 포인트 1점 획득!", "퀴즈 챌린지");
-      } catch (err) {
-        showToast(err.message, "오류");
-      }
     }
 
     window.addEventListener('scroll', () => {
