@@ -6276,5 +6276,1005 @@
       "고정 IP 주소를 제공한다."
     ],
     "answer": "변경되는 IP 주소를 자동으로 도메인 이름에 매핑하여 항상 최신 정보를 제공한다."
+  },
+  {
+    "question": "Spring Boot JPA란 무엇인가요?",
+    "options": [
+      "ORM(Object Relational Mapping) 기술",
+      "JDBC 라이브러리",
+      "SQL 쿼리 빌더",
+      "NoSQL 데이터베이스"
+    ],
+    "answer": "ORM(Object Relational Mapping) 기술"
+  },
+  {
+    "question": "Spring Data JPA에서 제공하는 Repository 인터페이스의 기본 기능은 무엇인가요?",
+    "options": [
+      "CRUD 연산",
+      "HTTP 통신",
+      "캐시 관리",
+      "스레드 관리"
+    ],
+    "answer": "CRUD 연산"
+  },
+  {
+    "question": "JpaRepository 인터페이스를 확장하면 어떤 기능을 추가로 사용할 수 있나요?",
+    "options": [
+      "페이징 및 정렬",
+      "보안 기능",
+      "트랜잭션 관리",
+      "로깅 기능"
+    ],
+    "answer": "페이징 및 정렬"
+  },
+  {
+    "question": "엔티티(Entity) 클래스에 반드시 필요한 어노테이션은 무엇인가요?",
+    "options": [
+      "@Entity",
+      "@Component",
+      "@Repository",
+      "@Service"
+    ],
+    "answer": "@Entity"
+  },
+  {
+    "question": "엔티티의 기본 키(primary key)를 지정하기 위해 사용하는 어노테이션은 무엇인가요?",
+    "options": [
+      "@Id",
+      "@Key",
+      "@Primary",
+      "@GeneratedValue"
+    ],
+    "answer": "@Id"
+  },
+  {
+    "question": "엔티티 클래스의 필드를 데이터베이스 컬럼과 매핑하기 위해 사용하는 어노테이션은 무엇인가요?",
+    "options": [
+      "@Column",
+      "@Table",
+      "@JoinColumn",
+      "@Entity"
+    ],
+    "answer": "@Column"
+  },
+  {
+    "question": "Spring Boot에서 application.properties 파일에 JPA 관련 설정을 할 때 사용하는 키워드는 무엇인가요?",
+    "options": [
+      "spring.jpa",
+      "jpa.config",
+      "hibernate",
+      "data.jpa"
+    ],
+    "answer": "spring.jpa"
+  },
+  {
+    "question": "JPA에서 영속성 컨텍스트(Persistence Context)의 역할은 무엇인가요?",
+    "options": [
+      "엔티티 상태 관리",
+      "HTTP 요청 처리",
+      "보안 인증",
+      "트랜잭션 롤백"
+    ],
+    "answer": "엔티티 상태 관리"
+  },
+  {
+    "question": "엔티티의 상태 변화를 데이터베이스에 반영하기 위해 사용하는 메서드는 무엇인가요?",
+    "options": [
+      "EntityManager.persist()",
+      "EntityManager.find()",
+      "EntityManager.merge()",
+      "EntityManager.remove()"
+    ],
+    "answer": "EntityManager.persist()"
+  },
+  {
+    "question": "Spring Data JPA에서 쿼리 메서드(query method)는 무엇을 의미하나요?",
+    "options": [
+      "메서드 이름으로 쿼리를 자동 생성하는 기능",
+      "SQL 쿼리를 수동으로 작성하는 기능",
+      "JPQL을 사용하여 쿼리를 작성하는 기능",
+      "Native SQL 쿼리를 실행하는 기능"
+    ],
+    "answer": "메서드 이름으로 쿼리를 자동 생성하는 기능"
+  },
+  {
+    "question": "JPQL은 무엇의 약자인가요?",
+    "options": [
+      "Java Persistence Query Language",
+      "Java Programming Query Language",
+      "JDBC Query Language",
+      "JSON Query Language"
+    ],
+    "answer": "Java Persistence Query Language"
+  },
+  {
+    "question": "엔티티 간의 연관관계 매핑을 위해 사용하는 어노테이션은 무엇인가요?",
+    "options": [
+      "@OneToOne, @OneToMany, @ManyToOne, @ManyToMany",
+      "@JoinTable",
+      "@Column",
+      "@Entity"
+    ],
+    "answer": "@OneToOne, @OneToMany, @ManyToOne, @ManyToMany"
+  },
+  {
+    "question": "양방향 연관관계에서 연관관계의 주인은 어떤 쪽인가요?",
+    "options": [
+      "외래 키(FK)를 소유한 쪽",
+      "단방향 연관관계인 쪽",
+      "주 테이블",
+      "종속 테이블"
+    ],
+    "answer": "외래 키(FK)를 소유한 쪽"
+  },
+  {
+    "question": "Lazy Loading과 Eager Loading의 차이는 무엇인가요?",
+    "options": [
+      "Lazy Loading은 실제 사용 시 데이터를 로딩, Eager Loading은 즉시 로딩",
+      "Eager Loading은 나중에 로딩, Lazy Loading은 즉시 로딩",
+      "두 방식은 동일하다",
+      "Lazy Loading은 캐시, Eager Loading은 DB"
+    ],
+    "answer": "Lazy Loading은 실제 사용 시 데이터를 로딩, Eager Loading은 즉시 로딩"
+  },
+  {
+    "question": "Spring Boot에서 JPA와 함께 사용하는 ORM 프레임워크는 무엇인가요?",
+    "options": [
+      "Hibernate",
+      "MyBatis",
+      "JDBC",
+      "Spring MVC"
+    ],
+    "answer": "Hibernate"
+  },
+  {
+    "question": "엔티티 매니저(EntityManager)를 생성하는 방법은 무엇인가요?",
+    "options": [
+      "의존성 주입(Autowired)으로 주입받는다.",
+      "new 키워드를 사용하여 직접 생성한다.",
+      "static 메서드를 통해 호출한다.",
+      "Factory 패턴을 사용하지 않는다."
+    ],
+    "answer": "의존성 주입(Autowired)으로 주입받는다."
+  },
+  {
+    "question": "Spring Boot에서 @EnableJpaRepositories 어노테이션의 역할은 무엇인가요?",
+    "options": [
+      "JPA Repository 인터페이스의 스캔 및 활성화",
+      "엔티티 매핑을 수행한다",
+      "트랜잭션 관리를 수행한다",
+      "보안 설정을 적용한다"
+    ],
+    "answer": "JPA Repository 인터페이스의 스캔 및 활성화"
+  },
+  {
+    "question": "엔티티의 변경을 자동으로 데이터베이스에 반영하기 위해 사용하는 기능은 무엇인가요?",
+    "options": [
+      "Dirty Checking",
+      "Cache Invalidation",
+      "Manual Flush",
+      "Eager Loading"
+    ],
+    "answer": "Dirty Checking"
+  },
+  {
+    "question": "Spring Boot에서 데이터베이스 초기화 스크립트를 실행하는 방법은 무엇인가요?",
+    "options": [
+      "schema.sql, data.sql 파일을 resources에 배치",
+      "application.properties에서 설정",
+      "JpaRepository를 확장",
+      "@PostConstruct 어노테이션을 사용"
+    ],
+    "answer": "schema.sql, data.sql 파일을 resources에 배치"
+  },
+  {
+    "question": "JPA에서 Native Query를 실행하려면 어떤 어노테이션을 사용하나요?",
+    "options": [
+      "@Query(nativeQuery = true)",
+      "@NativeQuery",
+      "@SQLQuery",
+      "@QueryNative"
+    ],
+    "answer": "@Query(nativeQuery = true)"
+  },
+  {
+    "question": "Spring Boot에서 H2 데이터베이스를 사용하는 주요 장점은 무엇인가요?",
+    "options": [
+      "경량, 내장형 데이터베이스로 테스트에 적합하다.",
+      "보안이 강력하다.",
+      "대용량 데이터 처리에 적합하다.",
+      "분산 처리를 지원한다."
+    ],
+    "answer": "경량, 내장형 데이터베이스로 테스트에 적합하다."
+  },
+  {
+    "question": "JPA에서 @GeneratedValue 어노테이션의 역할은 무엇인가요?",
+    "options": [
+      "기본 키의 값을 자동 생성한다.",
+      "데이터를 암호화한다.",
+      "연관관계를 설정한다.",
+      "트랜잭션을 관리한다."
+    ],
+    "answer": "기본 키의 값을 자동 생성한다."
+  },
+  {
+    "question": "JPA에서 Cascade 옵션의 주요 목적은 무엇인가요?",
+    "options": [
+      "연관된 엔티티에 대한 작업을 자동으로 전파한다.",
+      "쿼리 성능을 향상시킨다.",
+      "데이터를 암호화한다.",
+      "캐시를 관리한다."
+    ],
+    "answer": "연관된 엔티티에 대한 작업을 자동으로 전파한다."
+  },
+  {
+    "question": "JPA에서 @OneToMany 어노테이션은 주로 어떤 관계를 나타내나요?",
+    "options": [
+      "한 엔티티가 여러 엔티티와 연관된다.",
+      "여러 엔티티가 하나의 엔티티와 연관된다.",
+      "두 엔티티가 일대일 관계이다.",
+      "엔티티가 자신과 연관된다."
+    ],
+    "answer": "한 엔티티가 여러 엔티티와 연관된다."
+  },
+  {
+    "question": "JPA에서 @ManyToOne 어노테이션은 주로 어떤 관계를 나타내나요?",
+    "options": [
+      "여러 엔티티가 하나의 엔티티와 연관된다.",
+      "한 엔티티가 여러 엔티티와 연관된다.",
+      "두 엔티티가 일대일 관계이다.",
+      "엔티티가 자신과 연관된다."
+    ],
+    "answer": "여러 엔티티가 하나의 엔티티와 연관된다."
+  },
+  {
+    "question": "JPA에서 영속성 컨텍스트와 1차 캐시의 관계는 무엇인가요?",
+    "options": [
+      "영속성 컨텍스트는 엔티티를 1차 캐시에 저장하여 관리한다.",
+      "1차 캐시는 별도의 기술이다.",
+      "영속성 컨텍스트는 2차 캐시와 동일하다.",
+      "1차 캐시는 트랜잭션과 무관하다."
+    ],
+    "answer": "영속성 컨텍스트는 엔티티를 1차 캐시에 저장하여 관리한다."
+  },
+  {
+    "question": "Spring Boot에서 @Transactional 어노테이션의 주 역할은 무엇인가요?",
+    "options": [
+      "트랜잭션 경계를 지정하여 데이터베이스 작업을 관리한다.",
+      "JPA Repository를 자동 생성한다.",
+      "엔티티를 매핑한다.",
+      "보안 설정을 적용한다."
+    ],
+    "answer": "트랜잭션 경계를 지정하여 데이터베이스 작업을 관리한다."
+  },
+  {
+    "question": "JPA에서 엔티티의 버전 관리를 위해 사용하는 어노테이션은 무엇인가요?",
+    "options": [
+      "@Version",
+      "@Timestamp",
+      "@Lock",
+      "@UpdateTime"
+    ],
+    "answer": "@Version"
+  },
+  {
+    "question": "Spring Data JPA에서 커스텀 메서드를 추가할 때 사용하는 방법은 무엇인가요?",
+    "options": [
+      "인터페이스에 메서드 선언 후, 구현체를 작성한다.",
+      "메서드 이름을 아무렇게나 지정한다.",
+      "SQL 쿼리를 직접 작성하지 않는다.",
+      "쿼리 메서드는 사용할 수 없다."
+    ],
+    "answer": "인터페이스에 메서드 선언 후, 구현체를 작성한다."
+  },
+  {
+    "question": "JPA에서 FetchType.LAZY와 FetchType.EAGER의 차이는 무엇인가요?",
+    "options": [
+      "LAZY는 실제 사용 시 로딩, EAGER는 즉시 로딩",
+      "EAGER는 나중에 로딩, LAZY는 즉시 로딩",
+      "두 방식은 동일하다",
+      "LAZY는 캐시, EAGER는 DB 호출"
+    ],
+    "answer": "LAZY는 실제 사용 시 로딩, EAGER는 즉시 로딩"
+  },
+  {
+    "question": "Spring Data JPA에서 쿼리 메서드 이름 규칙의 예로 올바른 것은 무엇인가요?",
+    "options": [
+      "findByUsername",
+      "getUser",
+      "selectUser",
+      "retrieveUser"
+    ],
+    "answer": "findByUsername"
+  },
+  {
+    "question": "JPA에서 Native Query와 JPQL의 차이는 무엇인가요?",
+    "options": [
+      "Native Query는 데이터베이스 고유 SQL을 사용하고, JPQL은 객체지향 쿼리를 사용한다.",
+      "둘은 동일하다.",
+      "JPQL은 속도가 빠르다.",
+      "Native Query는 객체지향 쿼리를 사용한다."
+    ],
+    "answer": "Native Query는 데이터베이스 고유 SQL을 사용하고, JPQL은 객체지향 쿼리를 사용한다."
+  },
+  {
+    "question": "Spring Boot에서 JPA Auditing 기능의 주요 목적은 무엇인가요?",
+    "options": [
+      "엔티티 생성 및 수정 시간, 사용자 정보를 자동으로 기록한다.",
+      "데이터베이스 쿼리 로그를 설정한다.",
+      "엔티티 간 연관관계를 관리한다.",
+      "트랜잭션을 자동으로 롤백한다."
+    ],
+    "answer": "엔티티 생성 및 수정 시간, 사용자 정보를 자동으로 기록한다."
+  },
+  {
+    "question": "Spring Boot JPA에서 @EntityListeners 어노테이션의 역할은 무엇인가요?",
+    "options": [
+      "엔티티의 라이프사이클 이벤트를 처리할 리스너를 지정한다.",
+      "엔티티를 캐싱한다.",
+      "엔티티의 상태를 암호화한다.",
+      "엔티티 간 관계를 설정한다."
+    ],
+    "answer": "엔티티의 라이프사이클 이벤트를 처리할 리스너를 지정한다."
+  },
+  {
+    "question": "JPA에서 다대다(Many-to-Many) 관계 매핑 시 중간 테이블을 명시적으로 설정하려면 어떤 어노테이션을 사용하나요?",
+    "options": [
+      "@JoinTable",
+      "@JoinColumn",
+      "@ManyToManyTable",
+      "@MappingTable"
+    ],
+    "answer": "@JoinTable"
+  },
+  {
+    "question": "Spring Boot에서 HikariCP는 무엇을 위한 것인가요?",
+    "options": [
+      "데이터베이스 커넥션 풀",
+      "트랜잭션 관리",
+      "JPA 쿼리 생성",
+      "캐시 관리"
+    ],
+    "answer": "데이터베이스 커넥션 풀"
+  },
+  {
+    "question": "JPA에서 영속성 전이 옵션 중 CascadeType.ALL의 의미는 무엇인가요?",
+    "options": [
+      "모든 영속성 전이 옵션(CREATE, MERGE, REMOVE 등)을 적용한다.",
+      "삭제만 전이한다.",
+      "조회만 전이한다.",
+      "영속성 전이가 적용되지 않는다."
+    ],
+    "answer": "모든 영속성 전이 옵션(CREATE, MERGE, REMOVE 등)을 적용한다."
+  },
+  {
+    "question": "Spring Boot JPA에서 QueryDSL을 사용하는 주요 목적은 무엇인가요?",
+    "options": [
+      "타입 안전한 쿼리 작성을 지원한다.",
+      "SQL을 자동으로 생성한다.",
+      "트랜잭션 관리를 한다.",
+      "엔티티 매핑을 자동화한다."
+    ],
+    "answer": "타입 안전한 쿼리 작성을 지원한다."
+  },
+  {
+    "question": "JPA에서 @Table 어노테이션의 주요 역할은 무엇인가요?",
+    "options": [
+      "엔티티가 매핑될 데이터베이스 테이블의 이름을 지정한다.",
+      "컬럼의 길이를 지정한다.",
+      "기본 키를 설정한다.",
+      "엔티티를 암호화한다."
+    ],
+    "answer": "엔티티가 매핑될 데이터베이스 테이블의 이름을 지정한다."
+  },
+  {
+    "question": "Spring Boot JPA에서 Auditing을 활성화하려면 어떤 어노테이션을 사용해야 하나요?",
+    "options": [
+      "@EnableJpaAuditing",
+      "@EnableAuditing",
+      "@JpaAuditing",
+      "@EnableAudit"
+    ],
+    "answer": "@EnableJpaAuditing"
+  },
+  {
+    "question": "JPA에서 복합 기본 키(Composite Key)를 사용하려면 어떤 방법을 사용할 수 있나요?",
+    "options": [
+      "Embeddable 클래스와 @EmbeddedId 또는 @IdClass",
+      "단일 @Id만 사용",
+      "@IdClass 어노테이션만 사용",
+      "복합 키는 지원되지 않는다."
+    ],
+    "answer": "Embeddable 클래스와 @EmbeddedId 또는 @IdClass"
+  },
+  {
+    "question": "Spring Boot에서 application.properties에 'spring.jpa.hibernate.ddl-auto' 설정의 역할은 무엇인가요?",
+    "options": [
+      "데이터베이스 스키마 자동 생성 및 업데이트 옵션을 설정한다.",
+      "JPA 쿼리 로그를 설정한다.",
+      "데이터베이스 커넥션 풀 크기를 지정한다.",
+      "트랜잭션 격리 수준을 설정한다."
+    ],
+    "answer": "데이터베이스 스키마 자동 생성 및 업데이트 옵션을 설정한다."
+  },
+  {
+    "question": "JPA에서 Native Query를 사용하면 어떤 이점이 있나요?",
+    "options": [
+      "데이터베이스 고유 기능을 사용할 수 있다.",
+      "쿼리 자동 생성 기능을 사용한다.",
+      "트랜잭션 관리가 자동으로 된다.",
+      "보안 기능이 강화된다."
+    ],
+    "answer": "데이터베이스 고유 기능을 사용할 수 있다."
+  },
+  {
+    "question": "Spring Boot JPA에서 기본 제공되는 메서드 외에 복잡한 쿼리를 작성하려면 어떤 방법을 사용할 수 있나요?",
+    "options": [
+      "@Query 어노테이션을 사용하거나 QueryDSL을 사용한다.",
+      "JDBC를 직접 사용한다.",
+      "Hibernate Session을 사용한다.",
+      "Spring MVC를 사용한다."
+    ],
+    "answer": "@Query 어노테이션을 사용하거나 QueryDSL을 사용한다."
+  },
+  {
+    "question": "JPA에서 'Entity Graph'는 무엇을 위한 기능인가요?",
+    "options": [
+      "연관된 엔티티를 미리 로딩하여 N+1 문제를 해결한다.",
+      "엔티티를 암호화한다.",
+      "캐시를 자동으로 업데이트한다.",
+      "트랜잭션을 분리한다."
+    ],
+    "answer": "연관된 엔티티를 미리 로딩하여 N+1 문제를 해결한다."
+  },
+  {
+    "question": "Spring Boot JPA에서 'save()' 메서드는 무엇을 수행하나요?",
+    "options": [
+      "엔티티를 저장 또는 업데이트한다.",
+      "엔티티를 삭제한다.",
+      "엔티티를 조회한다.",
+      "엔티티의 버전을 업데이트한다."
+    ],
+    "answer": "엔티티를 저장 또는 업데이트한다."
+  },
+  {
+    "question": "JPA에서 'findById()' 메서드의 반환형은 무엇인가요?",
+    "options": [
+      "Optional<T>",
+      "T",
+      "List<T>",
+      "void"
+    ],
+    "answer": "Optional<T>"
+  },
+  {
+    "question": "Spring Data JPA에서 페이징 처리를 위해 사용하는 객체는 무엇인가요?",
+    "options": [
+      "Pageable",
+      "Page",
+      "Slice",
+      "Sort"
+    ],
+    "answer": "Pageable"
+  },
+  {
+    "question": "Spring Boot JPA에서 쿼리 메서드 이름으로 'findByEmailAndName'은 어떤 쿼리를 생성하나요?",
+    "options": [
+      "email과 name이 모두 일치하는 엔티티를 조회한다.",
+      "email이나 name 중 하나라도 일치하는 엔티티를 조회한다.",
+      "모든 엔티티를 조회한다.",
+      "email을 기준으로 정렬하여 조회한다."
+    ],
+    "answer": "email과 name이 모두 일치하는 엔티티를 조회한다."
+  },
+  {
+    "question": "JPA에서 데이터베이스와의 동기화를 위해 'flush()' 메서드의 역할은 무엇인가요?",
+    "options": [
+      "영속성 컨텍스트의 변경사항을 데이터베이스에 반영한다.",
+      "데이터를 캐시에서 제거한다.",
+      "트랜잭션을 커밋한다.",
+      "쿼리 로그를 출력한다."
+    ],
+    "answer": "영속성 컨텍스트의 변경사항을 데이터베이스에 반영한다."
+  },
+  {
+    "question": "Spring Boot JPA에서 JPQL 쿼리 실행 시 사용하는 메서드는 무엇인가요?",
+    "options": [
+      "createQuery()",
+      "executeQuery()",
+      "queryForObject()",
+      "findQuery()"
+    ],
+    "answer": "createQuery()"
+  },
+  {
+    "question": "Spring Boot JPA에서 @Modifying 어노테이션의 역할은 무엇인가요?",
+    "options": [
+      "데이터베이스의 데이터를 수정하는 쿼리임을 명시한다.",
+      "엔티티를 암호화한다.",
+      "조회 쿼리를 최적화한다.",
+      "트랜잭션을 분리한다."
+    ],
+    "answer": "데이터베이스의 데이터를 수정하는 쿼리임을 명시한다."
+  },
+  {
+    "question": "JPA에서 영속성 전이 옵션 중 CascadeType.REMOVE의 의미는 무엇인가요?",
+    "options": [
+      "부모 엔티티 삭제 시 연관 엔티티도 삭제한다.",
+      "연관 엔티티만 삭제한다.",
+      "엔티티를 업데이트하지 않는다.",
+      "영속성 컨텍스트를 초기화한다."
+    ],
+    "answer": "부모 엔티티 삭제 시 연관 엔티티도 삭제한다."
+  },
+  {
+    "question": "Spring Boot JPA에서 @Repository 어노테이션의 주 역할은 무엇인가요?",
+    "options": [
+      "데이터 접근 계층임을 명시하고, 예외 변환을 수행한다.",
+      "서비스 계층을 정의한다.",
+      "컨트롤러를 생성한다.",
+      "엔티티 매핑을 수행한다."
+    ],
+    "answer": "데이터 접근 계층임을 명시하고, 예외 변환을 수행한다."
+  },
+  {
+    "question": "Spring Security란 무엇인가요?",
+    "options": [
+      "애플리케이션 보안 프레임워크",
+      "데이터베이스 관리 시스템",
+      "로그 관리 도구",
+      "의존성 주입 프레임워크"
+    ],
+    "answer": "애플리케이션 보안 프레임워크"
+  },
+  {
+    "question": "Spring Security에서 인증(Authentication)과 인가(Authorization)의 차이는 무엇인가요?",
+    "options": [
+      "인증은 사용자 확인, 인가는 권한 부여",
+      "인증은 권한 부여, 인가는 사용자 확인",
+      "둘은 동일하다",
+      "인증은 암호화, 인가는 복호화"
+    ],
+    "answer": "인증은 사용자 확인, 인가는 권한 부여"
+  },
+  {
+    "question": "Spring Security의 필터 체인의 주 역할은 무엇인가요?",
+    "options": [
+      "HTTP 요청에 대해 보안 처리를 적용한다.",
+      "데이터베이스 쿼리를 최적화한다.",
+      "트랜잭션을 관리한다.",
+      "로깅을 수행한다."
+    ],
+    "answer": "HTTP 요청에 대해 보안 처리를 적용한다."
+  },
+  {
+    "question": "Spring Security에서 AuthenticationManager의 역할은 무엇인가요?",
+    "options": [
+      "사용자 인증 정보를 검증한다.",
+      "사용자 데이터를 저장한다.",
+      "보안 필터를 관리한다.",
+      "트랜잭션을 처리한다."
+    ],
+    "answer": "사용자 인증 정보를 검증한다."
+  },
+  {
+    "question": "Spring Security에서 PasswordEncoder 인터페이스의 주요 역할은 무엇인가요?",
+    "options": [
+      "비밀번호를 해시로 변환하여 저장 및 검증한다.",
+      "비밀번호를 암호화하지 않고 평문으로 저장한다.",
+      "비밀번호를 복호화한다.",
+      "인증 토큰을 생성한다."
+    ],
+    "answer": "비밀번호를 해시로 변환하여 저장 및 검증한다."
+  },
+  {
+    "question": "Spring Security에서 기본 로그인 폼을 활성화하기 위한 설정은 무엇인가요?",
+    "options": [
+      "http.formLogin()",
+      "http.basic()",
+      "http.logout()",
+      "http.csrf()"
+    ],
+    "answer": "http.formLogin()"
+  },
+  {
+    "question": "Spring Security에서 CSRF(Cross-Site Request Forgery) 보호는 기본적으로 활성화되어 있나요?",
+    "options": [
+      "예, 활성화되어 있다.",
+      "아니오, 비활성화되어 있다.",
+      "설정에 따라 다르다.",
+      "프로젝트 타입에 따라 다르다."
+    ],
+    "answer": "예, 활성화되어 있다."
+  },
+  {
+    "question": "Spring Security에서 CSRF 토큰은 주로 어떤 방식으로 전송되나요?",
+    "options": [
+      "HTML 폼 필드 또는 HTTP 헤더",
+      "쿠키만",
+      "URL 파라미터만",
+      "세션 저장소에만"
+    ],
+    "answer": "HTML 폼 필드 또는 HTTP 헤더"
+  },
+  {
+    "question": "Spring Security에서 사용자 정보를 저장하는 기본 객체는 무엇인가요?",
+    "options": [
+      "UserDetails",
+      "User",
+      "SecurityUser",
+      "AuthenticationUser"
+    ],
+    "answer": "UserDetails"
+  },
+  {
+    "question": "Spring Security에서 사용자 상세 정보를 제공하는 인터페이스는 무엇인가요?",
+    "options": [
+      "UserDetailsService",
+      "UserService",
+      "AuthenticationService",
+      "SecurityService"
+    ],
+    "answer": "UserDetailsService"
+  },
+  {
+    "question": "Spring Security에서 인가(Authorization) 설정은 주로 어떤 메서드를 사용하나요?",
+    "options": [
+      "http.authorizeRequests()",
+      "http.formLogin()",
+      "http.csrf()",
+      "http.logout()"
+    ],
+    "answer": "http.authorizeRequests()"
+  },
+  {
+    "question": "Spring Security에서 특정 URL 패턴에 대해 접근 권한을 설정하려면 어떤 메서드를 사용하나요?",
+    "options": [
+      "antMatchers()",
+      "regexMatchers()",
+      "mvcMatchers()",
+      "pathMatchers()"
+    ],
+    "answer": "antMatchers()"
+  },
+  {
+    "question": "Spring Security에서 'permitAll()' 메서드의 역할은 무엇인가요?",
+    "options": [
+      "해당 URL에 대해 모든 접근을 허용한다.",
+      "모든 인증을 요구한다.",
+      "특정 IP만 허용한다.",
+      "로그인을 강제한다."
+    ],
+    "answer": "해당 URL에 대해 모든 접근을 허용한다."
+  },
+  {
+    "question": "Spring Security에서 'hasRole()'과 'hasAuthority()'의 차이는 무엇인가요?",
+    "options": [
+      "둘은 기본적으로 동일하며, 접두어 'ROLE_'의 사용 여부로 구분된다.",
+      "hasRole은 숫자, hasAuthority는 문자열을 비교한다.",
+      "둘은 완전히 다른 기능이다.",
+      "hasRole은 인증, hasAuthority는 인가에 사용된다."
+    ],
+    "answer": "둘은 기본적으로 동일하며, 접두어 'ROLE_'의 사용 여부로 구분된다."
+  },
+  {
+    "question": "Spring Security에서 로그아웃 기능을 활성화하기 위한 기본 설정은 무엇인가요?",
+    "options": [
+      "http.logout()",
+      "http.formLogin()",
+      "http.csrf()",
+      "http.authorizeRequests()"
+    ],
+    "answer": "http.logout()"
+  },
+  {
+    "question": "Spring Security에서 세션 고정(Session Fixation) 공격을 방지하기 위한 기본 설정은 무엇인가요?",
+    "options": [
+      "세션 재생성",
+      "세션 타임아웃",
+      "쿠키 암호화",
+      "CSRF 토큰 사용"
+    ],
+    "answer": "세션 재생성"
+  },
+  {
+    "question": "Spring Security에서 remember-me 기능의 역할은 무엇인가요?",
+    "options": [
+      "사용자가 로그인 상태를 장기간 유지할 수 있도록 한다.",
+      "세션을 즉시 종료한다.",
+      "비밀번호를 저장한다.",
+      "권한 부여를 생략한다."
+    ],
+    "answer": "사용자가 로그인 상태를 장기간 유지할 수 있도록 한다."
+  },
+  {
+    "question": "Spring Security에서 Basic Authentication은 어떻게 동작하나요?",
+    "options": [
+      "클라이언트가 HTTP 헤더에 사용자 이름과 비밀번호를 인코딩하여 전송한다.",
+      "폼 로그인 페이지를 제공한다.",
+      "세션 기반 인증을 사용한다.",
+      "토큰 기반 인증을 사용한다."
+    ],
+    "answer": "클라이언트가 HTTP 헤더에 사용자 이름과 비밀번호를 인코딩하여 전송한다."
+  },
+  {
+    "question": "Spring Security에서 OAuth2를 지원하는 이유는 무엇인가요?",
+    "options": [
+      "타사 인증 제공자와의 연동을 쉽게 하기 위해",
+      "데이터 암호화를 강화하기 위해",
+      "내부 트랜잭션을 관리하기 위해",
+      "JPA와 연동하기 위해"
+    ],
+    "answer": "타사 인증 제공자와의 연동을 쉽게 하기 위해"
+  },
+  {
+    "question": "Spring Security에서 CSRF 보호를 비활성화하려면 어떤 설정을 해야 하나요?",
+    "options": [
+      "http.csrf().disable()",
+      "http.csrf().enable()",
+      "http.disableCsrf()",
+      "http.csrf().ignore()"
+    ],
+    "answer": "http.csrf().disable()"
+  },
+  {
+    "question": "Spring Security에서 필터 체인에 사용자 정의 필터를 추가하려면 어떤 메서드를 사용하나요?",
+    "options": [
+      "http.addFilter()",
+      "http.registerFilter()",
+      "http.customFilter()",
+      "http.addCustomFilter()"
+    ],
+    "answer": "http.addFilter()"
+  },
+  {
+    "question": "Spring Security에서 SecurityContext는 무엇을 저장하나요?",
+    "options": [
+      "현재 인증된 사용자의 정보",
+      "HTTP 요청의 헤더",
+      "데이터베이스 연결 정보",
+      "로그 파일 경로"
+    ],
+    "answer": "현재 인증된 사용자의 정보"
+  },
+  {
+    "question": "Spring Security에서 pre-authentication은 무엇을 의미하나요?",
+    "options": [
+      "외부 시스템에서 이미 인증된 사용자 정보를 기반으로 인증을 처리한다.",
+      "사용자 비밀번호를 직접 검증한다.",
+      "로그인 폼을 사용하지 않는다.",
+      "인증 없이 인가만 수행한다."
+    ],
+    "answer": "외부 시스템에서 이미 인증된 사용자 정보를 기반으로 인증을 처리한다."
+  },
+  {
+    "question": "Spring Security에서 JWT(Json Web Token)는 어떤 용도로 사용되나요?",
+    "options": [
+      "토큰 기반 인증 및 인가를 위해",
+      "세션 관리를 위해",
+      "암호화를 위해",
+      "데이터베이스 연결을 위해"
+    ],
+    "answer": "토큰 기반 인증 및 인가를 위해"
+  },
+  {
+    "question": "Spring Security에서 'anonymousUser'란 무엇을 의미하나요?",
+    "options": [
+      "인증되지 않은 사용자를 나타내는 기본 객체",
+      "익명의 인증 토큰",
+      "로그인한 사용자의 별칭",
+      "잘못된 사용자 정보를 나타낸다."
+    ],
+    "answer": "인증되지 않은 사용자를 나타내는 기본 객체"
+  },
+  {
+    "question": "Spring Security에서 메서드 수준 보안을 적용하려면 어떤 어노테이션을 사용할 수 있나요?",
+    "options": [
+      "@PreAuthorize",
+      "@Secured",
+      "@RolesAllowed",
+      "모두 해당"
+    ],
+    "answer": "모두 해당"
+  },
+  {
+    "question": "Spring Security에서 OAuth2 로그인 기능을 활성화하려면 어떤 의존성을 추가해야 하나요?",
+    "options": [
+      "spring-boot-starter-oauth2-client",
+      "spring-boot-starter-security",
+      "spring-security-oauth",
+      "spring-oauth2"
+    ],
+    "answer": "spring-boot-starter-oauth2-client"
+  },
+  {
+    "question": "Spring Security에서 WebSecurityConfigurerAdapter 클래스를 확장하는 이유는 무엇인가요?",
+    "options": [
+      "보안 설정을 커스터마이징하기 위해",
+      "JPA 쿼리를 작성하기 위해",
+      "HTTP 요청을 로깅하기 위해",
+      "캐시를 관리하기 위해"
+    ],
+    "answer": "보안 설정을 커스터마이징하기 위해"
+  },
+  {
+    "question": "Spring Security에서 Security Filter Chain은 어떻게 구성되나요?",
+    "options": [
+      "여러 보안 필터가 특정 순서로 연속해서 실행된다.",
+      "하나의 필터만 실행된다.",
+      "필터 체인은 자동으로 생성되지 않는다.",
+      "필터 체인은 항상 수동으로 설정해야 한다."
+    ],
+    "answer": "여러 보안 필터가 특정 순서로 연속해서 실행된다."
+  },
+  {
+    "question": "Spring Security에서 AccessDecisionManager의 역할은 무엇인가요?",
+    "options": [
+      "인가 결정 로직을 수행하여 접근 권한을 부여하거나 거부한다.",
+      "사용자 인증 정보를 저장한다.",
+      "HTTP 요청을 암호화한다.",
+      "세션을 관리한다."
+    ],
+    "answer": "인가 결정 로직을 수행하여 접근 권한을 부여하거나 거부한다."
+  },
+  {
+    "question": "Spring Security에서 폼 기반 로그인과 HTTP Basic 인증의 차이는 무엇인가요?",
+    "options": [
+      "폼 기반 로그인은 사용자 정의 로그인 페이지를 제공하고, Basic은 브라우저 기본 대화상자를 사용한다.",
+      "둘은 동일하다.",
+      "Basic 인증은 더 많은 기능을 제공한다.",
+      "폼 기반 로그인이 자동 로그아웃을 제공한다."
+    ],
+    "answer": "폼 기반 로그인은 사용자 정의 로그인 페이지를 제공하고, Basic은 브라우저 기본 대화상자를 사용한다."
+  },
+  {
+    "question": "Spring Security에서 사용자 권한(Authorities)은 어떤 객체에 저장되나요?",
+    "options": [
+      "Authentication 객체의 GrantedAuthority 목록",
+      "UserDetails 객체의 비밀번호 필드",
+      "SecurityContext의 인증 토큰",
+      "Session 객체의 사용자 ID"
+    ],
+    "answer": "Authentication 객체의 GrantedAuthority 목록"
+  },
+  {
+    "question": "Spring Security에서 accessDecisionManager가 결정하는 것은 무엇인가요?",
+    "options": [
+      "접근 허용 여부",
+      "로그인 성공",
+      "세션 타임아웃",
+      "HTTP 헤더 암호화"
+    ],
+    "answer": "접근 허용 여부"
+  },
+  {
+    "question": "Spring Security에서 커스텀 인증 필터를 추가할 때 주의할 점은 무엇인가요?",
+    "options": [
+      "필터 순서에 따라 보안 정책에 영향을 줄 수 있으므로 순서를 신중하게 설정해야 한다.",
+      "항상 가장 마지막에 추가해야 한다.",
+      "인증 토큰을 무시한다.",
+      "로그인 페이지를 강제한다."
+    ],
+    "answer": "필터 순서에 따라 보안 정책에 영향을 줄 수 있으므로 순서를 신중하게 설정해야 한다."
+  },
+  {
+    "question": "Spring Security에서 SSO(Single Sign-On)를 구현할 때 고려해야 할 중요한 요소는 무엇인가요?",
+    "options": [
+      "인증 토큰 공유, 사용자 세션 관리, 보안 정책 통합",
+      "데이터베이스 쿼리 최적화",
+      "HTTP 요청 압축",
+      "JPA 엔티티 매핑"
+    ],
+    "answer": "인증 토큰 공유, 사용자 세션 관리, 보안 정책 통합"
+  },
+  {
+    "question": "Spring Security에서 HTTP Basic Authentication과 Digest Authentication의 차이는 무엇인가요?",
+    "options": [
+      "Basic은 단순 인코딩, Digest는 해시를 사용하여 보안을 강화한다.",
+      "Digest는 단순 인코딩, Basic은 해시를 사용한다.",
+      "두 방식은 동일하다.",
+      "Basic은 암호화, Digest는 평문 전송이다."
+    ],
+    "answer": "Basic은 단순 인코딩, Digest는 해시를 사용하여 보안을 강화한다."
+  },
+  {
+    "question": "Spring Security에서 메서드 보안을 활성화하려면 클래스에 어떤 어노테이션을 추가해야 하나요?",
+    "options": [
+      "@EnableGlobalMethodSecurity",
+      "@EnableMethodSecurity",
+      "@GlobalSecurity",
+      "@MethodSecurity"
+    ],
+    "answer": "@EnableGlobalMethodSecurity"
+  },
+  {
+    "question": "Spring Security에서 Custom UserDetailsService를 구현하는 이유는 무엇인가요?",
+    "options": [
+      "사용자 정보를 데이터베이스에서 조회하여 인증에 사용하기 위해",
+      "HTTP 요청을 암호화하기 위해",
+      "JPA 쿼리를 자동 생성하기 위해",
+      "보안 필터를 제거하기 위해"
+    ],
+    "answer": "사용자 정보를 데이터베이스에서 조회하여 인증에 사용하기 위해"
+  },
+  {
+    "question": "Spring Security에서 logoutSuccessUrl() 메서드의 역할은 무엇인가요?",
+    "options": [
+      "로그아웃 후 리다이렉션할 URL을 설정한다.",
+      "로그아웃을 처리한다.",
+      "인증을 다시 수행한다.",
+      "세션을 재생성한다."
+    ],
+    "answer": "로그아웃 후 리다이렉션할 URL을 설정한다."
+  },
+  {
+    "question": "Spring Security에서 비밀번호 암호화 시 주로 사용하는 알고리즘은 무엇인가요?",
+    "options": [
+      "BCrypt",
+      "MD5",
+      "SHA-1",
+      "Base64"
+    ],
+    "answer": "BCrypt"
+  },
+  {
+    "question": "Spring Security에서 SecurityContextHolder의 기본 전략은 무엇인가요?",
+    "options": [
+      "ThreadLocal을 사용하여 보안 컨텍스트를 저장한다.",
+      "전역 변수에 저장한다.",
+      "세션에 저장하지 않는다.",
+      "HTTP 헤더에 저장한다."
+    ],
+    "answer": "ThreadLocal을 사용하여 보안 컨텍스트를 저장한다."
+  },
+  {
+    "question": "Spring Security에서 폼 기반 로그인과 HTTP Basic 인증의 차이는 무엇인가요?",
+    "options": [
+      "폼 기반 로그인은 사용자 정의 로그인 페이지를 제공하고, Basic은 브라우저 기본 대화상자를 사용한다.",
+      "둘은 동일하다.",
+      "Basic 인증은 더 많은 기능을 제공한다.",
+      "폼 기반 로그인이 자동 로그아웃을 제공한다."
+    ],
+    "answer": "폼 기반 로그인은 사용자 정의 로그인 페이지를 제공하고, Basic은 브라우저 기본 대화상자를 사용한다."
+  },
+  {
+    "question": "Spring Security에서 사용자 권한(Authorities)은 어떤 객체에 저장되나요?",
+    "options": [
+      "Authentication 객체의 GrantedAuthority 목록",
+      "UserDetails 객체의 비밀번호 필드",
+      "SecurityContext의 인증 토큰",
+      "Session 객체의 사용자 ID"
+    ],
+    "answer": "Authentication 객체의 GrantedAuthority 목록"
+  },
+  {
+    "question": "Spring Security에서 accessDecisionManager가 결정하는 것은 무엇인가요?",
+    "options": [
+      "접근 허용 여부",
+      "로그인 성공",
+      "세션 타임아웃",
+      "HTTP 헤더 암호화"
+    ],
+    "answer": "접근 허용 여부"
+  },
+  {
+    "question": "Spring Security에서 커스텀 인증 필터를 추가할 때 주의할 점은 무엇인가요?",
+    "options": [
+      "필터 순서에 따라 보안 정책에 영향을 줄 수 있으므로 순서를 신중하게 설정해야 한다.",
+      "항상 가장 마지막에 추가해야 한다.",
+      "인증 토큰을 무시한다.",
+      "로그인 페이지를 강제한다."
+    ],
+    "answer": "필터 순서에 따라 보안 정책에 영향을 줄 수 있으므로 순서를 신중하게 설정해야 한다."
+  },
+  {
+    "question": "Spring Security에서 SSO(Single Sign-On)를 구현할 때 고려해야 할 중요한 요소는 무엇인가요?",
+    "options": [
+      "인증 토큰 공유, 사용자 세션 관리, 보안 정책 통합",
+      "데이터베이스 쿼리 최적화",
+      "HTTP 요청 압축",
+      "JPA 엔티티 매핑"
+    ],
+    "answer": "인증 토큰 공유, 사용자 세션 관리, 보안 정책 통합"
   }
 ]
