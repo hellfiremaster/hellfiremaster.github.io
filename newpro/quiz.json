@@ -1,0 +1,4460 @@
+[
+    {
+      "question": "자바 문법에서 프로그램의 시작점은 무엇인가요?",
+      "options": [
+        "main",
+        "start",
+        "run",
+        "init"
+      ],
+      "answer": "main"
+    },
+    {
+      "question": "자바스크립트 문법에서 JavaScript를 개발한 회사는 어디인가요?",
+      "options": [
+        "Netscape",
+        "Microsoft",
+        "Google",
+        "Apple"
+      ],
+      "answer": "Netscape"
+    },
+    {
+      "question": "CPU는 무엇의 약자인가요?",
+      "options": [
+        "Central Processing Unit",
+        "Computer Personal Unit",
+        "Central Performance Unit",
+        "Control Processing Unit"
+      ],
+      "answer": "Central Processing Unit"
+    },
+    {
+      "question": "자바 문법에서 JVM은 무엇의 약자인가요?",
+      "options": [
+        "Java Virtual Machine",
+        "Java Variable Method",
+        "Just Virtual Memory",
+        "없음"
+      ],
+      "answer": "Java Virtual Machine"
+    },
+    {
+      "question": "자바스크립트 문법에서 클로저(closure)란 무엇인가요?",
+      "options": [
+        "자신의 렉시컬 환경을 기억하는 함수",
+        "단순 함수",
+        "즉시 실행 함수",
+        "콜백 함수"
+      ],
+      "answer": "자신의 렉시컬 환경을 기억하는 함수"
+    },
+    {
+      "question": "RAM은 무엇의 약자인가요?",
+      "options": [
+        "Random Access Memory",
+        "Readily Available Memory",
+        "Run Access Memory",
+        "없음"
+      ],
+      "answer": "Random Access Memory"
+    },
+    {
+      "question": "자바 문법에서 클래스를 상속할 때 사용하는 키워드는 무엇인가요?",
+      "options": [
+        "extends",
+        "implements",
+        "inherits",
+        "super"
+      ],
+      "answer": "extends"
+    },
+    {
+      "question": "자바스크립트 문법에서 'this'는 무엇을 가리키나요?",
+      "options": [
+        "현재 함수를 실행하는 객체",
+        "전역 객체",
+        "undefined",
+        "없음"
+      ],
+      "answer": "현재 함수를 실행하는 객체"
+    },
+    {
+      "question": "HTML의 풀 네임은 무엇인가요?",
+      "options": [
+        "Hyper Text Markup Language",
+        "High Text Machine Language",
+        "Hyperlinks and Text Markup Language",
+        "없음"
+      ],
+      "answer": "Hyper Text Markup Language"
+    },
+    {
+      "question": "자바 문법에서 다음 중 Java의 특징이 아닌 것은 무엇인가요?",
+      "options": [
+        "포인터",
+        "객체지향",
+        "이식성",
+        "동적"
+      ],
+      "answer": "포인터"
+    },
+    {
+      "question": "자바스크립트 문법에서 한 줄 주석을 나타내는 기호는 무엇인가요?",
+      "options": [
+        "//",
+        "<!--",
+        "#",
+        "%"
+      ],
+      "answer": "//"
+    },
+    {
+      "question": "이진 탐색의 시간 복잡도는 얼마인가요?",
+      "options": [
+        "O(log n)",
+        "O(n)",
+        "O(n log n)",
+        "O(1)"
+      ],
+      "answer": "O(log n)"
+    },
+    {
+      "question": "자바 문법에서 중복된 요소를 허용하지 않는 컬렉션은 무엇인가요?",
+      "options": [
+        "Set",
+        "List",
+        "Map",
+        "Array"
+      ],
+      "answer": "Set"
+    },
+    {
+      "question": "자바스크립트 문법에서 JSON 문자열을 객체로 변환하는 메서드는 무엇인가요?",
+      "options": [
+        "JSON.parse",
+        "JSON.stringify",
+        "JSON.toObject",
+        "JSON.convert"
+      ],
+      "answer": "JSON.parse"
+    },
+    {
+      "question": "API는 무엇의 약자인가요?",
+      "options": [
+        "Application Programming Interface",
+        "Advanced Programming Interface",
+        "Application Protocol Interface",
+        "없음"
+      ],
+      "answer": "Application Programming Interface"
+    },
+    {
+      "question": "자바 문법에서 예외를 처리할 때 사용하는 키워드는 무엇인가요?",
+      "options": [
+        "try",
+        "catch",
+        "finally",
+        "throw"
+      ],
+      "answer": "catch"
+    },
+    {
+      "question": "자바스크립트 문법에서 JavaScript 프레임워크 중 하나는 무엇인가요?",
+      "options": [
+        "React",
+        "Django",
+        "Laravel",
+        "Spring"
+      ],
+      "answer": "React"
+    },
+    {
+      "question": "SQL의 풀 네임은 무엇인가요?",
+      "options": [
+        "Structured Query Language",
+        "Simple Query Language",
+        "Standard Query Language",
+        "없음"
+      ],
+      "answer": "Structured Query Language"
+    },
+    {
+      "question": "자바 문법에서 스레드를 시작하는 메서드는 무엇인가요?",
+      "options": [
+        "start()",
+        "run()",
+        "init()",
+        "execute()"
+      ],
+      "answer": "start()"
+    },
+    {
+      "question": "자바스크립트 문법에서 값과 타입을 모두 비교하는 연산자는 무엇인가요?",
+      "options": [
+        "===",
+        "==",
+        "!==",
+        "="
+      ],
+      "answer": "==="
+    },
+    {
+      "question": "GPU는 무엇의 약자인가요?",
+      "options": [
+        "Graphics Processing Unit",
+        "General Processing Unit",
+        "Graphics Performance Unit",
+        "없음"
+      ],
+      "answer": "Graphics Processing Unit"
+    },
+    {
+      "question": "자바 문법에서 int 자료형의 크기는 몇 비트인가요?",
+      "options": [
+        "32",
+        "16",
+        "64",
+        "8"
+      ],
+      "answer": "32"
+    },
+    {
+      "question": "자바스크립트 문법에서 배열의 마지막 요소를 제거하는 메서드는 무엇인가요?",
+      "options": [
+        "pop()",
+        "push()",
+        "shift()",
+        "unshift()"
+      ],
+      "answer": "pop()"
+    },
+    {
+      "question": "운영체제의 주된 역할은 무엇인가요?",
+      "options": [
+        "하드웨어와 소프트웨어 자원 관리",
+        "하드웨어 관리만",
+        "소프트웨어 관리만",
+        "없음"
+      ],
+      "answer": "하드웨어와 소프트웨어 자원 관리"
+    },
+    {
+      "question": "자바 문법에서 객체를 생성할 때 사용하는 키워드는 무엇인가요?",
+      "options": [
+        "new",
+        "create",
+        "init",
+        "object"
+      ],
+      "answer": "new"
+    },
+    {
+      "question": "자바스크립트 문법에서 배열의 끝에 요소를 추가하는 메서드는 무엇인가요?",
+      "options": [
+        "push()",
+        "pop()",
+        "shift()",
+        "unshift()"
+      ],
+      "answer": "push()"
+    },
+    {
+      "question": "DNS의 풀 네임은 무엇인가요?",
+      "options": [
+        "Domain Name System",
+        "Digital Network Service",
+        "Distributed Name Service",
+        "Domain Numbering System"
+      ],
+      "answer": "Domain Name System"
+    },
+    {
+      "question": "자바 문법에서 문자열 비교에 사용하는 메서드는 무엇인가요?",
+      "options": [
+        "equals()",
+        "==",
+        "compareTo()",
+        "equal()"
+      ],
+      "answer": "equals()"
+    },
+    {
+      "question": "자바스크립트 문법에서 상수를 선언할 때 사용하는 키워드는 무엇인가요?",
+      "options": [
+        "const",
+        "var",
+        "let",
+        "static"
+      ],
+      "answer": "const"
+    },
+    {
+      "question": "HTTP의 풀 네임은 무엇인가요?",
+      "options": [
+        "HyperText Transfer Protocol",
+        "HyperText Transmission Protocol",
+        "HighText Transfer Protocol",
+        "없음"
+      ],
+      "answer": "HyperText Transfer Protocol"
+    },
+    {
+      "question": "자바 문법에서 모든 클래스의 상위 클래스는 무엇인가요?",
+      "options": [
+        "Object",
+        "Class",
+        "Base",
+        "Super"
+      ],
+      "answer": "Object"
+    },
+    {
+      "question": "자바스크립트 문법에서 문자열을 정수로 변환하는 함수는 무엇인가요?",
+      "options": [
+        "parseInt()",
+        "parseFloat()",
+        "Number()",
+        "convert()"
+      ],
+      "answer": "parseInt()"
+    },
+    {
+      "question": "URL의 풀 네임은 무엇인가요?",
+      "options": [
+        "Uniform Resource Locator",
+        "Universal Resource Link",
+        "Uniform Resource Link",
+        "Unique Resource Locator"
+      ],
+      "answer": "Uniform Resource Locator"
+    },
+    {
+      "question": "자바 문법에서 0으로 나눌 때 발생하는 예외는 무엇인가요?",
+      "options": [
+        "ArithmeticException",
+        "NullPointerException",
+        "NumberFormatException",
+        "IOException"
+      ],
+      "answer": "ArithmeticException"
+    },
+    {
+      "question": "자바스크립트 문법에서 객체를 JSON 문자열로 변환하는 메서드는 무엇인가요?",
+      "options": [
+        "JSON.stringify()",
+        "JSON.parse()",
+        "JSON.convert()",
+        "JSON.objectify()"
+      ],
+      "answer": "JSON.stringify()"
+    },
+    {
+      "question": "이진수 1010의 10진수 값은 얼마인가요?",
+      "options": [
+        "10",
+        "11",
+        "12",
+        "9"
+      ],
+      "answer": "10"
+    },
+    {
+      "question": "자바 문법에서 서브클래스를 만들 때 사용하는 키워드는 무엇인가요?",
+      "options": [
+        "extends",
+        "implements",
+        "inherits",
+        "super"
+      ],
+      "answer": "extends"
+    },
+    {
+      "question": "자바스크립트 문법에서 한 줄 주석을 나타내는 기호는 무엇인가요?",
+      "options": [
+        "//",
+        "/*",
+        "#",
+        "--"
+      ],
+      "answer": "//"
+    },
+    {
+      "question": "LAN은 무엇의 약자인가요?",
+      "options": [
+        "Local Area Network",
+        "Large Area Network",
+        "Long Area Network",
+        "없음"
+      ],
+      "answer": "Local Area Network"
+    },
+    {
+      "question": "자바 문법에서 문자열 연결에 사용하는 연산자는 무엇인가요?",
+      "options": [
+        "+",
+        "&",
+        "*",
+        "."
+      ],
+      "answer": "+"
+    },
+    {
+      "question": "자바스크립트 문법에서 소수를 반올림하는 메서드는 무엇인가요?",
+      "options": [
+        "Math.round()",
+        "Math.floor()",
+        "Math.ceil()",
+        "parseInt()"
+      ],
+      "answer": "Math.round()"
+    },
+    {
+      "question": "컴파일러의 주된 역할은 무엇인가요?",
+      "options": [
+        "소스 코드를 기계어로 번역",
+        "코드 실행",
+        "디버깅",
+        "코드 저장"
+      ],
+      "answer": "소스 코드를 기계어로 번역"
+    },
+    {
+      "question": "자바 문법에서 배열의 길이를 구하는 속성은 무엇인가요?",
+      "options": [
+        "length",
+        "size()",
+        "count()",
+        "getLength()"
+      ],
+      "answer": "length"
+    },
+    {
+      "question": "자바스크립트 문법에서 문자열 좌우의 공백을 제거하는 메서드는 무엇인가요?",
+      "options": [
+        "trim()",
+        "strip()",
+        "clean()",
+        "remove()"
+      ],
+      "answer": "trim()"
+    },
+    {
+      "question": "O(n log n) 시간 복잡도를 가지는 정렬 알고리즘은 무엇인가요?",
+      "options": [
+        "Merge Sort",
+        "Bubble Sort",
+        "Insertion Sort",
+        "Selection Sort"
+      ],
+      "answer": "Merge Sort"
+    },
+    {
+      "question": "자바 문법에서 사용자 정의 비교기를 만들 때 구현해야 하는 인터페이스는 무엇인가요?",
+      "options": [
+        "Comparator",
+        "Comparable",
+        "ComparatorInterface",
+        "SortingInterface"
+      ],
+      "answer": "Comparator"
+    },
+    {
+      "question": "자바스크립트 문법에서 배열의 앞쪽에 요소를 추가하는 메서드는 무엇인가요?",
+      "options": [
+        "unshift()",
+        "push()",
+        "shift()",
+        "pop()"
+      ],
+      "answer": "unshift()"
+    },
+    {
+      "question": "SSD는 무엇의 약자인가요?",
+      "options": [
+        "Solid State Drive",
+        "Super Speed Drive",
+        "Standard State Disk",
+        "없음"
+      ],
+      "answer": "Solid State Drive"
+    },
+    {
+      "question": "자바 문법에서 파일을 찾지 못했을 때 발생하는 예외는 무엇인가요?",
+      "options": [
+        "FileNotFoundException",
+        "IOException",
+        "NullPointerException",
+        "RuntimeException"
+      ],
+      "answer": "FileNotFoundException"
+    },
+    {
+      "question": "자바스크립트 문법에서 배열인지 확인하는 내장 메서드는 무엇인가요?",
+      "options": [
+        "Array.isArray()",
+        "typeof",
+        "instanceof",
+        "isArray()"
+      ],
+      "answer": "Array.isArray()"
+    },
+    {
+      "question": "안전한 통신을 위해 주로 사용하는 프로토콜은 무엇인가요?",
+      "options": [
+        "HTTPS",
+        "HTTP",
+        "FTP",
+        "SMTP"
+      ],
+      "answer": "HTTPS"
+    },
+    {
+      "question": "자바 문법에서 상속을 방지할 때 사용하는 키워드는 무엇인가요?",
+      "options": [
+        "final",
+        "static",
+        "private",
+        "const"
+      ],
+      "answer": "final"
+    },
+    {
+      "question": "자바스크립트 문법에서 코드 실행을 지연시키는 함수는 무엇인가요?",
+      "options": [
+        "setTimeout()",
+        "setInterval()",
+        "delay()",
+        "wait()"
+      ],
+      "answer": "setTimeout()"
+    },
+    {
+      "question": "빅오 표기법은 무엇을 설명하는가요?",
+      "options": [
+        "알고리즘 효율성",
+        "코드 작성",
+        "메모리 관리",
+        "없음"
+      ],
+      "answer": "알고리즘 효율성"
+    },
+    {
+      "question": "자바 문법에서 int를 감싸는 Wrapper 클래스는 무엇인가요?",
+      "options": [
+        "Integer",
+        "intWrapper",
+        "Number",
+        "Byte"
+      ],
+      "answer": "Integer"
+    },
+    {
+      "question": "자바스크립트 문법에서 변수에 값을 할당할 때 사용하는 연산자는 무엇인가요?",
+      "options": [
+        "=",
+        "==",
+        "===",
+        ":="
+      ],
+      "answer": "="
+    },
+    {
+      "question": "넓은 지역을 커버하는 네트워크는 무엇인가요?",
+      "options": [
+        "WAN",
+        "LAN",
+        "MAN",
+        "PAN"
+      ],
+      "answer": "WAN"
+    },
+    {
+      "question": "자바 문법에서 문자열을 대문자로 변환하는 메서드는 무엇인가요?",
+      "options": [
+        "toUpperCase()",
+        "toUpper()",
+        "upperCase()",
+        "capitalize()"
+      ],
+      "answer": "toUpperCase()"
+    },
+    {
+      "question": "자바스크립트 문법에서 날짜와 시간을 나타내는 내장 객체는 무엇인가요?",
+      "options": [
+        "Date",
+        "Time",
+        "Moment",
+        "Calendar"
+      ],
+      "answer": "Date"
+    },
+    {
+      "question": "BIOS의 풀 네임은 무엇인가요?",
+      "options": [
+        "Basic Input/Output System",
+        "Binary Input/Output System",
+        "Basic Internal Operating System",
+        "없음"
+      ],
+      "answer": "Basic Input/Output System"
+    },
+    {
+      "question": "자바 문법에서 상위 클래스의 생성자를 호출할 때 사용하는 키워드는 무엇인가요?",
+      "options": [
+        "super",
+        "this",
+        "parent",
+        "base"
+      ],
+      "answer": "super"
+    },
+    {
+      "question": "자바스크립트 문법에서 문자열의 길이를 반환하는 속성은 무엇인가요?",
+      "options": [
+        "length",
+        "size",
+        "count",
+        "charCount"
+      ],
+      "answer": "length"
+    },
+    {
+      "question": "컴퓨터에서 가장 작은 데이터 단위는 무엇인가요?",
+      "options": [
+        "Bit",
+        "Byte",
+        "Nibble",
+        "Word"
+      ],
+      "answer": "Bit"
+    },
+    {
+      "question": "자바 문법에서 LIFO 원칙을 따르는 자료구조는 무엇인가요?",
+      "options": [
+        "Stack",
+        "Queue",
+        "List",
+        "Set"
+      ],
+      "answer": "Stack"
+    },
+    {
+      "question": "자바스크립트 문법에서 배열의 각 요소를 변환하여 새로운 배열을 만드는 메서드는 무엇인가요?",
+      "options": [
+        "map()",
+        "filter()",
+        "sort()",
+        "reduce()"
+      ],
+      "answer": "map()"
+    },
+    {
+      "question": "O(n²) 시간 복잡도를 가지는 대표적인 정렬 알고리즘은 무엇인가요?",
+      "options": [
+        "Bubble Sort",
+        "Quick Sort",
+        "Merge Sort",
+        "Heap Sort"
+      ],
+      "answer": "Bubble Sort"
+    },
+    {
+      "question": "자바 문법에서 중복된 요소를 허용하는 컬렉션은 무엇인가요?",
+      "options": [
+        "List",
+        "Set",
+        "Map",
+        "Queue"
+      ],
+      "answer": "List"
+    },
+    {
+      "question": "자바스크립트 문법에서 사용자가 요소를 클릭할 때 발생하는 이벤트는 무엇인가요?",
+      "options": [
+        "click",
+        "onchange",
+        "hover",
+        "keydown"
+      ],
+      "answer": "click"
+    },
+    {
+      "question": "소프트웨어의 오류를 찾아 수정하는 과정을 무엇이라고 하나요?",
+      "options": [
+        "디버깅",
+        "컴파일",
+        "실행",
+        "설계"
+      ],
+      "answer": "디버깅"
+    },
+    {
+      "question": "자바 문법에서 현재 객체 자신을 가리키는 키워드는 무엇인가요?",
+      "options": [
+        "this",
+        "self",
+        "current",
+        "object"
+      ],
+      "answer": "this"
+    },
+    {
+      "question": "자바스크립트 문법에서 숫자를 문자열로 변환하는 메서드는 무엇인가요?",
+      "options": [
+        "toString()",
+        "parseInt()",
+        "String()",
+        "convert()"
+      ],
+      "answer": "toString()"
+    },
+    {
+      "question": "OSI 7계층 중 라우팅을 담당하는 계층은 무엇인가요?",
+      "options": [
+        "네트워크 계층",
+        "데이터 링크 계층",
+        "전송 계층",
+        "응용 계층"
+      ],
+      "answer": "네트워크 계층"
+    },
+    {
+      "question": "자바 문법에서 배열의 잘못된 인덱스에 접근할 때 발생하는 예외는 무엇인가요?",
+      "options": [
+        "ArrayIndexOutOfBoundsException",
+        "NullPointerException",
+        "IllegalArgumentException",
+        "ClassCastException"
+      ],
+      "answer": "ArrayIndexOutOfBoundsException"
+    },
+    {
+      "question": "자바스크립트 문법에서 값과 타입을 엄격하게 비교하는 연산자는 무엇인가요?",
+      "options": [
+        "===",
+        "==",
+        "!=",
+        "!=="
+      ],
+      "answer": "==="
+    },
+    {
+      "question": "GPU는 컴퓨터에서 어떤 역할을 하나요?",
+      "options": [
+        "그래픽 처리",
+        "일반 연산",
+        "메모리 관리",
+        "없음"
+      ],
+      "answer": "그래픽 처리"
+    },
+    {
+      "question": "자바 문법에서 컬렉션을 순회할 때 사용하는 인터페이스는 무엇인가요?",
+      "options": [
+        "Iterator",
+        "Iterable",
+        "Collection",
+        "ListIterator"
+      ],
+      "answer": "Iterator"
+    },
+    {
+      "question": "자바스크립트 문법에서 배열에서 특정 요소의 인덱스를 찾는 메서드는 무엇인가요?",
+      "options": [
+        "indexOf()",
+        "findIndex()",
+        "search()",
+        "locate()"
+      ],
+      "answer": "indexOf()"
+    },
+    {
+      "question": "IP 주소의 주 목적은 무엇인가요?",
+      "options": [
+        "네트워크 상의 장치 식별",
+        "데이터 저장",
+        "정보 처리",
+        "없음"
+      ],
+      "answer": "네트워크 상의 장치 식별"
+    },
+    {
+      "question": "자바 문법에서 여러 예외를 하나의 catch 블록으로 처리할 때 사용하는 구분자는 무엇인가요?",
+      "options": [
+        "| (파이프)",
+        "& (앰퍼샌드)",
+        ", (쉼표)",
+        "없음"
+      ],
+      "answer": "| (파이프)"
+    },
+    {
+      "question": "자바스크립트 문법에서 데이터 타입 중 하나가 아닌 것은 무엇인가요?",
+      "options": [
+        "Undefined",
+        "Integer",
+        "Boolean",
+        "Object"
+      ],
+      "answer": "Integer"
+    },
+    {
+      "question": "재귀(recursion)란 무엇인가요?",
+      "options": [
+        "함수가 자기 자신을 호출하는 것",
+        "반복문",
+        "조건문",
+        "없음"
+      ],
+      "answer": "함수가 자기 자신을 호출하는 것"
+    },
+    {
+      "question": "자바 문법에서 새 스레드를 생성하는 메서드는 무엇인가요?",
+      "options": [
+        "start()",
+        "run()",
+        "execute()",
+        "init()"
+      ],
+      "answer": "start()"
+    },
+    {
+      "question": "자바스크립트 문법에서 두 배열을 결합하는 메서드는 무엇인가요?",
+      "options": [
+        "concat()",
+        "merge()",
+        "join()",
+        "combine()"
+      ],
+      "answer": "concat()"
+    },
+    {
+      "question": "DNS는 네트워크에서 어떤 역할을 하나요?",
+      "options": [
+        "도메인 이름을 IP 주소로 변환",
+        "데이터 전송",
+        "파일 저장",
+        "없음"
+      ],
+      "answer": "도메인 이름을 IP 주소로 변환"
+    },
+    {
+      "question": "자바 문법에서 객체의 동등성을 비교할 때 사용하는 메서드는 무엇인가요?",
+      "options": [
+        "equals()",
+        "==",
+        "===",
+        "!="
+      ],
+      "answer": "equals()"
+    },
+    {
+      "question": "자바스크립트 문법에서 조건에 맞는 첫 번째 요소를 찾는 배열 메서드는 무엇인가요?",
+      "options": [
+        "find()",
+        "filter()",
+        "map()",
+        "reduce()"
+      ],
+      "answer": "find()"
+    },
+    {
+      "question": "SSD는 무엇의 약자인가요?",
+      "options": [
+        "Solid State Drive",
+        "Super Speed Drive",
+        "Standard Storage Device",
+        "없음"
+      ],
+      "answer": "Solid State Drive"
+    },
+    {
+      "question": "자바 문법에서 상수를 선언할 때 사용하는 키워드는 무엇인가요?",
+      "options": [
+        "final",
+        "const",
+        "static",
+        "immutable"
+      ],
+      "answer": "final"
+    },
+    {
+      "question": "자바스크립트 문법에서 현재 날짜와 시간을 반환하는 메서드는 무엇인가요?",
+      "options": [
+        "new Date()",
+        "Date.now()",
+        "getTime()",
+        "time()"
+      ],
+      "answer": "new Date()"
+    },
+    {
+      "question": "ASCII의 풀 네임은 무엇인가요?",
+      "options": [
+        "American Standard Code for Information Interchange",
+        "American System Code for Internet Interconnection",
+        "Automated Standard Code for Internal Information",
+        "없음"
+      ],
+      "answer": "American Standard Code for Information Interchange"
+    },
+    {
+      "question": "자바 문법에서 반복문을 조기 종료할 때 사용하는 키워드는 무엇인가요?",
+      "options": [
+        "break",
+        "continue",
+        "exit",
+        "return"
+      ],
+      "answer": "break"
+    },
+    {
+      "question": "자바스크립트 문법에서 배열의 첫 번째 요소를 제거하는 메서드는 무엇인가요?",
+      "options": [
+        "shift()",
+        "pop()",
+        "slice()",
+        "splice()"
+      ],
+      "answer": "shift()"
+    },
+    {
+      "question": "URL의 풀 네임은 무엇인가요?",
+      "options": [
+        "Uniform Resource Locator",
+        "Universal Resource Link",
+        "Unique Resource Locator",
+        "없음"
+      ],
+      "answer": "Uniform Resource Locator"
+    },
+    {
+      "question": "자바 문법에서 다음 중 원시 자료형이 아닌 것은 무엇인가요?",
+      "options": [
+        "String",
+        "int",
+        "boolean",
+        "char"
+      ],
+      "answer": "String"
+    },
+    {
+      "question": "자바스크립트 문법에서 조건을 만족하는 요소들로 새 배열을 만드는 메서드는 무엇인가요?",
+      "options": [
+        "filter()",
+        "map()",
+        "reduce()",
+        "forEach()"
+      ],
+      "answer": "filter()"
+    },
+    {
+      "question": "OS의 풀 네임은 무엇인가요?",
+      "options": [
+        "Operating System",
+        "Open Software",
+        "Organized System",
+        "없음"
+      ],
+      "answer": "Operating System"
+    },
+    {
+      "question": "자바 문법에서 null 객체 참조에 접근할 때 발생하는 예외는 무엇인가요?",
+      "options": [
+        "NullPointerException",
+        "IllegalStateException",
+        "IOException",
+        "RuntimeException"
+      ],
+      "answer": "NullPointerException"
+    },
+    {
+      "question": "자바스크립트 문법에서 문자열 연결에 사용하는 연산자는 무엇인가요?",
+      "options": [
+        "+",
+        "&",
+        "*",
+        "."
+      ],
+      "answer": "+"
+    },
+    {
+      "question": "데이터베이스 관리 시스템의 주된 역할은 무엇인가요?",
+      "options": [
+        "데이터 저장 및 관리",
+        "수학 계산",
+        "사용자 인터페이스 디자인",
+        "없음"
+      ],
+      "answer": "데이터 저장 및 관리"
+    },
+    {
+      "question": "자바 문법에서 멀티스레딩을 구현할 때 주로 사용하는 것은 무엇인가요?",
+      "options": [
+        "Thread",
+        "Process",
+        "Coroutine",
+        "Fiber"
+      ],
+      "answer": "Thread"
+    },
+    {
+      "question": "자바 문법에서 제네릭(Generic)을 사용하는 주된 목적은 무엇인가요?",
+      "options": [
+        "타입 안전성 보장",
+        "코드 간결성",
+        "성능 향상",
+        "메모리 최적화"
+      ],
+      "answer": "타입 안전성 보장"
+    },
+    {
+      "question": "자바 문법에서 오버라이딩과 오버로딩의 핵심 차이점은 무엇인가요?",
+      "options": [
+        "메서드 이름은 같으나 매개변수 목록이 다름",
+        "리턴 타입만 다름",
+        "접근 제어자 차이",
+        "둘 다 해당"
+      ],
+      "answer": "메서드 이름은 같으나 매개변수 목록이 다름"
+    },
+    {
+      "question": "자바 문법에서 인터페이스와 추상 클래스의 주요 차이점은 무엇인가요?",
+      "options": [
+        "다중 상속 지원 여부",
+        "메서드 구현 제공 여부",
+        "생성자 존재 여부",
+        "모두 해당"
+      ],
+      "answer": "모두 해당"
+    },
+    {
+      "question": "자바 문법에서 enum을 사용하는 주된 목적은 무엇인가요?",
+      "options": [
+        "상수 집합 정의",
+        "클래스 상속",
+        "동적 메모리 할당",
+        "없음"
+      ],
+      "answer": "상수 집합 정의"
+    },
+    {
+      "question": "자바 문법에서 Stream API의 주요 장점은 무엇인가요?",
+      "options": [
+        "병렬 처리 지원과 코드 간결성",
+        "메모리 절약",
+        "예외 처리 강화",
+        "없음"
+      ],
+      "answer": "병렬 처리 지원과 코드 간결성"
+    },
+    {
+      "question": "자바 문법에서 try-with-resources 구문의 장점은 무엇인가요?",
+      "options": [
+        "자원 자동 해제",
+        "예외 무시",
+        "코드 단순화",
+        "성능 향상"
+      ],
+      "answer": "자원 자동 해제"
+    },
+    {
+      "question": "자바 문법에서 람다 표현식의 주요 이점은 무엇인가요?",
+      "options": [
+        "코드 간결성",
+        "성능 향상",
+        "동기화 제공",
+        "메모리 최적화"
+      ],
+      "answer": "코드 간결성"
+    },
+    {
+      "question": "자바 문법에서 Optional 클래스를 사용하는 주된 목적은 무엇인가요?",
+      "options": [
+        "NullPointerException 예방",
+        "메모리 최적화",
+        "스레드 안전",
+        "없음"
+      ],
+      "answer": "NullPointerException 예방"
+    },
+    {
+      "question": "자바 문법에서 final 키워드의 용도는 무엇인가요?",
+      "options": [
+        "값 변경 불가",
+        "메서드 오버라이딩 방지",
+        "클래스 상속 금지",
+        "모두 해당"
+      ],
+      "answer": "모두 해당"
+    },
+    {
+      "question": "자바 문법에서 Reflection API를 사용하면 어떤 작업을 수행할 수 있나요?",
+      "options": [
+        "런타임에 클래스 정보 접근",
+        "코드 컴파일",
+        "정적 타입 검사",
+        "없음"
+      ],
+      "answer": "런타임에 클래스 정보 접근"
+    },
+    {
+      "question": "자바 문법에서 ConcurrentHashMap의 주요 특징은 무엇인가요?",
+      "options": [
+        "스레드 안전",
+        "락 분할",
+        "높은 동시성",
+        "모두 해당"
+      ],
+      "answer": "모두 해당"
+    },
+    {
+      "question": "자바 문법에서 Fork/Join 프레임워크의 주 용도는 무엇인가요?",
+      "options": [
+        "병렬 처리",
+        "파일 입출력",
+        "데이터베이스 연결",
+        "네트워킹"
+      ],
+      "answer": "병렬 처리"
+    },
+    {
+      "question": "자바 문법에서 ClassLoader의 주된 역할은 무엇인가요?",
+      "options": [
+        "클래스의 동적 로딩",
+        "메모리 관리",
+        "네트워크 통신",
+        "없음"
+      ],
+      "answer": "클래스의 동적 로딩"
+    },
+    {
+      "question": "자바 문법에서 어노테이션(Annotations)의 주요 목적은 무엇인가요?",
+      "options": [
+        "메타데이터 제공",
+        "메서드 오버라이딩",
+        "인터페이스 구현",
+        "메모리 할당"
+      ],
+      "answer": "메타데이터 제공"
+    },
+    {
+      "question": "자바 문법에서 JIT 컴파일러의 역할은 무엇인가요?",
+      "options": [
+        "바이트코드를 기계어로 변환",
+        "메모리 관리",
+        "스레드 스케줄링",
+        "없음"
+      ],
+      "answer": "바이트코드를 기계어로 변환"
+    },
+    {
+      "question": "자바 문법에서 CompletableFuture를 사용하는 주된 목적은 무엇인가요?",
+      "options": [
+        "비동기 프로그래밍",
+        "동기 프로그래밍",
+        "데이터베이스 연결",
+        "없음"
+      ],
+      "answer": "비동기 프로그래밍"
+    },
+    {
+      "question": "자바 문법에서 Immutable 클래스의 특징은 무엇인가요?",
+      "options": [
+        "상태 변경 불가",
+        "스레드 안전",
+        "캐싱 가능",
+        "모두 해당"
+      ],
+      "answer": "모두 해당"
+    },
+    {
+      "question": "자바 문법에서 메서드 참조(Method Reference)는 무엇인가요?",
+      "options": [
+        "람다 표현식의 축약형",
+        "클래스 상속 기법",
+        "예외 처리 방식",
+        "없음"
+      ],
+      "answer": "람다 표현식의 축약형"
+    },
+    {
+      "question": "자바 문법에서 내부 클래스(Inner Class)를 사용하는 주요 목적은 무엇인가요?",
+      "options": [
+        "캡슐화 강화",
+        "코드 구조 개선",
+        "외부 클래스의 멤버 접근",
+        "모두 해당"
+      ],
+      "answer": "모두 해당"
+    },
+    {
+      "question": "자바 문법에서 Stream의 filter() 메서드는 어떤 역할을 하나요?",
+      "options": [
+        "조건에 맞는 요소만 선택",
+        "요소 변환",
+        "요소 정렬",
+        "요소 합산"
+      ],
+      "answer": "조건에 맞는 요소만 선택"
+    },
+    {
+      "question": "자바 문법에서 parallelStream()을 사용하면 어떤 효과가 있나요?",
+      "options": [
+        "병렬 처리",
+        "동기 처리",
+        "순차 처리",
+        "성능 저하"
+      ],
+      "answer": "병렬 처리"
+    },
+    {
+      "question": "자바 문법에서 synchronized 키워드의 주된 목적은 무엇인가요?",
+      "options": [
+        "스레드 안전 보장",
+        "메모리 최적화",
+        "성능 향상",
+        "코드 간결성"
+      ],
+      "answer": "스레드 안전 보장"
+    },
+    {
+      "question": "자바 문법에서 volatile 키워드의 기능은 무엇인가요?",
+      "options": [
+        "변수의 가시성 보장",
+        "메서드 오버라이딩 방지",
+        "객체 불변성",
+        "없음"
+      ],
+      "answer": "변수의 가시성 보장"
+    },
+    {
+      "question": "자바 문법에서 Optional.ifPresent() 메서드의 역할은 무엇인가요?",
+      "options": [
+        "값이 존재할 때 실행",
+        "값 제거",
+        "null 체크",
+        "없음"
+      ],
+      "answer": "값이 존재할 때 실행"
+    },
+    {
+      "question": "자바 문법에서 Collectors.joining() 메서드는 주로 무엇에 사용되나요?",
+      "options": [
+        "문자열 결합",
+        "데이터 정렬",
+        "요소 필터링",
+        "병렬 처리"
+      ],
+      "answer": "문자열 결합"
+    },
+    {
+      "question": "자바 문법에서 메서드 참조 사용 시 주의해야 할 사항은 무엇인가요?",
+      "options": [
+        "매개변수와 리턴 타입 일치, 예외 처리",
+        "오직 매개변수만 일치",
+        "리턴 타입만 일치",
+        "없음"
+      ],
+      "answer": "매개변수와 리턴 타입 일치, 예외 처리"
+    },
+    {
+      "question": "자바 문법에서 finally 블록의 특징은 무엇인가요?",
+      "options": [
+        "항상 실행",
+        "예외 무시",
+        "조건부 실행",
+        "실행되지 않을 수 있음"
+      ],
+      "answer": "항상 실행"
+    },
+    {
+      "question": "자바 문법에서 Reflection API 사용 시 주의해야 할 점은 무엇인가요?",
+      "options": [
+        "성능 저하, 보안 취약점, 유지보수 어려움",
+        "메모리 누수",
+        "속도 저하만",
+        "없음"
+      ],
+      "answer": "성능 저하, 보안 취약점, 유지보수 어려움"
+    },
+    {
+      "question": "자바 문법에서 모듈 시스템의 주요 목적은 무엇인가요?",
+      "options": [
+        "의존성 관리",
+        "병렬 처리",
+        "메모리 관리",
+        "인터페이스 개선"
+      ],
+      "answer": "의존성 관리"
+    },
+    {
+      "question": "자바 문법에서 Stream의 collect() 메서드는 주로 어떤 역할을 하나요?",
+      "options": [
+        "스트림 결과를 컬렉션으로 변환",
+        "요소 필터링",
+        "요소 합산",
+        "정렬"
+      ],
+      "answer": "스트림 결과를 컬렉션으로 변환"
+    },
+    {
+      "question": "자바 문법에서 인스턴스 초기화 블록의 특징은 무엇인가요?",
+      "options": [
+        "객체 생성 시 실행",
+        "클래스 로딩 시 실행",
+        "정적 초기화",
+        "없음"
+      ],
+      "answer": "객체 생성 시 실행"
+    },
+    {
+      "question": "자바 문법에서 new 연산자의 역할은 무엇인가요?",
+      "options": [
+        "객체 생성, 메모리 할당, 생성자 호출",
+        "메서드 실행",
+        "클래스 로딩",
+        "없음"
+      ],
+      "answer": "객체 생성, 메모리 할당, 생성자 호출"
+    },
+    {
+      "question": "자바 문법에서 @Override 어노테이션의 목적은 무엇인가요?",
+      "options": [
+        "컴파일러에 오버라이딩 검증을 요청",
+        "성능 향상",
+        "메모리 최적화",
+        "코드 축약"
+      ],
+      "answer": "컴파일러에 오버라이딩 검증을 요청"
+    },
+    {
+      "question": "자바 문법에서 enum에 메서드를 정의할 수 있는 이유는 무엇인가요?",
+      "options": [
+        "enum이 클래스와 유사하기 때문",
+        "enum은 인터페이스임",
+        "메모리 최적화",
+        "없음"
+      ],
+      "answer": "enum이 클래스와 유사하기 때문"
+    },
+    {
+      "question": "자바 문법에서 자동 박싱(Autoboxing)의 주요 이점은 무엇인가요?",
+      "options": [
+        "코드 간결성",
+        "성능 향상",
+        "메모리 절약",
+        "동기화 지원"
+      ],
+      "answer": "코드 간결성"
+    },
+    {
+      "question": "자바스크립트 문법에서 클로저를 이용한 데이터 은닉의 주요 장점은 무엇인가요?",
+      "options": [
+        "캡슐화",
+        "메모리 최적화",
+        "코드 간결성",
+        "동기화"
+      ],
+      "answer": "캡슐화"
+    },
+    {
+      "question": "자바스크립트 문법에서 프로토타입 체인의 역할은 무엇인가요?",
+      "options": [
+        "객체 상속",
+        "메모리 관리",
+        "비동기 처리",
+        "없음"
+      ],
+      "answer": "객체 상속"
+    },
+    {
+      "question": "자바스크립트 문법에서 async/await를 사용하면 어떤 이점이 있나요?",
+      "options": [
+        "비동기 코드를 동기적으로 표현",
+        "성능 향상",
+        "메모리 절약",
+        "없음"
+      ],
+      "answer": "비동기 코드를 동기적으로 표현"
+    },
+    {
+      "question": "자바스크립트 문법에서 Promise의 상태는 어떤 값들을 가질 수 있나요?",
+      "options": [
+        "pending, fulfilled, rejected",
+        "start, run, end",
+        "open, closed, error",
+        "없음"
+      ],
+      "answer": "pending, fulfilled, rejected"
+    },
+    {
+      "question": "자바스크립트 문법에서 동적으로 객체 프로퍼티를 추가할 때 주로 사용하는 표기법은 무엇인가요?",
+      "options": [
+        "대괄호 표기법",
+        "점 표기법",
+        "둘 다",
+        "없음"
+      ],
+      "answer": "대괄호 표기법"
+    },
+    {
+      "question": "자바스크립트 문법에서 'use strict'를 사용하는 주된 이유는 무엇인가요?",
+      "options": [
+        "엄격한 문법 적용",
+        "코드 압축",
+        "동적 변수 생성 방지",
+        "없음"
+      ],
+      "answer": "엄격한 문법 적용"
+    },
+    {
+      "question": "자바스크립트 문법에서 클로저를 사용해 private 변수를 구현할 수 있는 이유는 무엇인가요?",
+      "options": [
+        "함수가 렉시컬 스코프를 기억하기 때문",
+        "전역 스코프 때문",
+        "객체 지향 특성 때문",
+        "없음"
+      ],
+      "answer": "함수가 렉시컬 스코프를 기억하기 때문"
+    },
+    {
+      "question": "자바스크립트 문법에서 Event Loop의 주된 역할은 무엇인가요?",
+      "options": [
+        "비동기 작업 처리",
+        "동기 코드 실행",
+        "메모리 관리",
+        "없음"
+      ],
+      "answer": "비동기 작업 처리"
+    },
+    {
+      "question": "자바스크립트 문법에서 Array.prototype.map()과 forEach()의 차이점은 무엇인가요?",
+      "options": [
+        "map()은 새 배열 반환, forEach()는 반환 없음",
+        "둘 다 새 배열 반환",
+        "둘 다 반환 없음",
+        "없음"
+      ],
+      "answer": "map()은 새 배열 반환, forEach()는 반환 없음"
+    },
+    {
+      "question": "자바스크립트 문법에서 객체의 깊은 복사와 얕은 복사의 차이는 무엇인가요?",
+      "options": [
+        "참조 복사 여부",
+        "메모리 사용량",
+        "속도 차이",
+        "모두 해당"
+      ],
+      "answer": "참조 복사 여부"
+    },
+    {
+      "question": "자바스크립트 문법에서 모듈 시스템(ES6 Modules)의 주요 장점은 무엇인가요?",
+      "options": [
+        "코드 캡슐화와 의존성 관리",
+        "코드 압축",
+        "비동기 처리",
+        "없음"
+      ],
+      "answer": "코드 캡슐화와 의존성 관리"
+    },
+    {
+      "question": "자바스크립트 문법에서 Symbol의 주요 용도는 무엇인가요?",
+      "options": [
+        "고유 식별자 생성",
+        "문자열 변환",
+        "숫자 계산",
+        "없음"
+      ],
+      "answer": "고유 식별자 생성"
+    },
+    {
+      "question": "자바스크립트 문법에서 Proxy 객체를 사용하는 주요 이유는 무엇인가요?",
+      "options": [
+        "객체의 동작을 제어하기 위해",
+        "메모리 최적화",
+        "비동기 처리",
+        "없음"
+      ],
+      "answer": "객체의 동작을 제어하기 위해"
+    },
+    {
+      "question": "자바스크립트 문법에서 Reflect API의 주요 목적은 무엇인가요?",
+      "options": [
+        "객체 조작 메서드 제공",
+        "비동기 처리",
+        "에러 핸들링",
+        "없음"
+      ],
+      "answer": "객체 조작 메서드 제공"
+    },
+    {
+      "question": "자바스크립트 문법에서 Generator 함수의 핵심 특징은 무엇인가요?",
+      "options": [
+        "yield 키워드 사용",
+        "동기 처리",
+        "메모리 절약",
+        "없음"
+      ],
+      "answer": "yield 키워드 사용"
+    },
+    {
+      "question": "자바스크립트 문법에서 옵셔널 체이닝(Optional Chaining)의 주요 이점은 무엇인가요?",
+      "options": [
+        "undefined 방지, 코드 간결성, 오류 예방",
+        "메모리 최적화",
+        "속도 향상",
+        "없음"
+      ],
+      "answer": "undefined 방지, 코드 간결성, 오류 예방"
+    },
+    {
+      "question": "자바스크립트 문법에서 Nullish 병합 연산자(??)는 주로 무엇을 처리하기 위한 연산자인가요?",
+      "options": [
+        "null 또는 undefined 값",
+        "숫자 계산",
+        "문자열 연결",
+        "없음"
+      ],
+      "answer": "null 또는 undefined 값"
+    },
+    {
+      "question": "자바스크립트 문법에서 비구조화 할당(Destructuring Assignment)의 주요 이점은 무엇인가요?",
+      "options": [
+        "코드 간결성, 데이터 추출 용이, 가독성 향상",
+        "메모리 절약",
+        "속도 향상",
+        "없음"
+      ],
+      "answer": "코드 간결성, 데이터 추출 용이, 가독성 향상"
+    },
+    {
+      "question": "자바스크립트 문법에서 Spread 연산자의 주된 용도는 무엇인가요?",
+      "options": [
+        "배열 복사 및 결합, 객체 확장, 함수 인자 전달",
+        "문자열 연결",
+        "숫자 계산",
+        "없음"
+      ],
+      "answer": "배열 복사 및 결합, 객체 확장, 함수 인자 전달"
+    },
+    {
+      "question": "자바스크립트 문법에서 클로저를 활용한 메모이제이션의 주요 목적은 무엇인가요?",
+      "options": [
+        "함수 결과 캐싱",
+        "코드 단순화",
+        "동기화",
+        "없음"
+      ],
+      "answer": "함수 결과 캐싱"
+    },
+    {
+      "question": "자바스크립트 문법에서 IIFE(즉시 실행 함수 표현식)의 주된 목적은 무엇인가요?",
+      "options": [
+        "즉시 실행과 스코프 격리",
+        "코드 압축",
+        "비동기 처리",
+        "없음"
+      ],
+      "answer": "즉시 실행과 스코프 격리"
+    },
+    {
+      "question": "자바스크립트 문법에서 Function.prototype.bind() 메서드의 주 역할은 무엇인가요?",
+      "options": [
+        "함수의 this 값을 고정",
+        "함수 복제",
+        "메모리 최적화",
+        "없음"
+      ],
+      "answer": "함수의 this 값을 고정"
+    },
+    {
+      "question": "자바스크립트 문법에서 옵저버 패턴을 구현할 때 주의해야 할 사항은 무엇인가요?",
+      "options": [
+        "메모리 누수, 동기화 문제, 성능 저하",
+        "코드 복잡성만",
+        "네임스페이스 충돌",
+        "없음"
+      ],
+      "answer": "메모리 누수, 동기화 문제, 성능 저하"
+    },
+    {
+      "question": "자바스크립트 문법에서 Map과 Object의 차이점은 무엇인가요?",
+      "options": [
+        "키의 타입 제한, 순서 보장, 성능",
+        "메모리 사용량",
+        "함수 지원",
+        "없음"
+      ],
+      "answer": "키의 타입 제한, 순서 보장, 성능"
+    },
+    {
+      "question": "자바스크립트 문법에서 WeakMap의 주요 특징은 무엇인가요?",
+      "options": [
+        "키로 객체만 사용, 가비지 컬렉션 대상, 메모리 누수 방지",
+        "키 제한 없음",
+        "순서 보장",
+        "없음"
+      ],
+      "answer": "키로 객체만 사용, 가비지 컬렉션 대상, 메모리 누수 방지"
+    },
+    {
+      "question": "자바스크립트 문법에서 Reflect.apply() 메서드의 역할은 무엇인가요?",
+      "options": [
+        "함수를 특정 this와 인자로 호출",
+        "객체 복사",
+        "에러 처리",
+        "없음"
+      ],
+      "answer": "함수를 특정 this와 인자로 호출"
+    },
+    {
+      "question": "자바스크립트 문법에서 비동기 이터레이터의 주요 장점은 무엇인가요?",
+      "options": [
+        "비동기 스트림 처리",
+        "동기 코드 실행",
+        "메모리 절약",
+        "없음"
+      ],
+      "answer": "비동기 스트림 처리"
+    },
+    {
+      "question": "자바스크립트 문법에서 Symbol.iterator의 주된 역할은 무엇인가요?",
+      "options": [
+        "이터러블 프로토콜 구현",
+        "함수 실행",
+        "객체 복제",
+        "없음"
+      ],
+      "answer": "이터러블 프로토콜 구현"
+    },
+    {
+      "question": "자바스크립트 문법에서 모듈 번들러(예: Webpack)의 주요 기능은 무엇인가요?",
+      "options": [
+        "모듈 결합 및 최적화",
+        "비동기 처리",
+        "UI 렌더링",
+        "없음"
+      ],
+      "answer": "모듈 결합 및 최적화"
+    },
+    {
+      "question": "자바스크립트 문법에서 Tail Call 최적화는 무엇을 개선하나요?",
+      "options": [
+        "재귀 함수의 성능",
+        "메모리 사용",
+        "동기화",
+        "없음"
+      ],
+      "answer": "재귀 함수의 성능"
+    },
+    {
+      "question": "자바스크립트 문법에서 import와 require의 차이점은 무엇인가요?",
+      "options": [
+        "ES6 모듈과 CommonJS 모듈",
+        "동기와 비동기",
+        "파일 경로 처리",
+        "없음"
+      ],
+      "answer": "ES6 모듈과 CommonJS 모듈"
+    },
+    {
+      "question": "자바스크립트 문법에서 Error 객체의 주요 프로퍼티는 무엇인가요?",
+      "options": [
+        "name, message, stack",
+        "type, value, code",
+        "error, info, trace",
+        "없음"
+      ],
+      "answer": "name, message, stack"
+    },
+    {
+      "question": "자바스크립트 문법에서 프로미스 체이닝의 주요 장점은 무엇인가요?",
+      "options": [
+        "비동기 작업 순서 제어",
+        "동시 실행",
+        "메모리 최적화",
+        "없음"
+      ],
+      "answer": "비동기 작업 순서 제어"
+    },
+    {
+      "question": "자바스크립트 문법에서 Optional Chaining 연산자와 Nullish 병합 연산자의 차이는 무엇인가요?",
+      "options": [
+        "동작 방식, 사용 목적, 문법",
+        "하나만 해당",
+        "둘 다 사용하지 않음",
+        "없음"
+      ],
+      "answer": "동작 방식, 사용 목적, 문법"
+    },
+    {
+      "question": "알고리즘에서 분할 정복 전략의 핵심 아이디어는 무엇인가요?",
+      "options": [
+        "문제를 더 작은 문제로 분할하여 해결",
+        "문제를 순차적으로 처리",
+        "메모이제이션 사용",
+        "없음"
+      ],
+      "answer": "문제를 더 작은 문제로 분할하여 해결"
+    },
+    {
+      "question": "동적 프로그래밍에서 최적 부분 구조의 의미는 무엇인가요?",
+      "options": [
+        "문제의 최적 해결책이 부분 문제의 최적 해결책으로 구성됨",
+        "문제가 반복적임",
+        "문제가 분할됨",
+        "없음"
+      ],
+      "answer": "문제의 최적 해결책이 부분 문제의 최적 해결책으로 구성됨"
+    },
+    {
+      "question": "NP-완전 문제의 주요 특징은 무엇인가요?",
+      "options": [
+        "모든 NP 문제로 다항 시간 환원 가능",
+        "결정 문제임",
+        "해결하기 어려움",
+        "모두 해당"
+      ],
+      "answer": "모두 해당"
+    },
+    {
+      "question": "그래프 이론에서 다익스트라 알고리즘의 주요 용도는 무엇인가요?",
+      "options": [
+        "최단 경로 탐색",
+        "최소 신장 트리",
+        "네트워크 플로우",
+        "없음"
+      ],
+      "answer": "최단 경로 탐색"
+    },
+    {
+      "question": "정렬 알고리즘 중 퀵 정렬의 평균 시간 복잡도는 얼마인가요?",
+      "options": [
+        "O(n log n)",
+        "O(n²)",
+        "O(n)",
+        "O(log n)"
+      ],
+      "answer": "O(n log n)"
+    },
+    {
+      "question": "동시성 제어에서 교착 상태(Deadlock)가 발생하는 주요 원인은 무엇인가요?",
+      "options": [
+        "상호 배제, 점유 대기, 비선점, 순환 대기",
+        "메모리 부족",
+        "스레드 수 과다",
+        "없음"
+      ],
+      "answer": "상호 배제, 점유 대기, 비선점, 순환 대기"
+    },
+    {
+      "question": "데이터베이스에서 트랜잭션의 ACID 특성 중 Isolation의 의미는 무엇인가요?",
+      "options": [
+        "동시에 실행된 트랜잭션 간 간섭 없음",
+        "모든 트랜잭션이 성공 또는 실패",
+        "데이터 일관성 유지",
+        "없음"
+      ],
+      "answer": "동시에 실행된 트랜잭션 간 간섭 없음"
+    },
+    {
+      "question": "컴퓨터 네트워크에서 TCP와 UDP의 주요 차이점은 무엇인가요?",
+      "options": [
+        "연결 지향 vs 비연결 지향, 속도, 신뢰성",
+        "속도만 다름",
+        "프로토콜 번호",
+        "없음"
+      ],
+      "answer": "연결 지향 vs 비연결 지향, 속도, 신뢰성"
+    },
+    {
+      "question": "메모리 관리에서 가비지 컬렉션의 주된 목적은 무엇인가요?",
+      "options": [
+        "사용하지 않는 객체 자동 제거",
+        "메모리 할당",
+        "프로세스 스케줄링",
+        "없음"
+      ],
+      "answer": "사용하지 않는 객체 자동 제거"
+    },
+    {
+      "question": "컴퓨터 구조에서 파이프라이닝의 주요 장점은 무엇인가요?",
+      "options": [
+        "명령어 처리 속도 향상",
+        "메모리 절약",
+        "동기화 제공",
+        "없음"
+      ],
+      "answer": "명령어 처리 속도 향상"
+    },
+    {
+      "question": "알고리즘 설계에서 그리디 알고리즘의 특징은 무엇인가요?",
+      "options": [
+        "매 단계마다 최적 선택",
+        "전체 최적 해 보장",
+        "동적 프로그래밍과 유사",
+        "없음"
+      ],
+      "answer": "매 단계마다 최적 선택"
+    },
+    {
+      "question": "암호학에서 대칭 키 암호화의 단점은 무엇인가요?",
+      "options": [
+        "키 분배 문제",
+        "암호화 속도",
+        "복잡한 알고리즘",
+        "없음"
+      ],
+      "answer": "키 분배 문제"
+    },
+    {
+      "question": "데이터베이스에서 인덱스의 주요 역할은 무엇인가요?",
+      "options": [
+        "데이터 검색 속도 향상",
+        "데이터 보안 강화",
+        "데이터 저장 공간 절약",
+        "없음"
+      ],
+      "answer": "데이터 검색 속도 향상"
+    },
+    {
+      "question": "튜링 머신이 중요한 이유는 무엇인가요?",
+      "options": [
+        "계산 가능성의 한계를 정의",
+        "실제 컴퓨터 구조",
+        "네트워크 프로토콜",
+        "없음"
+      ],
+      "answer": "계산 가능성의 한계를 정의"
+    },
+    {
+      "question": "자연어 처리에서 토큰화의 역할은 무엇인가요?",
+      "options": [
+        "텍스트를 단어 단위로 분할",
+        "텍스트 요약",
+        "텍스트 번역",
+        "없음"
+      ],
+      "answer": "텍스트를 단어 단위로 분할"
+    },
+    {
+      "question": "컴퓨터 그래픽스에서 렌더링의 주된 목적은 무엇인가요?",
+      "options": [
+        "이미지 생성",
+        "데이터 압축",
+        "네트워크 전송",
+        "없음"
+      ],
+      "answer": "이미지 생성"
+    },
+    {
+      "question": "머신러닝에서 과적합(Overfitting)을 방지하기 위한 일반적인 방법은 무엇인가요?",
+      "options": [
+        "정규화, 교차 검증, 데이터 증강, 하이퍼파라미터 튜닝",
+        "데이터 증강만",
+        "모델 단순화만",
+        "없음"
+      ],
+      "answer": "정규화, 교차 검증, 데이터 증강, 하이퍼파라미터 튜닝"
+    },
+    {
+      "question": "분산 처리에서 분산 시스템의 주요 이점은 무엇인가요?",
+      "options": [
+        "처리 속도 향상, 데이터 처리량 증가, 시스템 확장성",
+        "단순 분산",
+        "메모리 최적화",
+        "없음"
+      ],
+      "answer": "처리 속도 향상, 데이터 처리량 증가, 시스템 확장성"
+    },
+    {
+      "question": "네트워크 보안에서 방화벽의 주된 역할은 무엇인가요?",
+      "options": [
+        "불법 접근 차단",
+        "데이터 암호화",
+        "네트워크 모니터링",
+        "없음"
+      ],
+      "answer": "불법 접근 차단"
+    },
+    {
+      "question": "운영체제에서 컨텍스트 스위칭의 단점은 무엇인가요?",
+      "options": [
+        "오버헤드 증가",
+        "메모리 누수",
+        "데이터 손실",
+        "없음"
+      ],
+      "answer": "오버헤드 증가"
+    },
+    {
+      "question": "네트워크 라우팅 프로토콜의 예로 옳은 것은 무엇인가요?",
+      "options": [
+        "OSPF, BGP",
+        "HTTP, FTP",
+        "TCP, UDP",
+        "없음"
+      ],
+      "answer": "OSPF, BGP"
+    },
+    {
+      "question": "공개 키 암호화의 주요 장점은 무엇인가요?",
+      "options": [
+        "키 분배 문제 해결",
+        "빠른 암호화",
+        "데이터 압축",
+        "없음"
+      ],
+      "answer": "키 분배 문제 해결"
+    },
+    {
+      "question": "동적 계획법과 그리디 알고리즘의 차이점은 무엇인가요?",
+      "options": [
+        "최적 부분 구조와 선택 기준",
+        "시간 복잡도",
+        "공간 복잡도",
+        "없음"
+      ],
+      "answer": "최적 부분 구조와 선택 기준"
+    },
+    {
+      "question": "NP-하드 문제의 특징은 무엇인가요?",
+      "options": [
+        "NP 문제보다 어려움, 결정 문제가 아님, 다항 시간 환원 불가능",
+        "단순 어려움",
+        "결정 문제임",
+        "없음"
+      ],
+      "answer": "NP 문제보다 어려움, 결정 문제가 아님, 다항 시간 환원 불가능"
+    },
+    {
+      "question": "SSL/TLS 프로토콜의 주된 역할은 무엇인가요?",
+      "options": [
+        "데이터 암호화와 인증",
+        "속도 향상",
+        "네트워크 연결",
+        "없음"
+      ],
+      "answer": "데이터 암호화와 인증"
+    },
+    {
+      "question": "운영체제에서 페이지 교체 알고리즘의 예로 옳은 것은 무엇인가요?",
+      "options": [
+        "LRU, FIFO",
+        "DFS, BFS",
+        "Quick Sort, Merge Sort",
+        "없음"
+      ],
+      "answer": "LRU, FIFO"
+    },
+    {
+      "question": "병합 정렬의 주요 특징은 무엇인가요?",
+      "options": [
+        "안정 정렬, O(n log n)",
+        "불안정 정렬, O(n²)",
+        "빠른 정렬, O(n)",
+        "없음"
+      ],
+      "answer": "안정 정렬, O(n log n)"
+    },
+    {
+      "question": "캐시 메모리의 주요 역할은 무엇인가요?",
+      "options": [
+        "데이터 접근 속도 향상",
+        "메모리 확장",
+        "데이터 암호화",
+        "없음"
+      ],
+      "answer": "데이터 접근 속도 향상"
+    },
+    {
+      "question": "데이터베이스 정규화의 주된 목적은 무엇인가요?",
+      "options": [
+        "데이터 중복 제거 및 무결성 유지",
+        "데이터 압축",
+        "검색 속도 향상",
+        "없음"
+      ],
+      "answer": "데이터 중복 제거 및 무결성 유지"
+    },
+    {
+      "question": "분산 시스템의 주요 도전 과제는 무엇인가요?",
+      "options": [
+        "노드 간 통신 지연, 데이터 일관성 유지, 장애 허용성",
+        "단순 확장",
+        "메모리 최적화",
+        "없음"
+      ],
+      "answer": "노드 간 통신 지연, 데이터 일관성 유지, 장애 허용성"
+    },
+    {
+      "question": "컴퓨터 과학에서 알고리즘이란 무엇인가요?",
+      "options": [
+        "문제 해결을 위한 단계적 절차",
+        "프로그램 코드",
+        "데이터베이스",
+        "없음"
+      ],
+      "answer": "문제 해결을 위한 단계적 절차"
+    },
+    {
+      "question": "컴퓨터 과학에서 빅오 표기법은 무엇을 설명하나요?",
+      "options": [
+        "알고리즘의 시간 복잡도",
+        "메모리 사용량",
+        "코드 길이",
+        "없음"
+      ],
+      "answer": "알고리즘의 시간 복잡도"
+    },
+    {
+      "question": "컴퓨터 과학에서 자료구조란 무엇인가요?",
+      "options": [
+        "데이터를 효율적으로 저장하고 관리하는 방법",
+        "알고리즘",
+        "프로그램",
+        "없음"
+      ],
+      "answer": "데이터를 효율적으로 저장하고 관리하는 방법"
+    },
+    {
+      "question": "컴퓨터 과학에서 스택 자료구조의 특징은 무엇인가요?",
+      "options": [
+        "LIFO (Last In, First Out)",
+        "FIFO (First In, First Out)",
+        "무작위 접근",
+        "없음"
+      ],
+      "answer": "LIFO (Last In, First Out)"
+    },
+    {
+      "question": "컴퓨터 과학에서 큐 자료구조의 특징은 무엇인가요?",
+      "options": [
+        "FIFO (First In, First Out)",
+        "LIFO (Last In, First Out)",
+        "순차 정렬",
+        "없음"
+      ],
+      "answer": "FIFO (First In, First Out)"
+    },
+    {
+      "question": "컴퓨터 과학에서 이진 탐색을 사용하기 위한 전제 조건은 무엇인가요?",
+      "options": [
+        "정렬된 배열",
+        "무작위 배열",
+        "중복된 값",
+        "없음"
+      ],
+      "answer": "정렬된 배열"
+    },
+    {
+      "question": "컴퓨터 과학에서 재귀 함수란 무엇인가요?",
+      "options": [
+        "자기 자신을 호출하는 함수",
+        "반복문",
+        "조건문",
+        "없음"
+      ],
+      "answer": "자기 자신을 호출하는 함수"
+    },
+    {
+      "question": "컴퓨터 과학에서 해시 테이블은 데이터를 어떤 방식으로 저장하나요?",
+      "options": [
+        "해시 함수를 이용한 키-값 쌍",
+        "순차 배열",
+        "연결 리스트",
+        "없음"
+      ],
+      "answer": "해시 함수를 이용한 키-값 쌍"
+    },
+    {
+      "question": "컴퓨터 과학에서 네트워크 프로토콜이란 무엇인가요?",
+      "options": [
+        "데이터 통신 규칙 집합",
+        "데이터 저장 방식",
+        "프로그래밍 언어",
+        "없음"
+      ],
+      "answer": "데이터 통신 규칙 집합"
+    },
+    {
+      "question": "컴퓨터 과학에서 운영체제의 주요 기능 중 하나는 무엇인가요?",
+      "options": [
+        "자원 관리",
+        "프로그래밍",
+        "데이터베이스 관리",
+        "없음"
+      ],
+      "answer": "자원 관리"
+    },
+    {
+      "question": "컴퓨터 과학에서 컴파일러의 역할은 무엇인가요?",
+      "options": [
+        "소스 코드를 기계어로 변환함",
+        "코드를 실행함",
+        "메모리를 관리함",
+        "없음"
+      ],
+      "answer": "소스 코드를 기계어로 변환함"
+    },
+    {
+      "question": "컴퓨터 과학에서 인터프리터의 역할은 무엇인가요?",
+      "options": [
+        "소스 코드를 한 줄씩 실행함",
+        "전체 코드를 컴파일함",
+        "메모리를 할당함",
+        "없음"
+      ],
+      "answer": "소스 코드를 한 줄씩 실행함"
+    },
+    {
+      "question": "컴퓨터 과학에서 데이터베이스 관리 시스템(DBMS)의 주요 목적은 무엇인가요?",
+      "options": [
+        "데이터 저장, 검색, 관리",
+        "코드 실행",
+        "네트워크 연결",
+        "없음"
+      ],
+      "answer": "데이터 저장, 검색, 관리"
+    },
+    {
+      "question": "컴퓨터 과학에서 인덱스는 데이터베이스에서 주로 무엇을 향상시키나요?",
+      "options": [
+        "검색 속도",
+        "데이터 무결성",
+        "메모리 사용",
+        "없음"
+      ],
+      "answer": "검색 속도"
+    },
+    {
+      "question": "컴퓨터 과학에서 캐시 메모리의 역할은 무엇인가요?",
+      "options": [
+        "데이터 접근 속도 향상",
+        "데이터 저장",
+        "코드 실행",
+        "없음"
+      ],
+      "answer": "데이터 접근 속도 향상"
+    },
+    {
+      "question": "컴퓨터 과학에서 소켓 프로그래밍은 주로 무엇에 사용되나요?",
+      "options": [
+        "네트워크 통신",
+        "파일 입출력",
+        "데이터베이스 연결",
+        "없음"
+      ],
+      "answer": "네트워크 통신"
+    },
+    {
+      "question": "컴퓨터 과학에서 암호화란 무엇을 위해 사용되나요?",
+      "options": [
+        "데이터 보호",
+        "데이터 압축",
+        "데이터 정렬",
+        "없음"
+      ],
+      "answer": "데이터 보호"
+    },
+    {
+      "question": "컴퓨터 과학에서 알고리즘의 안정성이란 무엇을 의미하나요?",
+      "options": [
+        "동일한 값의 순서를 유지함",
+        "알고리즘 속도",
+        "메모리 사용",
+        "없음"
+      ],
+      "answer": "동일한 값의 순서를 유지함"
+    },
+    {
+      "question": "컴퓨터 과학에서 그래프에서 정점과 간선은 어떤 관계에 있나요?",
+      "options": [
+        "정점은 간선으로 연결됨",
+        "정점과 간선은 독립적임",
+        "간선이 정점을 포함함",
+        "없음"
+      ],
+      "answer": "정점은 간선으로 연결됨"
+    },
+    {
+      "question": "컴퓨터 과학에서 애자일(Agile) 개발 방법론의 주요 특징은 무엇인가요?",
+      "options": [
+        "유연한 계획과 반복적 개발",
+        "고정된 계획",
+        "단일 단계 개발",
+        "없음"
+      ],
+      "answer": "유연한 계획과 반복적 개발"
+    },
+    {
+      "question": "컴퓨터 과학에서 버전 관리 시스템으로 널리 사용되는 도구는 무엇인가요?",
+      "options": [
+        "Git",
+        "SVN",
+        "Mercurial",
+        "모두 해당"
+      ],
+      "answer": "Git"
+    },
+    {
+      "question": "컴퓨터 과학에서 컴퓨터 네트워크의 기본 구조 중 하나는 무엇인가요?",
+      "options": [
+        "클라이언트-서버",
+        "피어 투 피어",
+        "모두 해당",
+        "없음"
+      ],
+      "answer": "모두 해당"
+    },
+    {
+      "question": "컴퓨터 과학에서 소프트웨어의 버그란 무엇을 의미하나요?",
+      "options": [
+        "오류나 결함",
+        "코드 최적화",
+        "메모리 할당",
+        "없음"
+      ],
+      "answer": "오류나 결함"
+    },
+    {
+      "question": "컴퓨터 과학에서 알고리즘 효율성을 측정할 때 주로 사용하는 기준은 무엇인가요?",
+      "options": [
+        "시간 복잡도",
+        "코드 길이",
+        "메모리 사용",
+        "없음"
+      ],
+      "answer": "시간 복잡도"
+    },
+    {
+      "question": "컴퓨터 과학에서 데이터 압축의 주된 목적은 무엇인가요?",
+      "options": [
+        "저장 공간 절약",
+        "데이터 보안",
+        "네트워크 속도 향상",
+        "없음"
+      ],
+      "answer": "저장 공간 절약"
+    },
+    {
+      "question": "컴퓨터 과학에서 이진 트리의 특징 중 하나는 무엇인가요?",
+      "options": [
+        "각 노드가 최대 두 개의 자식을 가짐",
+        "모든 노드가 자식을 가짐",
+        "노드 순서가 없음",
+        "없음"
+      ],
+      "answer": "각 노드가 최대 두 개의 자식을 가짐"
+    },
+    {
+      "question": "컴퓨터 과학에서 소프트웨어 개발 생명주기(SDLC)의 첫 단계는 무엇인가요?",
+      "options": [
+        "요구사항 분석",
+        "코드 작성",
+        "테스트 수행",
+        "배포"
+      ],
+      "answer": "요구사항 분석"
+    },
+    {
+      "question": "컴퓨터 과학에서 중앙 처리 장치(CPU)의 주 역할은 무엇인가요?",
+      "options": [
+        "명령어 처리",
+        "데이터 저장",
+        "그래픽 처리",
+        "없음"
+      ],
+      "answer": "명령어 처리"
+    },
+    {
+      "question": "컴퓨터 과학에서 캐시 메모리는 일반적으로 CPU와 주 메모리 사이에 위치합니다. 이 설명은 옳은가요?",
+      "options": [
+        "옳다",
+        "그렇지 않다"
+      ],
+      "answer": "옳다"
+    },
+    {
+      "question": "컴퓨터 과학에서 클라우드 컴퓨팅의 주요 특징은 무엇인가요?",
+      "options": [
+        "유연한 자원 제공과 비용 효율성",
+        "고정된 자원 제공",
+        "로컬 컴퓨팅",
+        "없음"
+      ],
+      "answer": "유연한 자원 제공과 비용 효율성"
+    },
+    {
+      "question": "자바에서 클래스와 객체의 차이점은 무엇인가요?",
+      "options": [
+        "클래스는 객체의 설계도이고, 객체는 클래스의 인스턴스이다.",
+        "클래스는 메모리 할당을 직접 한다.",
+        "객체는 설계도이고, 클래스는 인스턴스이다.",
+        "클래스와 객체는 동일한 개념이다."
+      ],
+      "answer": "클래스는 객체의 설계도이고, 객체는 클래스의 인스턴스이다."
+    },
+    {
+      "question": "자바에서 상속의 주요 특징은 무엇인가요?",
+      "options": [
+        "하나의 클래스가 다른 클래스의 속성과 메서드를 물려받는다.",
+        "여러 클래스가 하나의 클래스에 상속된다.",
+        "메서드 오버로딩을 지원한다.",
+        "상속은 인터페이스에서만 가능하다."
+      ],
+      "answer": "하나의 클래스가 다른 클래스의 속성과 메서드를 물려받는다."
+    },
+    {
+      "question": "자바에서 인터페이스의 목적은 무엇인가요?",
+      "options": [
+        "클래스들이 특정 메서드를 구현하도록 강제하기 위해 사용된다.",
+        "클래스의 상속을 막기 위해 사용된다.",
+        "데이터베이스 연결을 위한 것이다.",
+        "객체 생성 시 사용된다."
+      ],
+      "answer": "클래스들이 특정 메서드를 구현하도록 강제하기 위해 사용된다."
+    },
+    {
+      "question": "자바에서 추상 클래스와 인터페이스의 차이점은 무엇인가요?",
+      "options": [
+        "추상 클래스는 일부 메서드 구현을 제공할 수 있고, 인터페이스는 오직 추상 메서드만 가질 수 있다.",
+        "인터페이스는 메서드 구현을 제공하고, 추상 클래스는 제공하지 않는다.",
+        "두 개념은 완전히 동일하다.",
+        "추상 클래스는 인스턴스를 생성할 수 있다."
+      ],
+      "answer": "추상 클래스는 일부 메서드 구현을 제공할 수 있고, 인터페이스는 오직 추상 메서드만 가질 수 있다."
+    },
+    {
+      "question": "자바에서 오버로딩과 오버라이딩의 차이는 무엇인가요?",
+      "options": [
+        "오버로딩은 같은 이름의 메서드를 여러 개 정의하는 것이고, 오버라이딩은 부모 클래스의 메서드를 재정의하는 것이다.",
+        "오버로딩은 메서드 재정의를 의미하고, 오버라이딩은 메서드 이름을 변경하는 것이다.",
+        "둘은 같은 개념이다.",
+        "오버라이딩은 컴파일 타임에 결정된다."
+      ],
+      "answer": "오버로딩은 같은 이름의 메서드를 여러 개 정의하는 것이고, 오버라이딩은 부모 클래스의 메서드를 재정의하는 것이다."
+    },
+    {
+      "question": "자바에서 예외 처리 방법 중 try-catch의 역할은 무엇인가요?",
+      "options": [
+        "예외 발생 시 프로그램이 중단되지 않도록 예외를 처리한다.",
+        "프로그램을 강제 종료시킨다.",
+        "메모리를 할당한다.",
+        "반복문을 종료시킨다."
+      ],
+      "answer": "예외 발생 시 프로그램이 중단되지 않도록 예외를 처리한다."
+    },
+    {
+      "question": "자바에서 패키지의 역할은 무엇인가요?",
+      "options": [
+        "관련된 클래스들을 그룹화하여 관리하기 위해 사용된다.",
+        "메모리 관리를 위해 사용된다.",
+        "데이터베이스 연결을 설정한다.",
+        "네트워크 통신을 처리한다."
+      ],
+      "answer": "관련된 클래스들을 그룹화하여 관리하기 위해 사용된다."
+    },
+    {
+      "question": "자바에서 static 키워드의 용도는 무엇인가요?",
+      "options": [
+        "클래스 변수나 메서드를 선언할 때 사용되어, 인스턴스 없이 접근 가능하게 한다.",
+        "객체 생성 시 자동 호출된다.",
+        "메서드를 오버라이딩할 때 사용된다.",
+        "메모리 해제를 담당한다."
+      ],
+      "answer": "클래스 변수나 메서드를 선언할 때 사용되어, 인스턴스 없이 접근 가능하게 한다."
+    },
+    {
+      "question": "자바에서 final 키워드의 역할은 무엇인가요?",
+      "options": [
+        "변수의 값을 변경할 수 없게 하거나, 메서드 오버라이딩 및 클래스 상속을 방지한다.",
+        "메서드 실행 속도를 높인다.",
+        "메모리 관리를 자동화한다.",
+        "클래스 인스턴스를 생성한다."
+      ],
+      "answer": "변수의 값을 변경할 수 없게 하거나, 메서드 오버라이딩 및 클래스 상속을 방지한다."
+    },
+    {
+      "question": "자바에서 생성자(Constructor)의 역할은 무엇인가요?",
+      "options": [
+        "객체 생성 시 초기화를 담당한다.",
+        "메서드 오버라이딩을 수행한다.",
+        "클래스 상속을 가능하게 한다.",
+        "인터페이스를 구현한다."
+      ],
+      "answer": "객체 생성 시 초기화를 담당한다."
+    },
+    {
+      "question": "자바에서 this 키워드의 사용법은 무엇인가요?",
+      "options": [
+        "현재 객체 자신을 참조하는데 사용된다.",
+        "부모 클래스를 참조한다.",
+        "메모리를 할당한다.",
+        "정적 메서드를 호출한다."
+      ],
+      "answer": "현재 객체 자신을 참조하는데 사용된다."
+    },
+    {
+      "question": "자바에서 super 키워드의 역할은 무엇인가요?",
+      "options": [
+        "부모 클래스의 멤버를 호출하거나 접근할 때 사용된다.",
+        "현재 클래스의 인스턴스를 생성한다.",
+        "메서드를 오버로딩한다.",
+        "객체를 직렬화한다."
+      ],
+      "answer": "부모 클래스의 멤버를 호출하거나 접근할 때 사용된다."
+    },
+    {
+      "question": "자바에서 제네릭(Generic)의 목적은 무엇인가요?",
+      "options": [
+        "컴파일 타임에 타입 안전성을 보장하기 위해 사용된다.",
+        "메모리 할당을 최적화한다.",
+        "동적 바인딩을 지원한다.",
+        "메서드 오버로딩을 가능하게 한다."
+      ],
+      "answer": "컴파일 타임에 타입 안전성을 보장하기 위해 사용된다."
+    },
+    {
+      "question": "자바에서 컬렉션 프레임워크의 주요 구성 요소는 무엇인가요?",
+      "options": [
+        "List, Set, Map 등의 인터페이스와 구현체들이다.",
+        "배열과 객체이다.",
+        "클래스와 인터페이스만 존재한다.",
+        "메서드와 변수로 구성된다."
+      ],
+      "answer": "List, Set, Map 등의 인터페이스와 구현체들이다."
+    },
+    {
+      "question": "자바에서 ArrayList와 LinkedList의 차이점은 무엇인가요?",
+      "options": [
+        "ArrayList는 인덱스 기반 접근이 빠르고, LinkedList는 삽입/삭제가 빠르다.",
+        "LinkedList는 인덱스 기반 접근이 빠르고, ArrayList는 삽입/삭제가 빠르다.",
+        "두 리스트는 성능 차이가 없다.",
+        "ArrayList는 동기화를 지원하고, LinkedList는 지원하지 않는다."
+      ],
+      "answer": "ArrayList는 인덱스 기반 접근이 빠르고, LinkedList는 삽입/삭제가 빠르다."
+    },
+    {
+      "question": "자바에서 HashMap의 작동 원리는 무엇인가요?",
+      "options": [
+        "키의 해시 코드를 기반으로 데이터를 저장하고 검색한다.",
+        "인덱스 번호를 사용하여 데이터를 저장한다.",
+        "데이터를 정렬된 순서로 저장한다.",
+        "트리 구조를 사용하여 데이터를 관리한다."
+      ],
+      "answer": "키의 해시 코드를 기반으로 데이터를 저장하고 검색한다."
+    },
+    {
+      "question": "자바에서 동기화(synchronization)의 필요성은 무엇인가요?",
+      "options": [
+        "멀티스레드 환경에서 데이터 일관성을 보장하기 위해 사용된다.",
+        "메모리 관리를 최적화하기 위해 사용된다.",
+        "클래스 상속을 단순화하기 위해 사용된다.",
+        "네트워크 통신을 관리하기 위해 사용된다."
+      ],
+      "answer": "멀티스레드 환경에서 데이터 일관성을 보장하기 위해 사용된다."
+    },
+    {
+      "question": "자바에서 Runnable 인터페이스와 Thread 클래스의 차이는 무엇인가요?",
+      "options": [
+        "Runnable은 작업을 정의하고, Thread는 실행을 담당한다.",
+        "Thread 클래스는 작업 정의 없이 단순 실행만 가능하다.",
+        "두 개념은 동일하다.",
+        "Runnable은 동기화를 지원하고, Thread는 지원하지 않는다."
+      ],
+      "answer": "Runnable은 작업을 정의하고, Thread는 실행을 담당한다."
+    },
+    {
+      "question": "자바에서 스트림(Stream) API의 주요 이점은 무엇인가요?",
+      "options": [
+        "컬렉션 데이터를 함수형 스타일로 처리할 수 있어 코드가 간결해진다.",
+        "메모리 사용량을 크게 줄인다.",
+        "동기화 문제를 해결한다.",
+        "객체 지향 프로그래밍을 지원한다."
+      ],
+      "answer": "컬렉션 데이터를 함수형 스타일로 처리할 수 있어 코드가 간결해진다."
+    },
+    {
+      "question": "자바에서 람다 표현식의 사용 목적은 무엇인가요?",
+      "options": [
+        "함수를 간결하게 표현하여 코드 가독성을 높인다.",
+        "메모리 할당을 최적화한다.",
+        "동적 바인딩을 지원한다.",
+        "객체 지향 프로그래밍을 비활성화한다."
+      ],
+      "answer": "함수를 간결하게 표현하여 코드 가독성을 높인다."
+    },
+    {
+      "question": "자바에서 Optional 클래스의 역할은 무엇인가요?",
+      "options": [
+        "null 값을 처리할 때 NullPointerException을 방지한다.",
+        "메모리 사용량을 줄인다.",
+        "동기화를 지원한다.",
+        "데이터베이스 연결을 관리한다."
+      ],
+      "answer": "null 값을 처리할 때 NullPointerException을 방지한다."
+    },
+    {
+      "question": "자바에서 내부 클래스(Inner Class)의 사용 용도는 무엇인가요?",
+      "options": [
+        "외부 클래스와 밀접한 관계가 있는 클래스를 정의하기 위해 사용된다.",
+        "클래스 상속을 위해 사용된다.",
+        "데이터베이스 연결을 위해 사용된다.",
+        "메서드 오버라이딩을 수행하기 위해 사용된다."
+      ],
+      "answer": "외부 클래스와 밀접한 관계가 있는 클래스를 정의하기 위해 사용된다."
+    },
+    {
+      "question": "자바에서 에러와 예외의 차이는 무엇인가요?",
+      "options": [
+        "에러는 복구 불가능한 문제이고, 예외는 적절한 처리로 복구할 수 있다.",
+        "예외는 시스템 오류이고, 에러는 사용자 오류이다.",
+        "둘은 동일한 개념이다.",
+        "에러는 컴파일 시 발생하고, 예외는 런타임에 발생한다."
+      ],
+      "answer": "에러는 복구 불가능한 문제이고, 예외는 적절한 처리로 복구할 수 있다."
+    },
+    {
+      "question": "자바에서 메모리 관리의 주요 개념은 무엇인가요?",
+      "options": [
+        "힙과 스택 메모리의 역할을 이해하는 것이다.",
+        "메모리 할당 없이 코드를 실행하는 것이다.",
+        "메서드 오버로딩과 오버라이딩을 사용하는 것이다.",
+        "클래스 상속을 관리하는 것이다."
+      ],
+      "answer": "힙과 스택 메모리의 역할을 이해하는 것이다."
+    },
+    {
+      "question": "자바에서 JVM의 역할은 무엇인가요?",
+      "options": [
+        "자바 바이트코드를 실행하고 메모리 관리를 담당한다.",
+        "소스 코드를 바로 실행한다.",
+        "네트워크 통신을 관리한다.",
+        "데이터베이스와 직접 연결된다."
+      ],
+      "answer": "자바 바이트코드를 실행하고 메모리 관리를 담당한다."
+    },
+    {
+      "question": "자바에서 GC(Garbage Collection)의 목적은 무엇인가요?",
+      "options": [
+        "더 이상 참조되지 않는 객체의 메모리를 자동으로 해제한다.",
+        "메모리 할당을 증가시킨다.",
+        "객체를 생성할 때마다 메모리를 고정시킨다.",
+        "프로그램 실행 속도를 낮춘다."
+      ],
+      "answer": "더 이상 참조되지 않는 객체의 메모리를 자동으로 해제한다."
+    },
+    {
+      "question": "자바에서 클래스 로더(ClassLoader)의 역할은 무엇인가요?",
+      "options": [
+        "JVM에 클래스를 동적으로 로드하는 역할을 한다.",
+        "메모리 관리를 수행한다.",
+        "인터넷 연결을 관리한다.",
+        "예외 처리를 담당한다."
+      ],
+      "answer": "JVM에 클래스를 동적으로 로드하는 역할을 한다."
+    },
+    {
+      "question": "자바에서 파일 입출력을 위한 주요 클래스는 무엇인가요?",
+      "options": [
+        "File, FileReader, FileWriter 등이 있다.",
+        "String, Scanner, ArrayList 등이 있다.",
+        "HashMap, LinkedList 등이 있다.",
+        "Socket, ServerSocket 등이 있다."
+      ],
+      "answer": "File, FileReader, FileWriter 등이 있다."
+    },
+    {
+      "question": "자바에서 직렬화(Serialization)의 목적은 무엇인가요?",
+      "options": [
+        "객체를 바이트 스트림으로 변환하여 저장하거나 전송하기 위해 사용된다.",
+        "객체를 복사하기 위해 사용된다.",
+        "메모리 관리를 최적화하기 위해 사용된다.",
+        "인터페이스 구현을 강제하기 위해 사용된다."
+      ],
+      "answer": "객체를 바이트 스트림으로 변환하여 저장하거나 전송하기 위해 사용된다."
+    },
+    {
+      "question": "자바에서 동적 바인딩(dynamic binding)이란 무엇인가요?",
+      "options": [
+        "실행 시점에 메서드 호출이 결정되는 것을 의미한다.",
+        "컴파일 시점에 메서드 호출이 결정된다.",
+        "클래스 상속을 동적으로 처리한다.",
+        "메모리 할당을 동적으로 조정한다."
+      ],
+      "answer": "실행 시점에 메서드 호출이 결정되는 것을 의미한다."
+    },
+    {
+      "question": "자바에서 enum의 사용 목적은 무엇인가요?",
+      "options": [
+        "고정된 상수 집합을 정의하기 위해 사용된다.",
+        "객체 지향 프로그래밍을 지원하기 위해 사용된다.",
+        "동적 메모리 할당을 위해 사용된다.",
+        "인터페이스를 구현하기 위해 사용된다."
+      ],
+      "answer": "고정된 상수 집합을 정의하기 위해 사용된다."
+    },
+    {
+      "question": "자바에서 final 변수와 상수의 차이는 무엇인가요?",
+      "options": [
+        "final 변수는 초기화 후 변경 불가능하며, 상수는 그 의미를 명확히 하기 위한 것이다.",
+        "둘은 동일하다.",
+        "final 변수는 메모리를 절약하고, 상수는 성능을 향상시킨다.",
+        "final 변수는 클래스 변수만 가능하다."
+      ],
+      "answer": "final 변수는 초기화 후 변경 불가능하며, 상수는 그 의미를 명확히 하기 위한 것이다."
+    },
+    {
+      "question": "자바에서 메서드 레퍼런스(Method Reference)의 사용법은 무엇인가요?",
+      "options": [
+        "람다 표현식을 간략하게 표현할 때 사용된다.",
+        "메서드 오버로딩을 대체한다.",
+        "인터페이스를 구현할 때 사용된다.",
+        "클래스 상속을 간략하게 만든다."
+      ],
+      "answer": "람다 표현식을 간략하게 표현할 때 사용된다."
+    },
+    {
+      "question": "자바에서 스트림을 이용한 필터링 방법은 무엇인가요?",
+      "options": [
+        "filter() 메서드를 사용하여 조건에 맞는 요소를 선택한다.",
+        "map() 메서드를 사용하여 데이터를 변환한다.",
+        "reduce() 메서드를 사용하여 값을 누적한다.",
+        "collect() 메서드를 사용하여 요소를 수집한다."
+      ],
+      "answer": "filter() 메서드를 사용하여 조건에 맞는 요소를 선택한다."
+    },
+    {
+      "question": "자바에서 멀티스레딩 구현 시 주의할 점은 무엇인가요?",
+      "options": [
+        "데이터 경쟁과 동기화 문제를 반드시 고려해야 한다.",
+        "메모리 할당을 최소화해야 한다.",
+        "모든 스레드를 동일한 작업으로 설정해야 한다.",
+        "스레드 우선순위를 항상 동일하게 유지한다."
+      ],
+      "answer": "데이터 경쟁과 동기화 문제를 반드시 고려해야 한다."
+    },
+    {
+      "question": "자바에서 synchronized 블록과 메서드의 차이는 무엇인가요?",
+      "options": [
+        "메서드 전체를 동기화하는 것과 특정 블록만 동기화하는 차이가 있다.",
+        "synchronized 블록은 성능을 낮춘다.",
+        "두 방법은 동일하다.",
+        "synchronized 메서드는 오버라이딩이 불가능하다."
+      ],
+      "answer": "메서드 전체를 동기화하는 것과 특정 블록만 동기화하는 차이가 있다."
+    },
+    {
+      "question": "자바에서 wait(), notify(), notifyAll() 메서드의 역할은 무엇인가요?",
+      "options": [
+        "스레드 간 통신을 위해 객체의 모니터를 활용한다.",
+        "메모리 할당을 제어한다.",
+        "객체를 직렬화한다.",
+        "메서드 호출을 동기화한다."
+      ],
+      "answer": "스레드 간 통신을 위해 객체의 모니터를 활용한다."
+    },
+    {
+      "question": "자바에서 Callable 인터페이스의 특징은 무엇인가요?",
+      "options": [
+        "결과를 반환할 수 있고, 예외를 던질 수 있다.",
+        "Runnable과 동일하게 동작한다.",
+        "메서드 오버라이딩이 불가능하다.",
+        "동기화 문제를 자동으로 해결한다."
+      ],
+      "answer": "결과를 반환할 수 있고, 예외를 던질 수 있다."
+    },
+    {
+      "question": "자바에서 Future 인터페이스의 용도는 무엇인가요?",
+      "options": [
+        "비동기 작업의 결과를 나중에 받아오기 위해 사용된다.",
+        "동기 작업의 결과를 즉시 반환한다.",
+        "스레드 우선순위를 관리한다.",
+        "예외 처리를 자동화한다."
+      ],
+      "answer": "비동기 작업의 결과를 나중에 받아오기 위해 사용된다."
+    },
+    {
+      "question": "자바에서 람다 표현식과 익명 클래스의 차이는 무엇인가요?",
+      "options": [
+        "람다 표현식은 간결하며, 익명 클래스는 더 많은 코드를 필요로 한다.",
+        "익명 클래스는 람다 표현식보다 빠르게 실행된다.",
+        "둘은 동일하게 사용된다.",
+        "람다 표현식은 객체 생성이 불가능하다."
+      ],
+      "answer": "람다 표현식은 간결하며, 익명 클래스는 더 많은 코드를 필요로 한다."
+    },
+    {
+      "question": "자바에서 String과 StringBuilder의 차이는 무엇인가요?",
+      "options": [
+        "String은 불변 객체이고, StringBuilder는 가변 객체이다.",
+        "String은 가변 객체이고, StringBuilder는 불변 객체이다.",
+        "두 클래스는 동일하게 작동한다.",
+        "String은 메모리 효율이 높다."
+      ],
+      "answer": "String은 불변 객체이고, StringBuilder는 가변 객체이다."
+    },
+    {
+      "question": "자바에서 정적(static) 초기화 블록의 용도는 무엇인가요?",
+      "options": [
+        "클래스 로딩 시 한 번만 실행되어 정적 변수들을 초기화한다.",
+        "객체 생성 시마다 실행된다.",
+        "메서드 오버라이딩을 방지한다.",
+        "예외 처리를 담당한다."
+      ],
+      "answer": "클래스 로딩 시 한 번만 실행되어 정적 변수들을 초기화한다."
+    },
+    {
+      "question": "자바에서 AOP(Aspect Oriented Programming)의 기본 개념은 무엇인가요?",
+      "options": [
+        "공통 관심사를 모듈화하여 코드 중복을 줄인다.",
+        "클래스 상속을 단순화한다.",
+        "메모리 관리를 자동화한다.",
+        "동적 바인딩을 개선한다."
+      ],
+      "answer": "공통 관심사를 모듈화하여 코드 중복을 줄인다."
+    },
+    {
+      "question": "자바에서 디자인 패턴 중 싱글턴 패턴의 특징은 무엇인가요?",
+      "options": [
+        "하나의 인스턴스만 생성되어 전역적으로 공유된다.",
+        "여러 인스턴스가 동시에 생성된다.",
+        "메모리 사용량이 증가한다.",
+        "객체 생성을 동적으로 제어한다."
+      ],
+      "answer": "하나의 인스턴스만 생성되어 전역적으로 공유된다."
+    },
+    {
+      "question": "자바에서 디자인 패턴 중 팩토리 패턴의 목적은 무엇인가요?",
+      "options": [
+        "객체 생성을 캡슐화하여 코드의 확장성을 높인다.",
+        "객체의 상태를 관리한다.",
+        "데이터베이스 연결을 관리한다.",
+        "메모리 할당을 최적화한다."
+      ],
+      "answer": "객체 생성을 캡슐화하여 코드의 확장성을 높인다."
+    },
+    {
+      "question": "자바에서 디자인 패턴 중 옵저버 패턴의 활용은 무엇인가요?",
+      "options": [
+        "객체 상태 변화에 따른 알림을 전달하기 위해 사용된다.",
+        "객체를 직렬화하기 위해 사용된다.",
+        "메서드 오버라이딩을 지원한다.",
+        "데이터베이스 연결을 관리한다."
+      ],
+      "answer": "객체 상태 변화에 따른 알림을 전달하기 위해 사용된다."
+    },
+    {
+      "question": "자바에서 JUnit을 사용하여 단위 테스트를 작성하는 방법은 무엇인가요?",
+      "options": [
+        "테스트 메서드에 @Test 어노테이션을 사용하여 작성한다.",
+        "메인 메서드에서 직접 실행한다.",
+        "JUnit은 인터페이스를 구현해야 한다.",
+        "메서드 오버로딩을 통해 테스트를 구성한다."
+      ],
+      "answer": "테스트 메서드에 @Test 어노테이션을 사용하여 작성한다."
+    },
+    {
+      "question": "자바에서 애노테이션(Annotation)의 역할은 무엇인가요?",
+      "options": [
+        "코드에 메타데이터를 제공하여 컴파일러나 런타임에 영향을 준다.",
+        "메서드 실행 속도를 향상시킨다.",
+        "객체 생성을 자동화한다.",
+        "클래스 상속을 제한한다."
+      ],
+      "answer": "코드에 메타데이터를 제공하여 컴파일러나 런타임에 영향을 준다."
+    },
+    {
+      "question": "자바에서 Reflection API를 사용하면 어떤 작업을 할 수 있나요?",
+      "options": [
+        "런타임에 클래스의 정보를 조회하고 수정할 수 있다.",
+        "컴파일 타임에 오류를 제거한다.",
+        "메모리 관리를 자동화한다.",
+        "네트워크 통신을 처리한다."
+      ],
+      "answer": "런타임에 클래스의 정보를 조회하고 수정할 수 있다."
+    },
+    {
+      "question": "자바에서 리플렉션을 사용할 때 주의할 점은 무엇인가요?",
+      "options": [
+        "성능 저하와 보안 문제에 주의해야 한다.",
+        "메모리 누수가 발생하지 않는다.",
+        "인터페이스를 자동으로 구현한다.",
+        "컴파일 오류가 발생한다."
+      ],
+      "answer": "성능 저하와 보안 문제에 주의해야 한다."
+    },
+    {
+      "question": "자바에서 비동기 프로그래밍을 위해 사용하는 주요 API는 무엇인가요?",
+      "options": [
+        "CompletableFuture를 사용한다.",
+        "Thread.sleep()을 사용한다.",
+        "Runnable을 직접 호출한다.",
+        "synchronized를 사용한다."
+      ],
+      "answer": "CompletableFuture를 사용한다."
+    },
+    {
+      "question": "자바에서 Stream API를 이용한 데이터 처리 예제는 무엇인가요?",
+      "options": [
+        "컬렉션의 filter(), map(), reduce() 메서드를 체인 형태로 사용한다.",
+        "반복문을 사용하여 데이터를 처리한다.",
+        "메서드 오버로딩을 사용한다.",
+        "동적 바인딩을 통해 처리한다."
+      ],
+      "answer": "컬렉션의 filter(), map(), reduce() 메서드를 체인 형태로 사용한다."
+    },
+    {
+      "question": "자바에서 람다 표현식의 문법은 어떻게 구성되나요?",
+      "options": [
+        "매개변수 -> 표현식 또는 블록",
+        "매개변수 :: 메서드",
+        "class 이름 { }",
+        "if-else 문"
+      ],
+      "answer": "매개변수 -> 표현식 또는 블록"
+    },
+    {
+      "question": "자바에서 Exception의 계층 구조는 어떻게 되어 있나요?",
+      "options": [
+        "Throwable -> Error, Exception으로 구성된다.",
+        "Exception -> Throwable, Error로 구성된다.",
+        "Error -> Exception으로 구성된다.",
+        "Throwable -> Exception만 존재한다."
+      ],
+      "answer": "Throwable -> Error, Exception으로 구성된다."
+    },
+    {
+      "question": "자바에서 메모리 누수를 방지하기 위한 방법은 무엇인가요?",
+      "options": [
+        "불필요한 객체 참조를 제거하고, 가비지 컬렉션을 유도한다.",
+        "객체를 계속 생성한다.",
+        "메모리를 강제로 할당한다.",
+        "동기화를 사용하지 않는다."
+      ],
+      "answer": "불필요한 객체 참조를 제거하고, 가비지 컬렉션을 유도한다."
+    },
+    {
+      "question": "자바에서 String pool이란 무엇인가요?",
+      "options": [
+        "동일한 문자열 리터럴을 공유하여 메모리 사용을 최적화하는 영역이다.",
+        "문자열을 저장하는 데이터베이스이다.",
+        "동적으로 생성된 문자열을 저장한다.",
+        "메서드 호출 시 생성되는 임시 메모리이다."
+      ],
+      "answer": "동일한 문자열 리터럴을 공유하여 메모리 사용을 최적화하는 영역이다."
+    },
+    {
+      "question": "자바에서 BigDecimal 클래스의 사용 목적은 무엇인가요?",
+      "options": [
+        "정밀한 부동소수점 연산을 위해 사용된다.",
+        "정수 연산을 빠르게 수행한다.",
+        "메모리 사용을 최소화한다.",
+        "문자열 처리를 위해 사용된다."
+      ],
+      "answer": "정밀한 부동소수점 연산을 위해 사용된다."
+    },
+    {
+      "question": "자바에서 volatile 키워드의 용도는 무엇인가요?",
+      "options": [
+        "여러 스레드 간 변수의 가시성을 보장한다.",
+        "메모리를 정적으로 할당한다.",
+        "객체를 불변으로 만든다.",
+        "메서드 실행 속도를 높인다."
+      ],
+      "answer": "여러 스레드 간 변수의 가시성을 보장한다."
+    },
+    {
+      "question": "자바에서 자바 8 이후에 추가된 기능 중 주요 기능은 무엇인가요?",
+      "options": [
+        "람다 표현식, Stream API, Optional 등이 추가되었다.",
+        "인터페이스 상속이 추가되었다.",
+        "동적 클래스 로딩이 제거되었다.",
+        "예외 처리 방식이 변경되었다."
+      ],
+      "answer": "람다 표현식, Stream API, Optional 등이 추가되었다."
+    },
+    {
+      "question": "자바에서 익셉션 처리 시 finally 블록의 역할은 무엇인가요?",
+      "options": [
+        "예외 발생 여부와 관계없이 반드시 실행된다.",
+        "예외 발생 시 실행되지 않는다.",
+        "메모리 할당을 조정한다.",
+        "클래스 로딩 시 실행된다."
+      ],
+      "answer": "예외 발생 여부와 관계없이 반드시 실행된다."
+    },
+    {
+      "question": "자바에서 switch문에서 String을 사용할 수 있나요?",
+      "options": [
+        "예, 자바 7부터 문자열을 사용할 수 있다.",
+        "아니오, 문자열은 사용할 수 없다.",
+        "오직 정수형만 가능하다.",
+        "키워드로 제한된다."
+      ],
+      "answer": "예, 자바 7부터 문자열을 사용할 수 있다."
+    },
+    {
+      "question": "자바에서 try-with-resources 구문의 장점은 무엇인가요?",
+      "options": [
+        "자원을 자동으로 닫아준다.",
+        "메모리 할당을 최적화한다.",
+        "메서드 오버로딩을 지원한다.",
+        "동적 바인딩을 제공한다."
+      ],
+      "answer": "자원을 자동으로 닫아준다."
+    },
+    {
+      "question": "자바에서 java.time 패키지가 추가된 이유는 무엇인가요?",
+      "options": [
+        "더 직관적이고 강력한 날짜 및 시간 API를 제공하기 위해서이다.",
+        "기존의 Date 클래스가 성능이 좋았기 때문이다.",
+        "메모리 관리를 위해서이다.",
+        "인터페이스를 구현하기 위해서이다."
+      ],
+      "answer": "더 직관적이고 강력한 날짜 및 시간 API를 제공하기 위해서이다."
+    },
+    {
+      "question": "자바에서 오버라이딩 시 어노테이션을 사용하는 이유는 무엇인가요?",
+      "options": [
+        "컴파일러에게 오버라이딩을 올바르게 수행했는지 검증하도록 요청하기 위해서이다.",
+        "메모리 할당을 줄이기 위해서이다.",
+        "클래스 상속을 제한하기 위해서이다.",
+        "메서드 오버로딩을 지원하기 위해서이다."
+      ],
+      "answer": "컴파일러에게 오버라이딩을 올바르게 수행했는지 검증하도록 요청하기 위해서이다."
+    },
+    {
+      "question": "자바에서 equals()와 ==의 차이는 무엇인가요?",
+      "options": [
+        "equals()는 객체의 내용을 비교하고, ==는 참조 주소를 비교한다.",
+        "==는 객체의 내용을 비교하고, equals()는 참조 주소를 비교한다.",
+        "두 메서드는 동일한 기능을 한다.",
+        "둘 다 문자열 비교에만 사용된다."
+      ],
+      "answer": "equals()는 객체의 내용을 비교하고, ==는 참조 주소를 비교한다."
+    },
+    {
+      "question": "자바에서 hashCode() 메서드의 역할은 무엇인가요?",
+      "options": [
+        "객체를 해시 기반 컬렉션에서 효율적으로 관리하기 위한 해시 값을 제공한다.",
+        "객체의 메모리 주소를 반환한다.",
+        "객체의 내용을 문자열로 변환한다.",
+        "동기화를 보장한다."
+      ],
+      "answer": "객체를 해시 기반 컬렉션에서 효율적으로 관리하기 위한 해시 값을 제공한다."
+    },
+    {
+      "question": "자바에서 immutable 객체를 만드는 방법은 무엇인가요?",
+      "options": [
+        "객체의 상태를 변경할 수 없도록 final 필드와 수정 메서드를 제거한다.",
+        "객체를 static으로 선언한다.",
+        "객체를 null로 설정한다.",
+        "메모리 할당을 동적으로 조정한다."
+      ],
+      "answer": "객체의 상태를 변경할 수 없도록 final 필드와 수정 메서드를 제거한다."
+    },
+    {
+      "question": "자바에서 함수형 인터페이스란 무엇인가요?",
+      "options": [
+        "하나의 추상 메서드만 가진 인터페이스를 의미하며, 람다 표현식의 대상이 된다.",
+        "여러 개의 추상 메서드를 가진 인터페이스이다.",
+        "메서드 오버라이딩을 금지한다.",
+        "동적 바인딩을 지원하지 않는다."
+      ],
+      "answer": "하나의 추상 메서드만 가진 인터페이스를 의미하며, 람다 표현식의 대상이 된다."
+    },
+    {
+      "question": "자바에서 default 메서드의 도입 이유는 무엇인가요?",
+      "options": [
+        "인터페이스에 메서드 구현을 제공하여 기존 인터페이스를 확장할 수 있도록 한다.",
+        "메서드 오버라이딩을 방지하기 위해서이다.",
+        "객체 생성을 제한하기 위해서이다.",
+        "동적 바인딩을 지원하기 위해서이다."
+      ],
+      "answer": "인터페이스에 메서드 구현을 제공하여 기존 인터페이스를 확장할 수 있도록 한다."
+    },
+    {
+      "question": "자바에서 Optional.ifPresent() 메서드의 사용법은 무엇인가요?",
+      "options": [
+        "Optional 값이 존재할 경우에만 특정 동작을 수행한다.",
+        "Optional 값을 제거한다.",
+        "메모리를 해제한다.",
+        "예외를 발생시킨다."
+      ],
+      "answer": "Optional 값이 존재할 경우에만 특정 동작을 수행한다."
+    },
+    {
+      "question": "자바에서 파일을 읽기 위한 주요 클래스를 나열하세요.",
+      "options": [
+        "FileReader, BufferedReader, InputStreamReader",
+        "FileWriter, PrintWriter, BufferedWriter",
+        "Scanner, System.in, Console",
+        "Socket, ServerSocket, DatagramSocket"
+      ],
+      "answer": "FileReader, BufferedReader, InputStreamReader"
+    },
+    {
+      "question": "자바에서 스트림을 사용하여 리스트를 정렬하는 방법은 무엇인가요?",
+      "options": [
+        "stream().sorted() 메서드를 사용한다.",
+        "Collections.sort()만 사용한다.",
+        "리스트를 배열로 변환 후 정렬한다.",
+        "정렬된 스트림은 불가능하다."
+      ],
+      "answer": "stream().sorted() 메서드를 사용한다."
+    },
+    {
+      "question": "자바에서 parallelStream()의 사용 시 주의사항은 무엇인가요?",
+      "options": [
+        "상태 변경이 없는 순수한 연산에만 사용하는 것이 안전하다.",
+        "항상 성능이 향상된다.",
+        "모든 스트림 작업에 적용할 수 있다.",
+        "동기화가 필요 없다."
+      ],
+      "answer": "상태 변경이 없는 순수한 연산에만 사용하는 것이 안전하다."
+    },
+    {
+      "question": "자바에서 예외 발생 시 스택 트레이스(stack trace)의 의미는 무엇인가요?",
+      "options": [
+        "예외가 발생한 메서드 호출의 경로를 나타낸다.",
+        "메모리 주소를 보여준다.",
+        "객체의 상태를 출력한다.",
+        "메서드 이름만을 나열한다."
+      ],
+      "answer": "예외가 발생한 메서드 호출의 경로를 나타낸다."
+    },
+    {
+      "question": "자바에서 동적 프로그래밍(dynamic programming)의 개념은 무엇인가요?",
+      "options": [
+        "문제를 작은 부분 문제로 나누어 해결하고, 결과를 저장하여 중복 계산을 피하는 것이다.",
+        "메모리를 동적으로 할당하는 것이다.",
+        "실행 시점에 코드를 수정하는 것이다.",
+        "재귀 호출을 제거하는 것이다."
+      ],
+      "answer": "문제를 작은 부분 문제로 나누어 해결하고, 결과를 저장하여 중복 계산을 피하는 것이다."
+    },
+    {
+      "question": "자바에서 인터페이스 다중 상속의 이점을 설명하세요.",
+      "options": [
+        "여러 인터페이스를 구현함으로써 다양한 기능을 클래스에 부여할 수 있다.",
+        "클래스 상속을 대체한다.",
+        "메모리 사용량을 줄인다.",
+        "동적 바인딩을 지원한다."
+      ],
+      "answer": "여러 인터페이스를 구현함으로써 다양한 기능을 클래스에 부여할 수 있다."
+    },
+    {
+      "question": "자바에서 try-catch-finally 블록의 실행 순서는 어떻게 되나요?",
+      "options": [
+        "try -> catch (예외 발생 시) -> finally",
+        "try -> finally -> catch",
+        "catch -> try -> finally",
+        "finally -> try -> catch"
+      ],
+      "answer": "try -> catch (예외 발생 시) -> finally"
+    },
+    {
+      "question": "자바에서 메모리 모델(memory model)의 주요 개념은 무엇인가요?",
+      "options": [
+        "스레드 간 메모리 일관성을 보장하기 위한 규칙이다.",
+        "메모리 할당 방식을 정의한다.",
+        "동적 바인딩을 지원한다.",
+        "메서드 오버로딩과 관련 있다."
+      ],
+      "answer": "스레드 간 메모리 일관성을 보장하기 위한 규칙이다."
+    },
+    {
+      "question": "자바에서 OOP의 4대 특징을 나열하세요.",
+      "options": [
+        "캡슐화, 상속, 다형성, 추상화",
+        "상속, 오버로딩, 동기화, 예외처리",
+        "메모리 관리, 스레드, 클래스, 인터페이스",
+        "변수, 메서드, 객체, 클래스"
+      ],
+      "answer": "캡슐화, 상속, 다형성, 추상화"
+    },
+    {
+      "question": "자바에서 enum과 클래스의 차이점을 설명하세요.",
+      "options": [
+        "enum은 고정된 상수 집합을 정의하고, 클래스는 상태와 동작을 가질 수 있다.",
+        "클래스는 상수 집합을 정의하고, enum은 인스턴스를 생성한다.",
+        "두 트는 동일한 역할을 한다.",
+        "enum은 상속이 가능하지만, 클래스는 불가능하다."
+      ],
+      "answer": "enum은 고정된 상수 집합을 정의하고, 클래스는 상태와 동작을 가질 수 있다."
+    },
+    {
+      "question": "자바스크립트에서 변수 선언 시 var, let, const의 차이는 무엇인가요?",
+      "options": [
+        "var는 함수 스코프, let과 const는 블록 스코프를 가진다.",
+        "let은 전역 변수, var는 지역 변수이다.",
+        "const는 값을 변경할 수 있다.",
+        "세 키워드 모두 동일하다."
+      ],
+      "answer": "var는 함수 스코프, let과 const는 블록 스코프를 가진다."
+    },
+    {
+      "question": "자바스크립트에서 호이스팅(hoisting)이란 무엇인가요?",
+      "options": [
+        "변수와 함수 선언이 코드의 상단으로 끌어올려지는 현상이다.",
+        "메모리 누수를 방지하는 기법이다.",
+        "비동기 처리를 동기적으로 만드는 것이다.",
+        "클로저와 관련 있다."
+      ],
+      "answer": "변수와 함수 선언이 코드의 상단으로 끌어올려지는 현상이다."
+    },
+    {
+      "question": "자바스크립트에서 클로저(closure)의 개념을 설명하세요.",
+      "options": [
+        "함수가 자신이 선언될 때의 렉시컬 환경을 기억하는 것이다.",
+        "함수가 동적으로 생성되는 것이다.",
+        "메모리를 최적화하는 기술이다.",
+        "객체 지향 프로그래밍의 한 형태이다."
+      ],
+      "answer": "함수가 자신이 선언될 때의 렉시컬 환경을 기억하는 것이다."
+    },
+    {
+      "question": "자바스크립트에서 this 키워드가 가리키는 객체는 언제 달라지나요?",
+      "options": [
+        "함수가 호출되는 방식에 따라 달라진다.",
+        "항상 전역 객체를 가리킨다.",
+        "화살표 함수에서는 항상 undefined이다.",
+        "함수 선언문과 관계없이 동일하다."
+      ],
+      "answer": "함수가 호출되는 방식에 따라 달라진다."
+    },
+    {
+      "question": "자바스크립트에서 arrow 함수의 특징은 무엇인가요?",
+      "options": [
+        "this 바인딩이 정적으로 결정되어, 상위 스코프의 this를 사용한다.",
+        "항상 익명 함수로만 사용된다.",
+        "메모리 사용량이 크게 증가한다.",
+        "생성자 함수로 사용될 수 있다."
+      ],
+      "answer": "this 바인딩이 정적으로 결정되어, 상위 스코프의 this를 사용한다."
+    },
+    {
+      "question": "자바스크립트에서 프로미스(Promise)의 상태(state)는 무엇인가요?",
+      "options": [
+        "pending, fulfilled, rejected",
+        "start, run, end",
+        "open, closed, error",
+        "active, inactive, complete"
+      ],
+      "answer": "pending, fulfilled, rejected"
+    },
+    {
+      "question": "자바스크립트에서 async/await의 사용법은 무엇인가요?",
+      "options": [
+        "비동기 코드를 동기 코드처럼 작성할 수 있게 한다.",
+        "동기 코드를 비동기로 변환한다.",
+        "함수를 즉시 실행한다.",
+        "메모리를 최적화한다."
+      ],
+      "answer": "비동기 코드를 동기 코드처럼 작성할 수 있게 한다."
+    },
+    {
+      "question": "자바스크립트에서 배열의 map() 메서드와 forEach()의 차이는 무엇인가요?",
+      "options": [
+        "map()은 새로운 배열을 반환하고, forEach()는 반환하지 않는다.",
+        "forEach()는 새로운 배열을 반환하고, map()은 반환하지 않는다.",
+        "둘 다 새로운 배열을 반환한다.",
+        "둘 다 반환하지 않는다."
+      ],
+      "answer": "map()은 새로운 배열을 반환하고, forEach()는 반환하지 않는다."
+    },
+    {
+      "question": "자바스크립트에서 객체 복사 시 얕은 복사와 깊은 복사의 차이는 무엇인가요?",
+      "options": [
+        "얕은 복사는 객체의 참조만 복사하고, 깊은 복사는 객체 자체를 재귀적으로 복사한다.",
+        "깊은 복사는 참조만 복사하고, 얕은 복사는 전체 객체를 복사한다.",
+        "두 방법은 동일하다.",
+        "얕은 복사는 배열에만 적용된다."
+      ],
+      "answer": "얕은 복사는 객체의 참조만 복사하고, 깊은 복사는 객체 자체를 재귀적으로 복사한다."
+    },
+    {
+      "question": "자바스크립트에서 JSON.stringify()와 JSON.parse()의 역할은 무엇인가요?",
+      "options": [
+        "객체를 JSON 문자열로 변환하고, 문자열을 객체로 변환한다.",
+        "객체를 배열로 변환하고, 배열을 객체로 변환한다.",
+        "데이터베이스에 저장하기 위해 형식을 변환한다.",
+        "메모리 관리를 위해 데이터를 압축한다."
+      ],
+      "answer": "객체를 JSON 문자열로 변환하고, 문자열을 객체로 변환한다."
+    },
+    {
+      "question": "자바스크립트에서 이벤트 버블링(Event Bubbling)이란 무엇인가요?",
+      "options": [
+        "이벤트가 하위 요소에서 상위 요소로 전파되는 현상이다.",
+        "이벤트가 상위 요소에서 하위 요소로 전파되는 현상이다.",
+        "동일한 이벤트가 여러 번 발생하는 것이다.",
+        "이벤트 핸들러가 무한 반복되는 현상이다."
+      ],
+      "answer": "이벤트가 하위 요소에서 상위 요소로 전파되는 현상이다."
+    },
+    {
+      "question": "자바스크립트에서 DOM(Document Object Model) 조작 방법은 무엇인가요?",
+      "options": [
+        "document.getElementById(), querySelector() 등을 사용한다.",
+        "메서드 체이닝으로 객체를 생성한다.",
+        "클래스 상속을 사용하여 DOM을 수정한다.",
+        "JSON 객체를 이용하여 DOM을 변경한다."
+      ],
+      "answer": "document.getElementById(), querySelector() 등을 사용한다."
+    },
+    {
+      "question": "자바스크립트에서 클로저를 활용한 데이터 은닉은 어떻게 구현하나요?",
+      "options": [
+        "함수 내부에 변수를 정의하여 외부에서 접근하지 못하게 한다.",
+        "변수를 전역으로 선언하여 보호한다.",
+        "객체의 프로퍼티를 삭제한다.",
+        "암호화를 사용하여 데이터를 숨긴다."
+      ],
+      "answer": "함수 내부에 변수를 정의하여 외부에서 접근하지 못하게 한다."
+    },
+    {
+      "question": "자바스크립트에서 모듈 시스템(ES6 Modules)의 장점은 무엇인가요?",
+      "options": [
+        "코드 캡슐화와 의존성 관리를 쉽게 할 수 있다.",
+        "전역 변수를 증가시킨다.",
+        "동적 바인딩을 제거한다.",
+        "메모리 사용을 줄인다."
+      ],
+      "answer": "코드 캡슐화와 의존성 관리를 쉽게 할 수 있다."
+    },
+    {
+      "question": "자바스크립트에서 배열의 filter() 메서드의 역할은 무엇인가요?",
+      "options": [
+        "조건에 맞는 요소들만 추출하여 새로운 배열을 생성한다.",
+        "배열을 정렬한다.",
+        "배열의 모든 요소를 변경한다.",
+        "배열을 단일 값으로 축소한다."
+      ],
+      "answer": "조건에 맞는 요소들만 추출하여 새로운 배열을 생성한다."
+    },
+    {
+      "question": "자바스크립트에서 객체의 프로토타입(prototype) 체인은 무엇인가요?",
+      "options": [
+        "객체가 상속받은 속성과 메서드의 연결 고리이다.",
+        "객체를 복제하는 방법이다.",
+        "메모리를 효율적으로 사용하는 방법이다.",
+        "동적 타입 변환을 지원한다."
+      ],
+      "answer": "객체가 상속받은 속성과 메서드의 연결 고리이다."
+    },
+    {
+      "question": "자바스크립트에서 setTimeout()과 setInterval()의 차이는 무엇인가요?",
+      "options": [
+        "setTimeout은 단일 실행, setInterval은 주기적 실행을 한다.",
+        "setInterval은 단일 실행, setTimeout은 주기적 실행을 한다.",
+        "두 함수는 동일하다.",
+        "setTimeout은 콜백을 반환하고, setInterval은 반환하지 않는다."
+      ],
+      "answer": "setTimeout은 단일 실행, setInterval은 주기적 실행을 한다."
+    },
+    {
+      "question": "자바스크립트에서 fetch API를 사용하여 데이터를 가져오는 방법은 무엇인가요?",
+      "options": [
+        "fetch(url).then(response => response.json())를 사용한다.",
+        "XMLHttpRequest 객체를 생성한다.",
+        "jQuery를 사용하여 데이터를 가져온다.",
+        "서버 소켓을 직접 연결한다."
+      ],
+      "answer": "fetch(url).then(response => response.json())를 사용한다."
+    },
+    {
+      "question": "자바스크립트에서 에러 처리를 위한 try-catch의 사용법은 무엇인가요?",
+      "options": [
+        "try 블록 내에서 예외가 발생하면 catch 블록으로 제어가 넘어간다.",
+        "예외 발생 시 finally 블록만 실행된다.",
+        "에러를 무시하고 실행을 계속한다.",
+        "메서드 체이닝을 중단한다."
+      ],
+      "answer": "try 블록 내에서 예외가 발생하면 catch 블록으로 제어가 넘어간다."
+    },
+    {
+      "question": "자바스크립트에서 DOM 이벤트 리스너를 추가하는 방법은 무엇인가요?",
+      "options": [
+        "addEventListener() 메서드를 사용한다.",
+        "onEvent() 메서드를 사용한다.",
+        "document.attachEvent()를 사용한다.",
+        "이벤트를 직접 호출한다."
+      ],
+      "answer": "addEventListener() 메서드를 사용한다."
+    },
+    {
+      "question": "자바스크립트에서 비동기 처리를 위한 콜백 함수의 문제점은 무엇인가요?",
+      "options": [
+        "콜백 헬(callback hell)로 인한 가독성 저하가 발생할 수 있다.",
+        "메모리 누수가 발생한다.",
+        "동기 처리를 지원하지 않는다.",
+        "클래스 상속에 문제가 있다."
+      ],
+      "answer": "콜백 헬(callback hell)로 인한 가독성 저하가 발생할 수 있다."
+    },
+    {
+      "question": "자바스크립트에서 Promise.all()의 역할은 무엇인가요?",
+      "options": [
+        "여러 비동기 작업을 동시에 실행하고, 모든 작업이 완료될 때까지 기다린다.",
+        "비동기 작업을 순차적으로 실행한다.",
+        "에러 처리를 생략한다.",
+        "동일한 결과를 여러 번 반환한다."
+      ],
+      "answer": "여러 비동기 작업을 동시에 실행하고, 모든 작업이 완료될 때까지 기다린다."
+    },
+    {
+      "question": "자바스크립트에서 Symbol의 사용 목적은 무엇인가요?",
+      "options": [
+        "고유하고 변경 불가능한 식별자를 생성하기 위해 사용된다.",
+        "숫자 연산을 수행한다.",
+        "문자열을 압축한다.",
+        "배열의 인덱스를 관리한다."
+      ],
+      "answer": "고유하고 변경 불가능한 식별자를 생성하기 위해 사용된다."
+    },
+    {
+      "question": "자바스크립트에서 스코프(scope)의 종류는 무엇인가요?",
+      "options": [
+        "전역 스코프와 지역(함수, 블록) 스코프가 있다.",
+        "동적 스코프와 정적 스코프만 있다.",
+        "모든 변수는 전역 스코프에 있다.",
+        "스코프는 존재하지 않는다."
+      ],
+      "answer": "전역 스코프와 지역(함수, 블록) 스코프가 있다."
+    },
+    {
+      "question": "자바스크립트에서 템플릿 리터럴(template literals)의 장점은 무엇인가요?",
+      "options": [
+        "문자열 내에서 변수와 표현식을 쉽게 삽입할 수 있다.",
+        "배열을 정렬할 수 있다.",
+        "객체를 복제할 수 있다.",
+        "메모리 관리를 최적화한다."
+      ],
+      "answer": "문자열 내에서 변수와 표현식을 쉽게 삽입할 수 있다."
+    },
+    {
+      "question": "자바스크립트에서 배열의 reduce() 메서드의 역할은 무엇인가요?",
+      "options": [
+        "배열의 모든 요소를 단일 값으로 축소한다.",
+        "배열을 정렬한다.",
+        "배열의 모든 요소를 변경하지 않는다.",
+        "배열을 복제한다."
+      ],
+      "answer": "배열의 모든 요소를 단일 값으로 축소한다."
+    },
+    {
+      "question": "자바스크립트에서 객체 비구조화 할당(Destructuring Assignment)의 사용법은 무엇인가요?",
+      "options": [
+        "객체의 속성을 변수로 쉽게 추출할 수 있다.",
+        "객체를 배열로 변환한다.",
+        "객체를 복제한다.",
+        "객체를 정렬한다."
+      ],
+      "answer": "객체의 속성을 변수로 쉽게 추출할 수 있다."
+    },
+    {
+      "question": "자바스크립트에서 spread 연산자의 주요 용도는 무엇인가요?",
+      "options": [
+        "배열이나 객체를 복사하고 확장하는 데 사용된다.",
+        "문자열을 분할한다.",
+        "객체의 속성을 삭제한다.",
+        "메모리를 압축한다."
+      ],
+      "answer": "배열이나 객체를 복사하고 확장하는 데 사용된다."
+    },
+    {
+      "question": "자바스크립트에서 Map과 Set 객체의 차이는 무엇인가요?",
+      "options": [
+        "Map은 키-값 쌍을 저장하고, Set은 고유한 값만 저장한다.",
+        "Set은 키-값 쌍을 저장하고, Map은 값만 저장한다.",
+        "두 객체는 동일하다.",
+        "둘 다 배열의 하위 집합이다."
+      ],
+      "answer": "Map은 키-값 쌍을 저장하고, Set은 고유한 값만 저장한다."
+    },
+    {
+      "question": "자바스크립트에서 try-catch-finally 블록의 실행 순서는 어떻게 되나요?",
+      "options": [
+        "try -> (catch, 예외 발생 시) -> finally",
+        "try -> finally -> catch",
+        "catch -> try -> finally",
+        "finally -> try -> catch"
+      ],
+      "answer": "try -> (catch, 예외 발생 시) -> finally"
+    },
+    {
+      "question": "자바스크립트에서 클래스(class)를 정의하는 방법은 무엇인가요?",
+      "options": [
+        "class 키워드를 사용하여 클래스를 선언한다.",
+        "function 키워드를 사용하여 클래스를 선언한다.",
+        "객체 리터럴로 클래스를 생성한다.",
+        "new 연산자를 사용하여 클래스를 생성한다."
+      ],
+      "answer": "class 키워드를 사용하여 클래스를 선언한다."
+    },
+    {
+      "question": "자바스크립트에서 메서드 체이닝(Method Chaining)이란 무엇인가요?",
+      "options": [
+        "여러 메서드를 연속적으로 호출할 수 있게 하는 기법이다.",
+        "메서드를 한 번만 호출하는 것이다.",
+        "클래스 상속과 관련 있다.",
+        "객체 생성 방식을 단순화한다."
+      ],
+      "answer": "여러 메서드를 연속적으로 호출할 수 있게 하는 기법이다."
+    },
+    {
+      "question": "자바스크립트에서 IIFE(즉시 실행 함수 표현식)의 목적은 무엇인가요?",
+      "options": [
+        "함수를 정의함과 동시에 즉시 실행하여 스코프를 격리한다.",
+        "함수를 나중에 호출하기 위해 미리 정의한다.",
+        "클래스 인스턴스를 생성한다.",
+        "이벤트를 바인딩한다."
+      ],
+      "answer": "함수를 정의함과 동시에 즉시 실행하여 스코프를 격리한다."
+    },
+    {
+      "question": "자바스크립트에서 이벤트 캡처링(Event Capturing)과 버블링의 차이는 무엇인가요?",
+      "options": [
+        "이벤트 캡처링은 상위 요소에서 하위 요소로, 버블링은 하위 요소에서 상위 요소로 전파된다.",
+        "버블링은 상위 요소에서 하위 요소로, 캡처링은 하위 요소에서 상위 요소로 전파된다.",
+        "두 방식은 동일하다.",
+        "이벤트 캡처링은 동기, 버블링은 비동기이다."
+      ],
+      "answer": "이벤트 캡처링은 상위 요소에서 하위 요소로, 버블링은 하위 요소에서 상위 요소로 전파된다."
+    },
+    {
+      "question": "자바스크립트에서 Object.freeze()의 역할은 무엇인가요?",
+      "options": [
+        "객체를 불변으로 만들어 수정할 수 없게 한다.",
+        "객체를 복제한다.",
+        "객체를 동적으로 확장한다.",
+        "메모리 사용량을 줄인다."
+      ],
+      "answer": "객체를 불변으로 만들어 수정할 수 없게 한다."
+    },
+    {
+      "question": "자바스크립트에서 프로토타입 상속의 예제를 설명하세요.",
+      "options": [
+        "하나의 객체가 다른 객체를 참조하여 속성과 메서드를 상속받는 것을 말한다.",
+        "클래스를 상속받아 새로운 클래스를 생성한다.",
+        "함수를 호출하여 객체를 생성한다.",
+        "객체 리터럴을 사용하여 상속한다."
+      ],
+      "answer": "하나의 객체가 다른 객체를 참조하여 속성과 메서드를 상속받는 것을 말한다."
+    },
+    {
+      "question": "자바스크립트에서 기본 자료형과 참조 자료형의 차이는 무엇인가요?",
+      "options": [
+        "기본 자료형은 값이 직접 저장되고, 참조 자료형은 객체의 참조가 저장된다.",
+        "참조 자료형은 값이 직접 저장되고, 기본 자료형은 참조가 저장된다.",
+        "두 자료형은 동일하다.",
+        "기본 자료형은 메모리를 많이 사용한다."
+      ],
+      "answer": "기본 자료형은 값이 직접 저장되고, 참조 자료형은 객체의 참조가 저장된다."
+    },
+    {
+      "question": "자바스크립트에서 Date 객체를 사용하여 날짜를 다루는 방법은 무엇인가요?",
+      "options": [
+        "new Date()를 사용하여 현재 날짜 및 시간을 생성하고, 다양한 메서드로 조작한다.",
+        "Date.now()는 객체를 반환한다.",
+        "날짜는 문자열로만 다룰 수 있다.",
+        "날짜는 자동으로 정렬된다."
+      ],
+      "answer": "new Date()를 사용하여 현재 날짜 및 시간을 생성하고, 다양한 메서드로 조작한다."
+    },
+    {
+      "question": "자바스크립트에서 정규 표현식(Regular Expression)의 사용 예는 무엇인가요?",
+      "options": [
+        "문자열 검색 및 치환 작업에 사용된다.",
+        "객체를 복제하는 데 사용된다.",
+        "메모리 할당을 최적화한다.",
+        "숫자 계산을 수행한다."
+      ],
+      "answer": "문자열 검색 및 치환 작업에 사용된다."
+    },
+    {
+      "question": "자바스크립트에서 fetch API의 오류 처리는 어떻게 하나요?",
+      "options": [
+        "catch() 메서드를 사용하여 오류를 처리한다.",
+        "오류가 발생하면 자동으로 재시도한다.",
+        "에러는 무시된다.",
+        "오류 처리가 불가능하다."
+      ],
+      "answer": "catch() 메서드를 사용하여 오류를 처리한다."
+    },
+    {
+      "question": "자바스크립트에서 new 연산자의 역할은 무엇인가요?",
+      "options": [
+        "생성자 함수를 호출하여 새로운 객체를 생성한다.",
+        "함수를 동적으로 수정한다.",
+        "메서드 체이닝을 가능하게 한다.",
+        "클래스를 상속받는다."
+      ],
+      "answer": "생성자 함수를 호출하여 새로운 객체를 생성한다."
+    },
+    {
+      "question": "자바스크립트에서 동적 import()의 용도는 무엇인가요?",
+      "options": [
+        "필요한 모듈을 런타임에 동적으로 불러온다.",
+        "모든 모듈을 한 번에 로드한다.",
+        "메모리 사용량을 늘린다.",
+        "코드를 동기적으로 실행한다."
+      ],
+      "answer": "필요한 모듈을 런타임에 동적으로 불러온다."
+    },
+    {
+      "question": "자바스크립트에서 null과 undefined의 차이는 무엇인가요?",
+      "options": [
+        "null은 명시적으로 값이 없음을 나타내고, undefined는 값이 할당되지 않았음을 나타낸다.",
+        "undefined는 null과 동일하다.",
+        "null은 숫자, undefined는 문자열이다.",
+        "둘 다 동일하게 동작한다."
+      ],
+      "answer": "null은 명시적으로 값이 없음을 나타내고, undefined는 값이 할당되지 않았음을 나타낸다."
+    },
+    {
+      "question": "자바스크립트에서 이벤트 위임(Event Delegation)이란 무엇인가요?",
+      "options": [
+        "상위 요소에 이벤트 리스너를 등록하여 하위 요소의 이벤트를 처리하는 기법이다.",
+        "각 요소에 개별적으로 이벤트 리스너를 등록하는 것이다.",
+        "이벤트를 캡처하는 방식이다.",
+        "동기 처리 기법이다."
+      ],
+      "answer": "상위 요소에 이벤트 리스너를 등록하여 하위 요소의 이벤트를 처리하는 기법이다."
+    },
+    {
+      "question": "자바스크립트에서 클래스 상속은 어떻게 구현되나요?",
+      "options": [
+        "extends 키워드를 사용하여 부모 클래스로부터 상속받는다.",
+        "prototype 체인을 수동으로 설정한다.",
+        "함수 호출을 통해 상속을 구현한다.",
+        "객체 리터럴을 사용하여 상속한다."
+      ],
+      "answer": "extends 키워드를 사용하여 부모 클래스로부터 상속받는다."
+    },
+    {
+      "question": "자바스크립트에서 프로미스 체이닝(Promise Chaining)의 이점은 무엇인가요?",
+      "options": [
+        "비동기 작업을 순차적으로 처리할 수 있어 가독성이 높아진다.",
+        "동시 실행을 가능하게 한다.",
+        "메모리 사용을 줄인다.",
+        "에러 처리가 자동으로 된다."
+      ],
+      "answer": "비동기 작업을 순차적으로 처리할 수 있어 가독성이 높아진다."
+    },
+    {
+      "question": "자바스크립트에서 Array.prototype.some() 메서드의 역할은 무엇인가요?",
+      "options": [
+        "배열의 요소 중 조건을 만족하는 것이 하나라도 있으면 true를 반환한다.",
+        "배열의 모든 요소가 조건을 만족하면 true를 반환한다.",
+        "배열을 정렬한다.",
+        "배열의 모든 요소를 합산한다."
+      ],
+      "answer": "배열의 요소 중 조건을 만족하는 것이 하나라도 있으면 true를 반환한다."
+    },
+    {
+      "question": "자바스크립트에서 Object.assign()의 용도는 무엇인가요?",
+      "options": [
+        "여러 객체를 하나의 객체로 병합한다.",
+        "객체를 배열로 변환한다.",
+        "객체의 속성을 삭제한다.",
+        "객체를 정렬한다."
+      ],
+      "answer": "여러 객체를 하나의 객체로 병합한다."
+    },
+    {
+      "question": "자바스크립트에서 클로저로 인한 메모리 누수를 방지하는 방법은 무엇인가요?",
+      "options": [
+        "불필요한 참조를 제거하고, 변수의 범위를 제한한다.",
+        "전역 변수를 사용한다.",
+        "함수를 항상 재귀적으로 호출한다.",
+        "메모리 캐시를 사용한다."
+      ],
+      "answer": "불필요한 참조를 제거하고, 변수의 범위를 제한한다."
+    },
+    {
+      "question": "자바스크립트에서 이벤트 루프(Event Loop)의 기본 원리는 무엇인가요?",
+      "options": [
+        "콜 스택과 태스크 큐를 사용하여 비동기 작업을 처리한다.",
+        "동기 코드를 우선 실행한다.",
+        "모든 함수 호출을 즉시 실행한다.",
+        "메모리 관리를 자동화한다."
+      ],
+      "answer": "콜 스택과 태스크 큐를 사용하여 비동기 작업을 처리한다."
+    },
+    {
+      "question": "자바스크립트에서 WeakMap과 WeakSet의 차이는 무엇인가요?",
+      "options": [
+        "WeakMap은 키로 객체만 사용하고, WeakSet은 값으로 객체만 사용한다.",
+        "WeakMap은 값을, WeakSet은 키를 저장한다.",
+        "두 객체는 동일하다.",
+        "WeakSet은 메모리 누수를 유발한다."
+      ],
+      "answer": "WeakMap은 키로 객체만 사용하고, WeakSet은 값으로 객체만 사용한다."
+    },
+    {
+      "question": "자바스크립트에서 try-catch 문에서 오류 객체(error object)의 주요 속성은 무엇인가요?",
+      "options": [
+        "name, message, stack",
+        "type, code, info",
+        "error, description, cause",
+        "value, trace, line"
+      ],
+      "answer": "name, message, stack"
+    },
+    {
+      "question": "자바스크립트에서 함수 기본 매개변수(default parameters)의 역할은 무엇인가요?",
+      "options": [
+        "매개변수가 전달되지 않을 경우 기본 값을 제공한다.",
+        "모든 매개변수를 필수로 만든다.",
+        "함수 실행을 중단시킨다.",
+        "매개변수를 동적으로 생성한다."
+      ],
+      "answer": "매개변수가 전달되지 않을 경우 기본 값을 제공한다."
+    },
+    {
+      "question": "자바스크립트에서 생성자 함수(Constructor function)의 특징은 무엇인가요?",
+      "options": [
+        "new 키워드와 함께 호출되어 새로운 객체를 생성한다.",
+        "객체 리터럴로 대체할 수 없다.",
+        "클래스 없이 상속을 구현한다.",
+        "항상 익명 함수로 선언된다."
+      ],
+      "answer": "new 키워드와 함께 호출되어 새로운 객체를 생성한다."
+    },
+    {
+      "question": "자바스크립트에서 동적 객체 프로퍼티 추가는 어떻게 하나요?",
+      "options": [
+        "대괄호 표기법 또는 점 표기법을 사용하여 프로퍼티를 추가한다.",
+        "객체를 재생성해야 한다.",
+        "프로퍼티 추가는 불가능하다.",
+        "Object.freeze()를 사용한다."
+      ],
+      "answer": "대괄호 표기법 또는 점 표기법을 사용하여 프로퍼티를 추가한다."
+    },
+    {
+      "question": "자바스크립트에서 배열의 find() 메서드의 사용법은 무엇인가요?",
+      "options": [
+        "조건을 만족하는 첫 번째 요소를 반환한다.",
+        "조건을 만족하는 모든 요소를 반환한다.",
+        "배열의 마지막 요소를 반환한다.",
+        "배열을 정렬한다."
+      ],
+      "answer": "조건을 만족하는 첫 번째 요소를 반환한다."
+    },
+    {
+      "question": "자바스크립트에서 Object.keys()와 Object.values()의 차이는 무엇인가요?",
+      "options": [
+        "Object.keys()는 속성 이름 배열, Object.values()는 속성 값 배열을 반환한다.",
+        "두 메서드는 동일하게 동작한다.",
+        "Object.keys()는 객체를 배열로 변환한다.",
+        "Object.values()는 객체의 길이를 반환한다."
+      ],
+      "answer": "Object.keys()는 속성 이름 배열, Object.values()는 속성 값 배열을 반환한다."
+    },
+    {
+      "question": "자바스크립트에서 함수 표현식(Function Expression)과 함수 선언(Function Declaration)의 차이는 무엇인가요?",
+      "options": [
+        "함수 선언은 호이스팅이 가능하고, 함수 표현식은 호이스팅이 제한된다.",
+        "함수 표현식은 호이스팅이 가능하고, 함수 선언은 불가능하다.",
+        "두 방식은 동일하다.",
+        "함수 선언은 익명 함수로만 사용된다."
+      ],
+      "answer": "함수 선언은 호이스팅이 가능하고, 함수 표현식은 호이스팅이 제한된다."
+    },
+    {
+      "question": "자바스크립트에서 불변성(immutability)을 유지하는 방법은 무엇인가요?",
+      "options": [
+        "객체를 복제하고, 기존 객체를 변경하지 않는다.",
+        "객체를 직접 수정한다.",
+        "전역 변수를 많이 사용한다.",
+        "함수를 동적으로 생성한다."
+      ],
+      "answer": "객체를 복제하고, 기존 객체를 변경하지 않는다."
+    },
+    {
+      "question": "자바스크립트에서 타이머 함수와 비동기 처리의 관계를 설명하세요.",
+      "options": [
+        "타이머 함수는 비동기 작업을 지연시켜 실행할 수 있도록 한다.",
+        "타이머 함수는 동기적으로 작동한다.",
+        "타이머 함수는 메모리를 압축한다.",
+        "타이머 함수는 객체를 동적으로 생성한다."
+      ],
+      "answer": "타이머 함수는 비동기 작업을 지연시켜 실행할 수 있도록 한다."
+    },
+    {
+      "question": "자바스크립트에서 모듈 번들러(Webpack)의 기본 역할은 무엇인가요?",
+      "options": [
+        "여러 모듈을 하나의 파일로 결합하고 최적화한다.",
+        "코드를 동적으로 실행한다.",
+        "메모리 관리를 자동화한다.",
+        "서버와 클라이언트를 연결한다."
+      ],
+      "answer": "여러 모듈을 하나의 파일로 결합하고 최적화한다."
+    },
+    {
+      "question": "자바스크립트에서 동적 import()를 사용하는 이유는 무엇인가요?",
+      "options": [
+        "필요할 때 모듈을 동적으로 불러와 초기 로딩 시간을 줄인다.",
+        "모든 모듈을 동시에 로드한다.",
+        "메모리 사용량을 늘린다.",
+        "코드를 동기적으로 실행한다."
+      ],
+      "answer": "필요할 때 모듈을 동적으로 불러와 초기 로딩 시간을 줄인다."
+    },
+    {
+      "question": "자바스크립트에서 이벤트 핸들러의 this 바인딩은 어떻게 제어하나요?",
+      "options": [
+        "bind(), call(), apply() 메서드를 사용하여 제어할 수 있다.",
+        "this 바인딩은 변경할 수 없다.",
+        "객체 리터럴로만 제어할 수 있다.",
+        "클래스 상속을 통해 제어한다."
+      ],
+      "answer": "bind(), call(), apply() 메서드를 사용하여 제어할 수 있다."
+    },
+    {
+      "question": "자바스크립트에서 클로저를 테스트하는 간단한 예제를 작성하세요.",
+      "options": [
+        "함수 내부에서 변수를 선언하고, 내부 함수를 반환하여 외부에서 접근하게 한다.",
+        "함수를 즉시 실행하여 결과를 반환한다.",
+        "전역 변수를 사용하여 클로저를 테스트한다.",
+        "클래스 상속을 사용한다."
+      ],
+      "answer": "함수 내부에서 변수를 선언하고, 내부 함수를 반환하여 외부에서 접근하게 한다."
+    },
+    {
+      "question": "자바스크립트에서 Array.prototype.every() 메서드의 용도는 무엇인가요?",
+      "options": [
+        "배열의 모든 요소가 조건을 만족하는지 확인한다.",
+        "첫 번째 조건만 확인한다.",
+        "배열의 요소를 합산한다.",
+        "조건을 만족하는 요소만 추출한다."
+      ],
+      "answer": "배열의 모든 요소가 조건을 만족하는지 확인한다."
+    },
+    {
+      "question": "자바스크립트에서 성능 최적화를 위해 주의해야 할 점은 무엇인가요?",
+      "options": [
+        "불필요한 DOM 조작과 메모리 누수를 피해야 한다.",
+        "모든 코드를 동기적으로 작성한다.",
+        "전역 변수를 많이 사용한다.",
+        "클래스 상속을 과도하게 사용한다."
+      ],
+      "answer": "불필요한 DOM 조작과 메모리 누수를 피해야 한다."
+    },
+    {
+      "question": "자바스크립트에서 함수 합성(function composition)이란 무엇인가요?",
+      "options": [
+        "여러 함수를 결합하여 하나의 함수로 만드는 기법이다.",
+        "함수를 분리하는 기법이다.",
+        "클래스 상속을 대체한다.",
+        "메서드 체이닝과 동일하다."
+      ],
+      "answer": "여러 함수를 결합하여 하나의 함수로 만드는 기법이다."
+    },
+    {
+      "question": "자바스크립트에서 프라퍼티 디스크립터(Property Descriptors)의 용도는 무엇인가요?",
+      "options": [
+        "객체의 프로퍼티 설정(값, writable, enumerable 등)을 상세히 제어할 수 있다.",
+        "객체를 복제한다.",
+        "메모리 관리를 자동화한다.",
+        "객체를 동적으로 생성한다."
+      ],
+      "answer": "객체의 프로퍼티 설정(값, writable, enumerable 등)을 상세히 제어할 수 있다."
+    },
+    {
+      "question": "자바스크립트에서 Generator 함수의 기본 문법은 무엇인가요?",
+      "options": [
+        "function* 키워드를 사용하여 정의하고, yield 키워드를 사용한다.",
+        "function 키워드만 사용한다.",
+        "generator 키워드를 사용한다.",
+        "클래스 내부에서만 정의할 수 있다."
+      ],
+      "answer": "function* 키워드를 사용하여 정의하고, yield 키워드를 사용한다."
+    },
+    {
+      "question": "자바스크립트에서 비동기 이터레이터의 사용 예는 무엇인가요?",
+      "options": [
+        "for-await-of 루프를 사용하여 비동기 스트림 데이터를 처리한다.",
+        "일반 for 루프로 데이터를 처리한다.",
+        "동기적으로 배열을 순회한다.",
+        "이터레이터는 동기 처리만 가능하다."
+      ],
+      "answer": "for-await-of 루프를 사용하여 비동기 스트림 데이터를 처리한다."
+    },
+    {
+      "question": "자바스크립트에서 Reflect API의 기본 사용법은 무엇인가요?",
+      "options": [
+        "객체의 메서드 호출, 속성 설정, 삭제 등을 프로그래밍적으로 제어한다.",
+        "메모리 할당을 최적화한다.",
+        "객체를 복제한다.",
+        "이벤트 처리를 간소화한다."
+      ],
+      "answer": "객체의 메서드 호출, 속성 설정, 삭제 등을 프로그래밍적으로 제어한다."
+    },
+    {
+      "question": "자바스크립트에서 Proxy 객체의 주요 기능은 무엇인가요?",
+      "options": [
+        "객체의 기본 동작(속성 접근, 할당 등)을 가로채서 사용자 정의 동작을 적용할 수 있다.",
+        "객체를 동적으로 생성한다.",
+        "메모리 관리를 자동화한다.",
+        "배열을 정렬한다."
+      ],
+      "answer": "객체의 기본 동작(속성 접근, 할당 등)을 가로채서 사용자 정의 동작을 적용할 수 있다."
+    },
+    {
+      "question": "자바스크립트에서 함수 디바운싱(Function Debouncing)이란 무엇인가요?",
+      "options": [
+        "짧은 시간 내 여러 번 호출되는 함수를 하나로 합쳐 실행 횟수를 줄이는 기법이다.",
+        "함수를 재귀적으로 호출하는 기법이다.",
+        "함수를 동기적으로 변환하는 것이다.",
+        "메모리 할당을 최적화한다."
+      ],
+      "answer": "짧은 시간 내 여러 번 호출되는 함수를 하나로 합쳐 실행 횟수를 줄이는 기법이다."
+    },
+    {
+      "question": "자바스크립트에서 함수 스로틀링(Function Throttling)의 목적은 무엇인가요?",
+      "options": [
+        "함수 호출 빈도를 제한하여 성능 저하를 방지한다.",
+        "함수를 재귀적으로 호출한다.",
+        "메모리 사용량을 늘린다.",
+        "객체 생성 속도를 높인다."
+      ],
+      "answer": "함수 호출 빈도를 제한하여 성능 저하를 방지한다."
+    },
+    {
+      "question": "자바스크립트에서 모듈 스코프와 전역 스코프의 차이는 무엇인가요?",
+      "options": [
+        "모듈 스코프는 모듈 내부에서만 유효하고, 전역 스코프는 전체에서 유효하다.",
+        "전역 스코프는 모듈 내부에서만 유효하다.",
+        "두 스코프는 동일하다.",
+        "모듈 스코프는 동적이고, 전역 스코프는 정적이다."
+      ],
+      "answer": "모듈 스코프는 모듈 내부에서만 유효하고, 전역 스코프는 전체에서 유효하다."
+    },
+    {
+      "question": "자바스크립트에서 Number와 parseInt의 차이는 무엇인가요?",
+      "options": [
+        "Number는 숫자 타입으로 변환하고, parseInt는 문자열을 정수로 파싱한다.",
+        "parseInt는 항상 10진수만 처리한다.",
+        "Number는 문자열만 처리한다.",
+        "둘은 동일하게 작동한다."
+      ],
+      "answer": "Number는 숫자 타입으로 변환하고, parseInt는 문자열을 정수로 파싱한다."
+    },
+    {
+      "question": "자바스크립트에서 객체 리터럴에서 단축 속성 이름(short property names)의 장점은 무엇인가요?",
+      "options": [
+        "객체 생성 시 코드가 간결해진다.",
+        "메모리 사용량을 줄인다.",
+        "속도가 빨라진다.",
+        "객체의 복제가 쉬워진다."
+      ],
+      "answer": "객체 생성 시 코드가 간결해진다."
+    },
+    {
+      "question": "자바스크립트에서 비구조화 할당과 기본값을 동시에 설정하는 방법은 무엇인가요?",
+      "options": [
+        "변수 선언 시 = 기호를 사용하여 기본값을 지정한다.",
+        "기본값은 함수 내에서만 설정할 수 있다.",
+        "객체의 속성을 변경할 수 없다.",
+        "기본값 설정은 지원되지 않는다."
+      ],
+      "answer": "변수 선언 시 = 기호를 사용하여 기본값을 지정한다."
+    },
+    {
+      "question": "자바스크립트에서 Array.prototype.concat()의 사용법은 무엇인가요?",
+      "options": [
+        "두 개 이상의 배열을 하나로 결합하여 새로운 배열을 생성한다.",
+        "배열을 정렬한다.",
+        "배열의 요소를 제거한다.",
+        "배열을 복제한다."
+      ],
+      "answer": "두 개 이상의 배열을 하나로 결합하여 새로운 배열을 생성한다."
+    },
+    {
+      "question": "자바스크립트에서 this 바인딩을 변경하는 방법은 무엇인가요?",
+      "options": [
+        "bind(), call(), apply() 메서드를 사용하여 변경할 수 있다.",
+        "this는 변경할 수 없다.",
+        "객체 리터럴로 재정의한다.",
+        "클래스 상속을 통해 변경한다."
+      ],
+      "answer": "bind(), call(), apply() 메서드를 사용하여 변경할 수 있다."
+    },
+    {
+      "question": "컴퓨터 공학에서 알고리즘의 시간 복잡도란 무엇인가요?",
+      "options": [
+        "알고리즘이 문제를 해결하는 데 걸리는 시간을 입력 크기에 따라 나타내는 척도이다.",
+        "메모리 사용량을 측정하는 방법이다.",
+        "네트워크 속도를 나타낸다.",
+        "알고리즘의 코드 길이를 의미한다."
+      ],
+      "answer": "알고리즘이 문제를 해결하는 데 걸리는 시간을 입력 크기에 따라 나타내는 척도이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 데이터 구조 중 배열과 연결 리스트의 차이는 무엇인가요?",
+      "options": [
+        "배열은 인덱스를 통해 직접 접근할 수 있고, 연결 리스트는 순차 접근이 필요하다.",
+        "연결 리스트는 인덱스 기반 접근이 빠르고, 배열은 느리다.",
+        "두 자료구조는 동일하다.",
+        "배열은 동적이고, 연결 리스트는 정적이다."
+      ],
+      "answer": "배열은 인덱스를 통해 직접 접근할 수 있고, 연결 리스트는 순차 접근이 필요하다."
+    },
+    {
+      "question": "컴퓨터 공학에서 스택 자료구조의 특징은 무엇인가요?",
+      "options": [
+        "LIFO(후입선출) 구조로 데이터를 관리한다.",
+        "FIFO(선입선출) 구조로 데이터를 관리한다.",
+        "무작위 접근이 가능하다.",
+        "정렬이 자동으로 이루어진다."
+      ],
+      "answer": "LIFO(후입선출) 구조로 데이터를 관리한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 큐 자료구조의 특징은 무엇인가요?",
+      "options": [
+        "FIFO(선입선출) 구조로 데이터를 관리한다.",
+        "LIFO(후입선출) 구조로 데이터를 관리한다.",
+        "무작위 접근이 가능하다.",
+        "정렬된 순서로 데이터를 저장한다."
+      ],
+      "answer": "FIFO(선입선출) 구조로 데이터를 관리한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 이진 탐색(Binary Search)을 사용하기 위한 전제 조건은 무엇인가요?",
+      "options": [
+        "입력 데이터가 정렬되어 있어야 한다.",
+        "데이터가 무작위로 정렬되어 있어야 한다.",
+        "중복된 값이 반드시 있어야 한다.",
+        "데이터가 연결 리스트 형태여야 한다."
+      ],
+      "answer": "입력 데이터가 정렬되어 있어야 한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 정렬 알고리즘 중 버블 정렬의 시간 복잡도는 무엇인가요?",
+      "options": [
+        "O(n^2)",
+        "O(n log n)",
+        "O(n)",
+        "O(log n)"
+      ],
+      "answer": "O(n^2)"
+    },
+    {
+      "question": "컴퓨터 공학에서 퀵 정렬의 평균 시간 복잡도는 무엇인가요?",
+      "options": [
+        "O(n log n)",
+        "O(n^2)",
+        "O(n)",
+        "O(log n)"
+      ],
+      "answer": "O(n log n)"
+    },
+    {
+      "question": "컴퓨터 공학에서 병합 정렬의 주요 특징은 무엇인가요?",
+      "options": [
+        "안정 정렬이며, 시간 복잡도가 O(n log n)이다.",
+        "불안정 정렬이며, 시간 복잡도가 O(n^2)이다.",
+        "빠른 정렬이지만, 메모리 사용이 많다.",
+        "동적 메모리 할당을 지원하지 않는다."
+      ],
+      "answer": "안정 정렬이며, 시간 복잡도가 O(n log n)이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 해시 테이블의 작동 원리는 무엇인가요?",
+      "options": [
+        "해시 함수를 사용하여 키를 인덱스로 변환하여 데이터를 저장한다.",
+        "배열 인덱스를 순차적으로 사용한다.",
+        "데이터를 정렬하여 저장한다.",
+        "트리 구조를 기반으로 데이터를 관리한다."
+      ],
+      "answer": "해시 함수를 사용하여 키를 인덱스로 변환하여 데이터를 저장한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 그래프 자료구조에서 DFS(깊이 우선 탐색)의 특징은 무엇인가요?",
+      "options": [
+        "한 정점에서 가능한 깊이까지 탐색 후, 백트래킹하여 다른 경로를 탐색한다.",
+        "가장 가까운 정점부터 탐색한다.",
+        "정렬된 경로를 항상 선택한다.",
+        "최단 경로를 보장한다."
+      ],
+      "answer": "한 정점에서 가능한 깊이까지 탐색 후, 백트래킹하여 다른 경로를 탐색한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 그래프 자료구조에서 BFS(너비 우선 탐색)의 특징은 무엇인가요?",
+      "options": [
+        "시작 정점에서부터 가까운 정점들을 먼저 탐색한다.",
+        "항상 최단 경로를 찾는다.",
+        "깊이 우선 탐색과 동일하다.",
+        "정렬된 경로를 우선 탐색한다."
+      ],
+      "answer": "시작 정점에서부터 가까운 정점들을 먼저 탐색한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 트리 자료구조의 주요 특징은 무엇인가요?",
+      "options": [
+        "계층적 구조를 가지며, 루트 노드에서 시작한다.",
+        "배열과 동일한 구조이다.",
+        "순차적으로 데이터를 저장한다.",
+        "해시 테이블과 결합되어 있다."
+      ],
+      "answer": "계층적 구조를 가지며, 루트 노드에서 시작한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 이진 트리와 이진 탐색 트리의 차이는 무엇인가요?",
+      "options": [
+        "이진 탐색 트리는 왼쪽 자식이 부모보다 작고, 오른쪽 자식이 부모보다 크다는 조건이 있다.",
+        "이진 트리는 항상 정렬되어 있다.",
+        "두 트리는 동일하다.",
+        "이진 탐색 트리는 균형 잡힌 트리만을 의미한다."
+      ],
+      "answer": "이진 탐색 트리는 왼쪽 자식이 부모보다 작고, 오른쪽 자식이 부모보다 크다는 조건이 있다."
+    },
+    {
+      "question": "컴퓨터 공학에서 동적 프로그래밍의 핵심 개념은 무엇인가요?",
+      "options": [
+        "문제를 작은 부분 문제로 나누어 중복 계산을 피하는 것이다.",
+        "문제를 분할하여 각각 독립적으로 해결한다.",
+        "재귀 호출을 피한다.",
+        "반복문을 사용하여 문제를 해결한다."
+      ],
+      "answer": "문제를 작은 부분 문제로 나누어 중복 계산을 피하는 것이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 그리디 알고리즘의 기본 아이디어는 무엇인가요?",
+      "options": [
+        "매 단계에서 최선의 선택을 하는 것이다.",
+        "전체 최적 해를 보장한다.",
+        "동적 프로그래밍과 동일하다.",
+        "역순으로 문제를 해결한다."
+      ],
+      "answer": "매 단계에서 최선의 선택을 하는 것이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 NP-완전 문제의 특징은 무엇인가요?",
+      "options": [
+        "해결하기 어려우며, NP 문제로 환원될 수 있다.",
+        "항상 다항 시간에 해결된다.",
+        "결정 문제가 아니다.",
+        "모든 경우에 최적 해를 보장한다."
+      ],
+      "answer": "해결하기 어려우며, NP 문제로 환원될 수 있다."
+    },
+    {
+      "question": "컴퓨터 공학에서 빅오 표기법의 의미는 무엇인가요?",
+      "options": [
+        "알고리즘의 최악의 경우 실행 시간을 나타낸다.",
+        "메모리 사용량을 나타낸다.",
+        "알고리즘의 평균 성능을 나타낸다.",
+        "코드 길이를 측정한다."
+      ],
+      "answer": "알고리즘의 최악의 경우 실행 시간을 나타낸다."
+    },
+    {
+      "question": "컴퓨터 공학에서 메모리 계층 구조에서 캐시 메모리의 역할은 무엇인가요?",
+      "options": [
+        "CPU와 주 메모리 사이의 속도 차이를 줄이기 위해 데이터를 임시 저장한다.",
+        "메모리 할당을 최적화한다.",
+        "디스크 I/O를 관리한다.",
+        "네트워크 속도를 높인다."
+      ],
+      "answer": "CPU와 주 메모리 사이의 속도 차이를 줄이기 위해 데이터를 임시 저장한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 가상 메모리의 개념은 무엇인가요?",
+      "options": [
+        "물리 메모리보다 큰 메모리 공간을 사용할 수 있도록 하는 기술이다.",
+        "메모리를 동적으로 생성하는 것이다.",
+        "메모리 누수를 방지하는 기술이다.",
+        "캐시 메모리를 확장하는 것이다."
+      ],
+      "answer": "물리 메모리보다 큰 메모리 공간을 사용할 수 있도록 하는 기술이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 프로세스와 스레드의 차이는 무엇인가요?",
+      "options": [
+        "프로세스는 독립적인 실행 단위이고, 스레드는 프로세스 내에서 실행되는 경량 단위이다.",
+        "스레드는 독립적이며, 프로세스는 종속적이다.",
+        "두 개념은 동일하다.",
+        "프로세스는 메모리를 공유하지 않는다."
+      ],
+      "answer": "프로세스는 독립적인 실행 단위이고, 스레드는 프로세스 내에서 실행되는 경량 단위이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 인터럽트(Interrupt)의 역할은 무엇인가요?",
+      "options": [
+        "하드웨어나 소프트웨어가 현재 작업을 중단하고 다른 작업을 처리하도록 알리는 것이다.",
+        "메모리를 재할당하는 것이다.",
+        "프로세스를 종료하는 것이다.",
+        "데이터를 전송하는 것이다."
+      ],
+      "answer": "하드웨어나 소프트웨어가 현재 작업을 중단하고 다른 작업을 처리하도록 알리는 것이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 운영체제의 주요 기능은 무엇인가요?",
+      "options": [
+        "자원 관리, 프로세스 관리, 메모리 관리, 파일 시스템 관리 등을 포함한다.",
+        "데이터베이스 연결만을 관리한다.",
+        "네트워크 속도를 조절한다.",
+        "프로그램 코드를 컴파일한다."
+      ],
+      "answer": "자원 관리, 프로세스 관리, 메모리 관리, 파일 시스템 관리 등을 포함한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 컨텍스트 스위칭이란 무엇인가요?",
+      "options": [
+        "CPU가 하나의 프로세스에서 다른 프로세스로 전환되는 것을 말한다.",
+        "메모리에서 데이터를 교환하는 것이다.",
+        "디스크 I/O를 전환하는 것이다.",
+        "네트워크 연결을 변경하는 것이다."
+      ],
+      "answer": "CPU가 하나의 프로세스에서 다른 프로세스로 전환되는 것을 말한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 데드락(Deadlock)이 발생하는 조건은 무엇인가요?",
+      "options": [
+        "상호 배제, 점유 및 대기, 비선점, 순환 대기가 동시에 발생할 때이다.",
+        "메모리 누수가 발생할 때이다.",
+        "프로세스가 종료될 때이다.",
+        "네트워크 연결이 끊길 때이다."
+      ],
+      "answer": "상호 배제, 점유 및 대기, 비선점, 순환 대기가 동시에 발생할 때이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 TCP와 UDP의 차이점은 무엇인가요?",
+      "options": [
+        "TCP는 연결 지향, UDP는 비연결 지향이다.",
+        "TCP는 비연결 지향, UDP는 연결 지향이다.",
+        "두 프로토콜은 동일하다.",
+        "TCP는 빠르고, UDP는 느리다."
+      ],
+      "answer": "TCP는 연결 지향, UDP는 비연결 지향이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 IP 주소의 주요 역할은 무엇인가요?",
+      "options": [
+        "네트워크 상의 장치를 식별하기 위한 고유한 주소이다.",
+        "데이터를 암호화한다.",
+        "네트워크 속도를 증가시킨다.",
+        "메모리를 관리한다."
+      ],
+      "answer": "네트워크 상의 장치를 식별하기 위한 고유한 주소이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 DNS의 역할은 무엇인가요?",
+      "options": [
+        "도메인 이름을 IP 주소로 변환한다.",
+        "데이터를 저장한다.",
+        "네트워크 속도를 조절한다.",
+        "메모리 관리를 수행한다."
+      ],
+      "answer": "도메인 이름을 IP 주소로 변환한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 HTTP와 HTTPS의 차이점은 무엇인가요?",
+      "options": [
+        "HTTPS는 암호화를 통해 보안을 강화한 HTTP이다.",
+        "HTTP는 보안이 강화되었고, HTTPS는 그렇지 않다.",
+        "두 프로토콜은 동일하다.",
+        "HTTPS는 빠르고, HTTP는 느리다."
+      ],
+      "answer": "HTTPS는 암호화를 통해 보안을 강화한 HTTP이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 데이터베이스에서 인덱스의 역할은 무엇인가요?",
+      "options": [
+        "검색 속도를 향상시킨다.",
+        "데이터를 압축한다.",
+        "메모리를 확장한다.",
+        "데이터베이스 연결을 관리한다."
+      ],
+      "answer": "검색 속도를 향상시킨다."
+    },
+    {
+      "question": "컴퓨터 공학에서 트랜잭션의 ACID 특성 중 하나를 설명하세요.",
+      "options": [
+        "Atomicity: 트랜잭션은 모두 성공하거나 모두 실패해야 한다.",
+        "Consistency: 데이터는 항상 중복되어야 한다.",
+        "Isolation: 모든 트랜잭션은 동시에 실행되어야 한다.",
+        "Durability: 트랜잭션은 임시 데이터만을 사용한다."
+      ],
+      "answer": "Atomicity: 트랜잭션은 모두 성공하거나 모두 실패해야 한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 컴파일러의 역할은 무엇인가요?",
+      "options": [
+        "소스 코드를 기계어로 변환한다.",
+        "코드를 실행한다.",
+        "메모리를 관리한다.",
+        "네트워크 연결을 설정한다."
+      ],
+      "answer": "소스 코드를 기계어로 변환한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 인터프리터의 역할은 무엇인가요?",
+      "options": [
+        "소스 코드를 한 줄씩 읽어 실행한다.",
+        "전체 코드를 컴파일한다.",
+        "메모리 할당을 최적화한다.",
+        "객체를 직렬화한다."
+      ],
+      "answer": "소스 코드를 한 줄씩 읽어 실행한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 소켓 프로그래밍의 기본 개념은 무엇인가요?",
+      "options": [
+        "네트워크 상에서 프로세스 간 통신을 가능하게 한다.",
+        "메모리를 공유한다.",
+        "데이터베이스 연결을 관리한다.",
+        "클래스 상속을 구현한다."
+      ],
+      "answer": "네트워크 상에서 프로세스 간 통신을 가능하게 한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 멀티스레딩의 장단점은 무엇인가요?",
+      "options": [
+        "장점: 성능 향상, 단점: 동기화 문제 발생 가능",
+        "장점: 메모리 절약, 단점: 속도 저하",
+        "장점: 코드 간결, 단점: 가독성 저하",
+        "장점: 객체 지향, 단점: 절차 지향"
+      ],
+      "answer": "장점: 성능 향상, 단점: 동기화 문제 발생 가능"
+    },
+    {
+      "question": "컴퓨터 공학에서 분산 시스템의 주요 특징은 무엇인가요?",
+      "options": [
+        "여러 컴퓨터가 협력하여 작업을 수행한다.",
+        "단일 컴퓨터에서만 작동한다.",
+        "메모리 공유가 불가능하다.",
+        "데이터베이스 연결이 제한된다."
+      ],
+      "answer": "여러 컴퓨터가 협력하여 작업을 수행한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 클라우드 컴퓨팅의 장점은 무엇인가요?",
+      "options": [
+        "유연한 자원 제공과 비용 효율성을 제공한다.",
+        "고정된 자원만 제공한다.",
+        "메모리 사용량을 줄인다.",
+        "네트워크 속도를 저하시킨다."
+      ],
+      "answer": "유연한 자원 제공과 비용 효율성을 제공한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 RAID 기술의 주요 목적은 무엇인가요?",
+      "options": [
+        "데이터 저장의 신뢰성과 성능을 향상시키기 위해 여러 디스크를 사용한다.",
+        "데이터를 압축하여 저장한다.",
+        "메모리 할당을 최적화한다.",
+        "네트워크 속도를 높인다."
+      ],
+      "answer": "데이터 저장의 신뢰성과 성능을 향상시키기 위해 여러 디스크를 사용한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 버추얼 머신(VM)의 역할은 무엇인가요?",
+      "options": [
+        "하드웨어 자원을 가상화하여 여러 운영체제를 실행할 수 있게 한다.",
+        "메모리를 동적으로 확장한다.",
+        "프로세스를 최적화한다.",
+        "네트워크 연결을 관리한다."
+      ],
+      "answer": "하드웨어 자원을 가상화하여 여러 운영체제를 실행할 수 있게 한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 암호화와 복호화의 기본 원리는 무엇인가요?",
+      "options": [
+        "데이터를 읽을 수 없게 변환하고, 다시 원래 데이터로 복원하는 것이다.",
+        "데이터를 압축하는 것이다.",
+        "메모리 사용을 최적화하는 것이다.",
+        "네트워크 속도를 증가시키는 것이다."
+      ],
+      "answer": "데이터를 읽을 수 없게 변환하고, 다시 원래 데이터로 복원하는 것이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 대칭키 암호화와 공개키 암호화의 차이는 무엇인가요?",
+      "options": [
+        "대칭키 암호화는 하나의 키로 암호화하고 복호화하며, 공개키 암호화는 서로 다른 키를 사용한다.",
+        "대칭키 암호화는 더 안전하다.",
+        "공개키 암호화는 더 빠르다.",
+        "두 방식은 동일하다."
+      ],
+      "answer": "대칭키 암호화는 하나의 키로 암호화하고 복호화하며, 공개키 암호화는 서로 다른 키를 사용한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 데이터 압축의 목적은 무엇인가요?",
+      "options": [
+        "저장 공간을 절약하고, 전송 속도를 향상시키기 위함이다.",
+        "데이터를 암호화하기 위함이다.",
+        "메모리 사용을 줄이기 위함이다.",
+        "네트워크 연결을 최적화한다."
+      ],
+      "answer": "저장 공간을 절약하고, 전송 속도를 향상시키기 위함이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 컴퓨터 네트워크의 기본 구성 요소는 무엇인가요?",
+      "options": [
+        "클라이언트, 서버, 프로토콜, 네트워크 장비",
+        "메모리, CPU, GPU, 스토리지",
+        "운영체제, 컴파일러, 인터프리터, IDE",
+        "데이터베이스, 서버, 클라이언트, 브라우저"
+      ],
+      "answer": "클라이언트, 서버, 프로토콜, 네트워크 장비"
+    },
+    {
+      "question": "컴퓨터 공학에서 버스(bus) 아키텍처의 역할은 무엇인가요?",
+      "options": [
+        "CPU, 메모리, I/O 장치 간의 데이터 전송 경로를 제공한다.",
+        "메모리 관리를 수행한다.",
+        "네트워크 연결을 관리한다.",
+        "데이터베이스를 연결한다."
+      ],
+      "answer": "CPU, 메모리, I/O 장치 간의 데이터 전송 경로를 제공한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 CPU의 기본 구성 요소는 무엇인가요?",
+      "options": [
+        "ALU, 제어 장치, 레지스터",
+        "메모리, 캐시, 버스",
+        "디스크, 네트워크 카드, 전원 공급 장치",
+        "스레드, 프로세스, 모듈"
+      ],
+      "answer": "ALU, 제어 장치, 레지스터"
+    },
+    {
+      "question": "컴퓨터 공학에서 GPU의 역할은 무엇인가요?",
+      "options": [
+        "그래픽 처리와 병렬 연산을 수행한다.",
+        "메모리를 관리한다.",
+        "네트워크 통신을 담당한다.",
+        "파일 시스템을 관리한다."
+      ],
+      "answer": "그래픽 처리와 병렬 연산을 수행한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 파이프라이닝의 개념은 무엇인가요?",
+      "options": [
+        "명령어 처리 단계를 분할하여 동시에 여러 명령어를 처리하는 것이다.",
+        "데이터를 압축하는 것이다.",
+        "메모리 할당을 최적화한다.",
+        "프로세스 간 통신을 강화한다."
+      ],
+      "answer": "명령어 처리 단계를 분할하여 동시에 여러 명령어를 처리하는 것이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 분산 파일 시스템의 예를 들어보세요.",
+      "options": [
+        "HDFS, Google File System",
+        "NTFS, FAT32",
+        "APFS, ext4",
+        "RAID, SSD"
+      ],
+      "answer": "HDFS, Google File System"
+    },
+    {
+      "question": "컴퓨터 공학에서 멀티코어 프로세서의 장점은 무엇인가요?",
+      "options": [
+        "동시에 여러 작업을 처리하여 성능을 향상시킨다.",
+        "메모리 사용량을 줄인다.",
+        "전력을 절약한다.",
+        "코드를 간결하게 만든다."
+      ],
+      "answer": "동시에 여러 작업을 처리하여 성능을 향상시킨다."
+    },
+    {
+      "question": "컴퓨터 공학에서 데이터베이스 정규화의 목적은 무엇인가요?",
+      "options": [
+        "데이터 중복을 제거하고, 데이터 무결성을 유지하기 위함이다.",
+        "메모리 사용량을 줄인다.",
+        "데이터 전송 속도를 높인다.",
+        "네트워크 연결을 최적화한다."
+      ],
+      "answer": "데이터 중복을 제거하고, 데이터 무결성을 유지하기 위함이다."
+    },
+    {
+      "question": "컴퓨터 공학에서 B-트리의 특징은 무엇인가요?",
+      "options": [
+        "균형 잡힌 트리 구조로, 데이터베이스 인덱싱에 주로 사용된다.",
+        "비균형 트리로, 정렬이 불가능하다.",
+        "연결 리스트와 동일하다.",
+        "메모리 할당을 동적으로 조정한다."
+      ],
+      "answer": "균형 잡힌 트리 구조로, 데이터베이스 인덱싱에 주로 사용된다."
+    },
+    {
+      "question": "컴퓨터 공학에서 소프트웨어 개발 방법론 중 애자일의 특징은 무엇인가요?",
+      "options": [
+        "유연한 계획과 반복적 개발을 강조한다.",
+        "모든 계획을 사전에 완벽하게 수립한다.",
+        "단일 단계로 개발을 진행한다.",
+        "코드 작성에만 집중한다."
+      ],
+      "answer": "유연한 계획과 반복적 개발을 강조한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 RESTful API의 주요 원칙은 무엇인가요?",
+      "options": [
+        "자원 기반 설계, HTTP 메서드 사용, 상태 비저장성",
+        "동기식 호출, XML 데이터 사용, 상태 저장성",
+        "오직 GET 메서드만 사용, JSON 데이터 사용",
+        "프로토콜 독립적 설계"
+      ],
+      "answer": "자원 기반 설계, HTTP 메서드 사용, 상태 비저장성"
+    },
+    {
+      "question": "컴퓨터 공학에서 HTTP 상태 코드 404의 의미는 무엇인가요?",
+      "options": [
+        "요청한 자원을 찾을 수 없음",
+        "서버 오류 발생",
+        "요청 성공",
+        "접근 권한 없음"
+      ],
+      "answer": "요청한 자원을 찾을 수 없음"
+    },
+    {
+      "question": "컴퓨터 공학에서 로드 밸런싱의 목적은 무엇인가요?",
+      "options": [
+        "여러 서버에 부하를 분산시켜 시스템의 가용성과 성능을 향상시킨다.",
+        "메모리 사용량을 줄인다.",
+        "데이터를 압축하여 전송한다.",
+        "네트워크 연결을 단일화한다."
+      ],
+      "answer": "여러 서버에 부하를 분산시켜 시스템의 가용성과 성능을 향상시킨다."
+    },
+    {
+      "question": "컴퓨터 공학에서 가상화 기술의 주요 이점은 무엇인가요?",
+      "options": [
+        "하드웨어 자원을 효율적으로 사용할 수 있다.",
+        "메모리 누수를 방지한다.",
+        "네트워크 속도를 증가시킨다.",
+        "데이터베이스 연결을 개선한다."
+      ],
+      "answer": "하드웨어 자원을 효율적으로 사용할 수 있다."
+    },
+    {
+      "question": "컴퓨터 공학에서 메모리 관리 기법 중 스와핑(swap)의 역할은 무엇인가요?",
+      "options": [
+        "메모리 부족 시 디스크 공간을 활용하여 데이터를 임시 저장한다.",
+        "메모리 누수를 제거한다.",
+        "CPU 속도를 향상시킨다.",
+        "네트워크 데이터를 캐시한다."
+      ],
+      "answer": "메모리 부족 시 디스크 공간을 활용하여 데이터를 임시 저장한다."
+    },
+    {
+      "question": "컴퓨터 공학에서 임베디드 시스템의 특징은 무엇인가요?",
+      "options": [
+        "특정 기능을 수행하기 위해 설계된 전용 컴퓨팅 시스템이다.",
+        "범용 컴퓨터와 동일하다.",
+        "메모리 사용이 무제한이다.",
+        "모든 애플리케이션을 실행할 수 있다."
+      ],
+      "answer": "특정 기능을 수행하기 위해 설계된 전용 컴퓨팅 시스템이다."
+    }
+  ]
