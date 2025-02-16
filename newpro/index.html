@@ -520,6 +520,11 @@
               <label for="signupNickname" class="form-label">닉네임</label>
               <input type="text" class="form-control" id="signupNickname" required />
             </div>
+            <div class="text-center">
+              <small>
+                회원가입을 진행하면 <a href="terms.html" target="_blank">이용약관</a>에 동의하는 것으로 간주됩니다.
+              </small>
+            </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -529,7 +534,7 @@
       </div>
     </div>
   </div>
-
+  
   <!-- 로그인 모달 -->
   <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -549,8 +554,7 @@
               <input type="password" class="form-control" id="loginPassword" required />
             </div>
             <div class="text-end">
-              <button type="button" id="resetPasswordBtn" class="btn btn-link btn-sm">비밀번호 찾기</button>
-              <a href="terms.html" target="_blank" class="btn btn-link btn-sm">이용 약관</a>
+              <button type="button" id="resetPasswordBtn" class="btn btn-link btn-sm">비밀번호 찾기</button>              
             </div>
           </div>
           <div class="modal-footer">
