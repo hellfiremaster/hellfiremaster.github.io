@@ -275,14 +275,33 @@
       }
     }
     .magic-ultimate {
-      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(0,0,0,0) 70%) !important;
-      animation: ultimateGlow 2s infinite;
+      background: radial-gradient(circle, rgba(255,215,0,0.4), rgba(255,215,0,0.2), rgba(0,0,0,0));
+      animation: ultimateGlow 30s infinite, pulseGlow 2s infinite, borderGlow 2s infinite;
+      border: 3px solid #ff595e;
+      box-shadow: 0 0 10px 5px #ff595e;
     }
+
     @keyframes ultimateGlow {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+      0%   { transform: scale(0.9) rotate(-10deg); }
+      25%   { transform: scale(0.9) rotate(360deg); }
+      50%  { transform: scale(1.1) rotate(10deg); }
+      50%  { transform: scale(1.25) rotate(10deg); }
+      100% { transform: scale(0.9) rotate(-10deg); }
     }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 10px 5px rgba(255,215,0,0.7); }
+      50% { box-shadow: 0 0 20px 10px rgba(255,215,0,1); }
+    }
+
+    @keyframes borderGlow {
+      0% { border-color: #ff595e; box-shadow: 0 0 10px 5px #ff595e; }
+      25% { border-color: #ffca3a; box-shadow: 0 0 10px 5px #ffca3a; }
+      50% { border-color: #8ac926; box-shadow: 0 0 10px 5px #8ac926; }
+      75% { border-color: #1982c4; box-shadow: 0 0 10px 5px #1982c4; }
+      100% { border-color: #ff595e; box-shadow: 0 0 10px 5px #ff595e; }
+    }
+
     .magic-basic {
       animation: basicGlow 2s infinite;
     }
@@ -1771,6 +1790,9 @@
       likeBtn.addEventListener('click', () => {
         likeBtn.classList.add('like-flame');
         toggleLike(postId);
+        if (card.classList.contains('magic-ultimate')) {
+          launchFireworkSpread();
+        }
         setTimeout(() => {
           likeBtn.classList.remove('like-flame');
         }, 500);
@@ -2218,6 +2240,29 @@
         showToast(err.message, '회원탈퇴 실패');
       }
     });
+
+    function launchFireworkSpread() {
+      const duration = 500; // 효과 지속 시간 (ms)
+      const animationEnd = Date.now() + duration;
+      const defaults = {
+        origin: { x: 0.5, y: 0.5 },
+        colors: ['#ff595e', '#ffca3a', '#8ac926', '#1982c4', '#6a4c93'],
+        startVelocity: 45,
+        particleCount: 20,
+        spread: 360,
+        ticks: 60
+      };
+      (function frame() {
+        const timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) return;
+        confetti(Object.assign({}, defaults, {
+          particleCount: 20,
+          startVelocity: 30 + Math.random() * 20,
+          angle: Math.random() * 360
+        }));
+        requestAnimationFrame(frame);
+      }());
+    }
 
     async function init() {
       fetchActiveNotices();    
