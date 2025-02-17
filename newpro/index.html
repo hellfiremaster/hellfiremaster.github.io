@@ -808,13 +808,7 @@
         return;
       }
       try {
-        await runTransaction(db, async (transaction) => {
-          const userRef = doc(db, 'users', user.uid);
-          const userSnap = await transaction.get(userRef);
-          let oldScore = 0;
-          if (userSnap.exists()) oldScore = userSnap.data().score || 0;
-          transaction.update(userRef, { score: oldScore + points });
-        });
+        await awardPoints({ points });
         showToast(`퀴즈 포인트 ${points}점 획득!`, "퀴즈 챌린지");
       } catch (err) {
         showToast(err.message, "오류");
