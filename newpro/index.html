@@ -1572,9 +1572,8 @@
       let updateData = {};
 
       if (dislikes.includes(user.uid)) {
-        // 이미 싫어요한 경우 → 싫어요 취소해도 -5점 처리 (즉, 취소해도 점수를 회복하지 않음)
         updateData.dislikes = arrayRemove(user.uid);
-        scoreDiff = -5;
+        scoreDiff = 5;
       } else {
         // 싫어요 추가 시: -5점 적용
         updateData.dislikes = arrayUnion(user.uid);
