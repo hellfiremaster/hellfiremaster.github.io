@@ -658,6 +658,7 @@
     import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app-check.js';
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
     import { getFirestore, collection, doc, setDoc, getDoc, updateDoc, deleteDoc, runTransaction, serverTimestamp, arrayUnion, arrayRemove, where, query, orderBy, getDocs, startAfter, limit, onSnapshot, Timestamp, deleteField } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
+    import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
@@ -675,7 +676,9 @@
     });
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const functions = getFunctions(app);
 
+    const awardPoints = httpsCallable(functions, 'awardPoints');
     /********************************
      * 전역 사용자 캐시 및 함수
      ********************************/
@@ -1174,14 +1177,10 @@
     /********************************
      * 글 작성 (DOMPurify 및 유튜브 임베디드 적용)
      ********************************/
-    savePostBtn.addEventListener('click', async () => {
+     savePostBtn.addEventListener('click', async () => {
       const user = auth.currentUser;
       if (!user) {
         showToast('로그인이 필요합니다.', '오류');
-        return;
-      }
-      if (!currentNickname) {
-        showToast('닉네임을 불러오지 못했습니다.', '오류');
         return;
       }
       const titleVal = DOMPurify.sanitize(postTitle.value.trim(), { ALLOWED_TAGS: [] });
@@ -1195,31 +1194,26 @@
         return;
       }
       try {
-        await runTransaction(db, async (transaction) => {
-          const userRef = doc(db, 'users', user.uid);
-          const userSnap = await transaction.get(userRef);
-          let oldScore = 0;
-          if (userSnap.exists()) oldScore = userSnap.data().score || 0;
-          const newPostRef = doc(collection(db, 'posts'));
-          transaction.set(newPostRef, {
-            uid: user.uid,
-            nickname: currentNickname,
-            title: titleVal,
-            content: contentVal,
-            createdAt: serverTimestamp(),
-            likes: [],
-            dislikes: []
-          });
-          transaction.update(userRef, { score: oldScore + 50 });
+        // 게시글 생성 (트랜잭션 없이 바로 등록)
+        const newPostRef = doc(collection(db, 'posts'));
+        await setDoc(newPostRef, {
+          uid: user.uid,
+          nickname: currentNickname,
+          title: titleVal,
+          content: contentVal,
+          createdAt: serverTimestamp(),
+          likes: [],
+          dislikes: []
         });
+        // 글 작성 후 +50점 부여 (서버에서 하루 최대 +500점 제한 적용)
+        awardPoints({ points: 50 });
+        // console.log('Awarded points:', res.data.awarded);
         showToast('글이 등록되었습니다.', '글 작성');
         postTitle.value = '';
         createEditor.setHTML('');
         postCard.classList.add('d-none');
         clearPostList();
         await loadMorePosts();
-        const userData = await fetchUserNicknameAndScore(user.uid);
-        currentScore = userData.score;
       } catch (err) {
         showToast(err.message, '글 작성 실패');
       }
@@ -1292,7 +1286,7 @@
     /********************************
      * 댓글 등록 (부모 댓글 ID 선택적)
      ********************************/
-    async function addComment(postId, content, parentCommentId = null) {
+     async function addComment(postId, content, parentCommentId = null) {
       const user = auth.currentUser;
       if (!user) {
         showToast('로그인이 필요합니다.', '오류');
@@ -1304,24 +1298,21 @@
         return;
       }
       try {
-        await runTransaction(db, async (transaction) => {
-          const userRef = doc(db, 'users', user.uid);
-          const userSnap = await transaction.get(userRef);
-          let oldScore = 0;
-          if (userSnap.exists()) oldScore = userSnap.data().score || 0;
-          const cmtRef = doc(collection(db, 'posts', postId, 'comments'));
-          transaction.set(cmtRef, {
-            uid: user.uid,
-            nickname: currentNickname,
-            content: sanitizedContent,
-            createdAt: serverTimestamp(),
-            parentCommentId: parentCommentId || null,
-            likes: [],
-            dislikes: []
-          });
-          transaction.update(userRef, { score: oldScore + 20 });
+        // 댓글 등록 (트랜잭션 없이 바로 등록)
+        const newCommentRef = doc(collection(db, 'posts', postId, 'comments'));
+        await setDoc(newCommentRef, {
+          uid: user.uid,
+          nickname: currentNickname,
+          content: sanitizedContent,
+          createdAt: serverTimestamp(),
+          parentCommentId: parentCommentId || null,
+          likes: [],
+          dislikes: []
         });
         showToast('댓글이 등록되었습니다.', '댓글 작성');
+        // 댓글 작성 후 +20점 부여
+        awardPoints({ points: 20 });
+        // console.log('Awarded points:', res.data.awarded);
       } catch (err) {
         showToast(err.message, '댓글 등록 실패');
       }
@@ -1542,167 +1533,150 @@
         showToast('로그인이 필요합니다.', '오류');
         return;
       }
-      if (likeDislikeInProgress.has(postId)) return;
-      likeDislikeInProgress.add(postId);
-      try {
-        await runTransaction(db, async (transaction) => {
-          const postRef = doc(db, 'posts', postId);
-          const postSnap = await transaction.get(postRef);
-          if (!postSnap.exists()) return;
-          const data = postSnap.data();
-          const likes = data.likes || [];
-          const dislikes = data.dislikes || [];
-          const userRef = doc(db, 'users', user.uid);
-          const userSnap = await transaction.get(userRef);
-          let oldScore = 0;
-          if (userSnap.exists()) oldScore = userSnap.data().score || 0;
-          let scoreDiff = 0;
-          const alreadyLiked = likes.includes(user.uid);
-          const alreadyDisliked = dislikes.includes(user.uid);
-          if (alreadyLiked) {
-            transaction.update(postRef, { likes: arrayRemove(user.uid) });
-            scoreDiff -= 10;
-          } else {
-            transaction.update(postRef, { likes: arrayUnion(user.uid) });
-            if (alreadyDisliked) {
-              transaction.update(postRef, { dislikes: arrayRemove(user.uid) });
-              scoreDiff += 5;
-            }
-            scoreDiff += 10;
-          }
-          transaction.update(userRef, { score: oldScore + scoreDiff });
-        });
-        const userData = await fetchUserNicknameAndScore(user.uid);
-        currentScore = userData.score;
-      } catch (err) {
-        showToast(err.message, '오류');
-      } finally {
-        likeDislikeInProgress.delete(postId);
+      const postRef = doc(db, 'posts', postId);
+      const postSnap = await getDoc(postRef);
+      if (!postSnap.exists()) return;
+      const data = postSnap.data();
+      let likes = data.likes || [];
+      let dislikes = data.dislikes || [];
+      let scoreDiff = 0;
+      let updateData = {};
+      
+      if (likes.includes(user.uid)) {
+        // 이미 좋아요한 경우 → 좋아요 취소 (점수 -10)
+        updateData.likes = arrayRemove(user.uid);
+        scoreDiff = -10;
+      } else {
+        // 좋아요 추가 (+10)
+        updateData.likes = arrayUnion(user.uid);
+        scoreDiff = 10;
+        // 싫어요가 이미 눌렸다면 제거 (점수 +5 보정)
+        if (dislikes.includes(user.uid)) {
+          updateData.dislikes = arrayRemove(user.uid);
+          scoreDiff += 5;
+        }
+      }
+      await updateDoc(postRef, updateData);
+      if (scoreDiff !== 0) {
+        await awardPoints({ points: scoreDiff });
       }
     }
+
     async function toggleDislike(postId) {
       const user = auth.currentUser;
       if (!user) {
-        showToast('로그인이 필요합니다.', '오류');
+        showToast("로그인이 필요합니다.", "오류");
         return;
       }
-      if (likeDislikeInProgress.has(postId)) return;
-      likeDislikeInProgress.add(postId);
-      try {
-        await runTransaction(db, async (transaction) => {
-          const postRef = doc(db, 'posts', postId);
-          const postSnap = await transaction.get(postRef);
-          if (!postSnap.exists()) return;
-          const data = postSnap.data();
-          const likes = data.likes || [];
-          const dislikes = data.dislikes || [];
-          const userRef = doc(db, 'users', user.uid);
-          const userSnap = await transaction.get(userRef);
-          let oldScore = 0;
-          if (userSnap.exists()) oldScore = userSnap.data().score || 0;
-          let scoreDiff = 0;
-          const alreadyLiked = likes.includes(user.uid);
-          const alreadyDisliked = dislikes.includes(user.uid);
-          if (alreadyDisliked) {
-            transaction.update(postRef, { dislikes: arrayRemove(user.uid) });
-            scoreDiff += 5;
-          } else {
-            transaction.update(postRef, { dislikes: arrayUnion(user.uid) });
-            if (alreadyLiked) {
-              transaction.update(postRef, { likes: arrayRemove(user.uid) });
-              scoreDiff -= 10;
-            }
-            scoreDiff -= 5;
-          }
-          transaction.update(userRef, { score: oldScore + scoreDiff });
-        });
-        const userData = await fetchUserNicknameAndScore(user.uid);
-        currentScore = userData.score;
-      } catch (err) {
-        showToast(err.message, '오류');
-      } finally {
-        likeDislikeInProgress.delete(postId);
+      const postRef = doc(db, "posts", postId);
+      const postSnap = await getDoc(postRef);
+      if (!postSnap.exists()) return;
+      const data = postSnap.data();
+      const likes = data.likes || [];
+      const dislikes = data.dislikes || [];
+      let scoreDiff = 0;
+      let updateData = {};
+
+      if (dislikes.includes(user.uid)) {
+        // 이미 싫어요한 경우 → 싫어요 취소해도 -5점 처리 (즉, 취소해도 점수를 회복하지 않음)
+        updateData.dislikes = arrayRemove(user.uid);
+        scoreDiff = -5;
+      } else {
+        // 싫어요 추가 시: -5점 적용
+        updateData.dislikes = arrayUnion(user.uid);
+        scoreDiff = -5;
+        // 만약 좋아요가 눌려 있다면 먼저 좋아요를 취소 (좋아요 취소 시 -10점 적용)
+        if (likes.includes(user.uid)) {
+          updateData.likes = arrayRemove(user.uid);
+          scoreDiff -= 10;
+        }
+      }
+      await updateDoc(postRef, updateData);
+      if (scoreDiff !== 0) {
+        await awardPoints({ points: scoreDiff });
       }
     }
 
     /********************************
      * 좋아요/싫어요 (댓글)
      ********************************/
-    let commentLikeDislikeInProgress = new Set();
+    // 댓글 좋아요 토글 함수
     async function toggleCommentLike(postId, commentId) {
       const user = auth.currentUser;
       if (!user) {
-        showToast('로그인이 필요합니다.', '오류');
+        showToast("로그인이 필요합니다.", "오류");
         return;
       }
-      const key = `comment-${postId}-${commentId}`;
-      if (commentLikeDislikeInProgress.has(key)) return;
-      commentLikeDislikeInProgress.add(key);
+      const commentRef = doc(db, "posts", postId, "comments", commentId);
       try {
-        await runTransaction(db, async (transaction) => {
-          const commentRef = doc(db, 'posts', postId, 'comments', commentId);
-          const commentSnap = await transaction.get(commentRef);
-          if (!commentSnap.exists()) return;
-          const data = commentSnap.data();
-          const likes = data.likes || [];
-          const dislikes = data.dislikes || [];
-          let scoreDiff = 0;
-          const alreadyLiked = likes.includes(user.uid);
-          const alreadyDisliked = dislikes.includes(user.uid);
-          if (alreadyLiked) {
-            transaction.update(commentRef, { likes: arrayRemove(user.uid) });
-            scoreDiff -= 5;
-          } else {
-            transaction.update(commentRef, { likes: arrayUnion(user.uid) });
-            if (alreadyDisliked) {
-              transaction.update(commentRef, { dislikes: arrayRemove(user.uid) });
-              scoreDiff += 3;
-            }
-            scoreDiff += 5;
+        const commentSnap = await getDoc(commentRef);
+        if (!commentSnap.exists()) return;
+        const data = commentSnap.data();
+        const likes = data.likes || [];
+        const dislikes = data.dislikes || [];
+        let scoreDiff = 0;
+        let updateData = {};
+
+        if (likes.includes(user.uid)) {
+          // 이미 좋아요한 경우: 좋아요 취소 → -5점
+          updateData.likes = arrayRemove(user.uid);
+          scoreDiff = -5;
+        } else {
+          // 좋아요 추가 → +5점
+          updateData.likes = arrayUnion(user.uid);
+          scoreDiff = 5;
+          // 만약 이미 싫어요가 있다면 먼저 싫어요 취소
+          if (dislikes.includes(user.uid)) {
+            updateData.dislikes = arrayRemove(user.uid);
+            scoreDiff += 3; // 순수 효과: +8점
           }
-        });
+        }
+        await updateDoc(commentRef, updateData);
+        if (scoreDiff !== 0) {
+          await awardPoints({ points: scoreDiff });
+        }
       } catch (err) {
-        showToast(err.message, '오류');
-      } finally {
-        commentLikeDislikeInProgress.delete(`comment-${postId}-${commentId}`);
+        showToast(err.message, "오류");
       }
     }
+
+    // 댓글 싫어요 토글 함수
     async function toggleCommentDislike(postId, commentId) {
       const user = auth.currentUser;
       if (!user) {
-        showToast('로그인이 필요합니다.', '오류');
+        showToast("로그인이 필요합니다.", "오류");
         return;
       }
-      const key = `comment-${postId}-${commentId}`;
-      if (commentLikeDislikeInProgress.has(key)) return;
-      commentLikeDislikeInProgress.add(key);
+      const commentRef = doc(db, "posts", postId, "comments", commentId);
       try {
-        await runTransaction(db, async (transaction) => {
-          const commentRef = doc(db, 'posts', postId, 'comments', commentId);
-          const commentSnap = await transaction.get(commentRef);
-          if (!commentSnap.exists()) return;
-          const data = commentSnap.data();
-          const likes = data.likes || [];
-          const dislikes = data.dislikes || [];
-          let scoreDiff = 0;
-          const alreadyLiked = likes.includes(user.uid);
-          const alreadyDisliked = dislikes.includes(user.uid);
-          if (alreadyDisliked) {
-            transaction.update(commentRef, { dislikes: arrayRemove(user.uid) });
-            scoreDiff += 3;
-          } else {
-            transaction.update(commentRef, { dislikes: arrayUnion(user.uid) });
-            if (alreadyLiked) {
-              transaction.update(commentRef, { likes: arrayRemove(user.uid) });
-              scoreDiff -= 5;
-            }
-            scoreDiff -= 3;
+        const commentSnap = await getDoc(commentRef);
+        if (!commentSnap.exists()) return;
+        const data = commentSnap.data();
+        const likes = data.likes || [];
+        const dislikes = data.dislikes || [];
+        let scoreDiff = 0;
+        let updateData = {};
+
+        if (dislikes.includes(user.uid)) {
+          // 이미 싫어요한 경우: 싫어요 취소 → +3점
+          updateData.dislikes = arrayRemove(user.uid);
+          scoreDiff = 3;
+        } else {
+          // 싫어요 추가 → -3점
+          updateData.dislikes = arrayUnion(user.uid);
+          scoreDiff = -3;
+          // 만약 좋아요가 있다면 먼저 좋아요 취소 → 추가 -5점
+          if (likes.includes(user.uid)) {
+            updateData.likes = arrayRemove(user.uid);
+            scoreDiff -= 5; // 순수 효과: -8점
           }
-        });
+        }
+        await updateDoc(commentRef, updateData);
+        if (scoreDiff !== 0) {
+          await awardPoints({ points: scoreDiff });
+        }
       } catch (err) {
-        showToast(err.message, '오류');
-      } finally {
-        commentLikeDislikeInProgress.delete(`comment-${postId}-${commentId}`);
+        showToast(err.message, "오류");
       }
     }
 
