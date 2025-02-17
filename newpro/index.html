@@ -1411,11 +1411,12 @@
         }
         const dateStr = formatDateTime(comment.createdAt);
 
+        const currentUser = auth.currentUser;
         // 최상위 댓글(indent가 0인 경우)에만 답글 버튼과 폼을 노출
-        const replyButtonHtml = indent === 0
+        const replyButtonHtml = (indent === 0 && currentUser)
           ? `<button class="btn btn-sm btn-link" id="replyBtn-${postId}-${comment.commentId}">답글</button>`
           : '';
-        const replyFormHtml = indent === 0
+        const replyFormHtml = (indent === 0 && currentUser)
           ? `<div class="reply-form d-none" id="replyForm-${postId}-${comment.commentId}">
               <textarea class="form-control mb-2" rows="2" placeholder="댓글을 입력하세요" id="replyInput-${postId}-${comment.commentId}"></textarea>
               <button class="btn btn-secondary btn-sm" id="replySubmitBtn-${postId}-${comment.commentId}">댓글 달기</button>
@@ -1474,11 +1475,15 @@
         commentDislikeBtn.addEventListener('click', () => toggleCommentDislike(postId, comment.commentId));
 
         // 답글 버튼과 폼은 indent가 0인 경우(최상위 댓글)일 때만 이벤트를 등록합니다.
-        if (indent === 0) {
+        if (indent === 0 && currentUser) {
           const replyBtn = div.querySelector(`#replyBtn-${postId}-${comment.commentId}`);
           const replyForm = div.querySelector(`#replyForm-${postId}-${comment.commentId}`);
           replyBtn.addEventListener('click', () => {
             replyForm.classList.toggle('d-none');
+            if (!replyForm.classList.contains('d-none')) {
+              const replyInput = div.querySelector(`#replyInput-${postId}-${comment.commentId}`);
+              replyInput.focus();
+            }
           });
           const replySubmitBtn = div.querySelector(`#replySubmitBtn-${postId}-${comment.commentId}`);
           replySubmitBtn.addEventListener('click', () => {
