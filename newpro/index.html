@@ -778,9 +778,12 @@
               });
 
               confirmBtn.addEventListener('click', async function() {
-                await awardQuizPoints(card.currentPoints);
-                resultEl.innerHTML = `확정하였습니다! ${card.currentPoints}점 획득!`;
-                // 확정 후에도 선택지는 그대로 남아 있음.
+                const awarded = await awardQuizPoints(card.currentPoints);
+                let message = `확정하였습니다!`;
+                if(awarded !== 0) {
+                  message += `${awarded}점 획득!`;
+                } 
+                resultEl.innerHTML = message;
               });
 
               if(card.currentPoints < 50) {
@@ -805,14 +808,21 @@
       const user = auth.currentUser;
       if (!user) {
         showToast("로그인이 필요합니다.", "오류");
-        return;
+        return null;
       }
       try {
-        await awardPoints({ points });
-        showToast(`퀴즈 포인트 ${points}점 획득!`, "퀴즈 챌린지");
+        const res = await awardPoints({ points });        
+        if(res.data.awarded === 0) {
+          showToast(`축하합니다!`, "퀴즈 챌린지");
+        } else {
+          showToast(`퀴즈 포인트 ${res.data.awarded}점 획득!`, "퀴즈 챌린지");
+        }
+        return res.data.awarded;
       } catch (err) {
         showToast(err.message, "오류");
       }
+
+      return null;
     }
 
     function shuffleArray(array) {
