@@ -778,10 +778,11 @@
               });
 
               confirmBtn.addEventListener('click', async function() {
+                confirmBtn.disabled = true;
                 const awarded = await awardQuizPoints(card.currentPoints);
                 let message = `확정하였습니다!`;
                 if(awarded !== 0) {
-                  message += `${awarded}점 획득!`;
+                  message += ` ${awarded}점 획득!`;
                 } 
                 resultEl.innerHTML = message;
               });
