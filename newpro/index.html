@@ -778,6 +778,7 @@
               });
 
               confirmBtn.addEventListener('click', async function() {
+                continueBtn.disabled = true;
                 confirmBtn.disabled = true;
                 const awarded = await awardQuizPoints(card.currentPoints);
                 let message = `확정하였습니다!`;
