@@ -419,7 +419,7 @@
     <div class="d-flex justify-content-end mb-2">
       <button class="btn shining-btn me-2" id="showRankBtn" data-bs-toggle="modal" data-bs-target="#rankModal">내 계급 보기</button>
       <button class="btn btn-outline-info me-2" id="showRankingBtn" data-bs-toggle="modal" data-bs-target="#rankingModal">랭킹</button>
-      <button class="btn btn-light d-none" id="togglePostFormBtn">글쓰기</button>
+      <button class="btn btn-light" id="togglePostFormBtn">글쓰기</button>
     </div>
 
     <div id="noticeContainer" class="notice-container mb-3"></div>
@@ -781,10 +781,15 @@
                 continueBtn.disabled = true;
                 confirmBtn.disabled = true;
                 const awarded = await awardQuizPoints(card.currentPoints);
-                let message = `확정하였습니다!`;
-                if(awarded !== 0) {
-                  message += ` ${awarded}점 획득!`;
-                } 
+                let message;
+                if(awarded == null) {
+                  message = '로그인이 필요합니다.'; 
+                } else { 
+                  message = `확정하였습니다!`;
+                  if(awarded !== 0) {
+                    message += ` ${awarded}점 획득!`;
+                  }
+                }
                 resultEl.innerHTML = message;
               });
 
@@ -1104,7 +1109,6 @@
         loginBtn.classList.add('d-none');
         signupBtn.classList.add('d-none');
         document.getElementById('userDropdown').classList.remove('d-none');
-        togglePostFormBtn.classList.remove('d-none');
         const userData = await fetchUserNicknameAndScore(user.uid);
         currentNickname = userData.nickname;
         currentScore = userData.score;
@@ -1114,7 +1118,6 @@
         loginBtn.classList.remove('d-none');
         signupBtn.classList.remove('d-none');
         document.getElementById('userDropdown').classList.add('d-none');
-        togglePostFormBtn.classList.add('d-none');
         postCard.classList.add('d-none');
         currentNickname = null;
         currentScore = 0;
@@ -1137,6 +1140,10 @@
       }
     });
     togglePostFormBtn.addEventListener('click', () => {
+      if(!auth.currentUser) {
+        showToast('로그인이 필요합니다.', '오류');
+        return;
+      }
       postCard.classList.toggle('d-none');
       if (!postCard.classList.contains('d-none')) {
         postTitle.focus();
@@ -2061,7 +2068,7 @@
           const item = await createPostItem(docSnap);
 
           // 퀴즈 카드 하나 삽입
-          if(Math.random() < 0.2) {
+          if(Math.random() < 0.25) {
             const quizCard = createQuizCard();
             postList.appendChild(quizCard);
           }
