@@ -416,10 +416,12 @@
 
   <!-- 메인 컨테이너 -->
   <div class="container mb-5">
+    <!-- 기존 버튼들 옆에 검색 필터 버튼 추가 -->
     <div class="d-flex justify-content-end mb-2">
-      <button class="btn shining-btn me-2" id="showRankBtn" data-bs-toggle="modal" data-bs-target="#rankModal">내 계급 보기</button>
-      <button class="btn btn-outline-info me-2" id="showRankingBtn" data-bs-toggle="modal" data-bs-target="#rankingModal">랭킹</button>
-      <button class="btn btn-light" id="togglePostFormBtn">글쓰기</button>
+      <button class="btn shining-btn me-2" id="showRankBtn" data-bs-toggle="modal" data-bs-target="#rankModal">👤 내 등급</button>
+      <button class="btn btn-outline-info me-2" id="showRankingBtn" data-bs-toggle="modal" data-bs-target="#rankingModal">🔝 랭킹</button>
+      <button class="btn btn-outline-info me-2" id="filterBtn" data-bs-toggle="modal" data-bs-target="#filterModal">🔎 검색</button>
+      <button class="btn btn-light" id="togglePostFormBtn">✍️ 글쓰기</button>
     </div>
 
     <div id="noticeContainer" class="notice-container mb-3"></div>
@@ -445,6 +447,28 @@
       <div class="card-body px-0 px-md-3">
         <h4 class="card-title adventure text-center">모험의 기록</h4>
         <div id="postList" class="mt-3"><!-- 게시글 목록이 로드됩니다 --></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 검색 필터 모달 -->
+  <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="filterModalLabel">검색 필터</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="filterInput" class="form-label">검색어 (제목 또는 작성자)</label>
+            <input type="text" class="form-control" id="filterInput" placeholder="검색어를 입력하세요">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="clearFilterBtn">초기화</button>
+          <button type="button" class="btn btn-primary" id="applyFilterBtn">검색</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2101,7 +2125,16 @@
     }
 
     window.addEventListener('scroll', () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) loadMorePosts();
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+        if(isFiltering) {
+          const totalRendered = filteredPage * FILTER_PAGE_SIZE;
+          if (totalRendered < filteredPostsArray.length) {
+            renderFilteredPostsPage();
+          }
+        } else {
+          loadMorePosts();
+        }
+      }
     });
 
     /********************************
@@ -2259,6 +2292,121 @@
         requestAnimationFrame(frame);
       }());
     }
+
+    // 전역 상태 변수 (검색 모드 관련)
+    let isFiltering = false;
+    let filteredPostsArray = [];  // 검색 결과 전체(중복 제거 후)
+    let filteredPage = 0;
+    const FILTER_PAGE_SIZE = 5;
+
+    // Firestore posts 컬렉션 참조
+    const postsRef = collection(db, 'posts');
+
+    // 모달이 열리면 filterInput에 포커스 설정
+    const filterModalEl = document.getElementById('filterModal');
+    filterModalEl.addEventListener('shown.bs.modal', function () {
+      document.getElementById('filterInput').focus();
+    });
+
+    /**
+     * Firestore에서 제목과 작성자(닉네임)에 대해 접두어 검색을 수행합니다.
+     * 두 쿼리를 각각 limit 50으로 실행한 후 결과를 병합, 중복 제거하고 생성일(createdAt) 기준 내림차순으로 정렬합니다.
+     */
+    async function doSearch(searchQuery) {
+      // Firestore는 부분 문자열 검색이 어려우므로 접두어 검색으로 처리합니다.
+      const titleQuery = query(
+        postsRef,
+        where('title', '>=', searchQuery),
+        where('title', '<=', searchQuery + '\uf8ff'),
+        limit(50)
+      );
+      const nicknameQuery = query(
+        postsRef,
+        where('nickname', '>=', searchQuery),
+        where('nickname', '<=', searchQuery + '\uf8ff'),
+        limit(50)
+      );
+
+      // 두 쿼리 병렬 실행
+      const [titleSnapshot, nicknameSnapshot] = await Promise.all([
+        getDocs(titleQuery),
+        getDocs(nicknameQuery)
+      ]);
+
+      // 중복 제거: 각 문서를 Map에 저장 (doc.id를 키로)
+      const docsMap = new Map();
+      titleSnapshot.forEach(docSnap => docsMap.set(docSnap.id, docSnap));
+      nicknameSnapshot.forEach(docSnap => docsMap.set(docSnap.id, docSnap));
+
+      // Map을 배열로 변환하고, createdAt 필드를 기준으로 내림차순 정렬
+      const docsArray = Array.from(docsMap.values());
+      docsArray.sort((a, b) => {
+        const aTime = a.data().createdAt ? a.data().createdAt.seconds : 0;
+        const bTime = b.data().createdAt ? b.data().createdAt.seconds : 0;
+        return bTime - aTime;
+      });
+
+      return docsArray;
+    }
+
+    /**
+     * 검색 결과 배열(filteredPostsArray)에서 현재 페이지에 해당하는 5개의 게시글을 렌더링합니다.
+     */
+    async function renderFilteredPostsPage() {
+      const startIndex = filteredPage * FILTER_PAGE_SIZE;
+      const endIndex = startIndex + FILTER_PAGE_SIZE;
+      const postsToRender = filteredPostsArray.slice(startIndex, endIndex);
+      for (const docSnap of postsToRender) {
+        const item = await createPostItem(docSnap);
+        postList.appendChild(item);
+      }
+      filteredPage++;
+    }
+
+    /**
+     * 검색어를 입력받아 Firestore에서 검색 후 게시글 목록을 갱신합니다.
+     */
+    async function searchPosts(searchQuery) {
+      // 검색 모드 시작
+      isFiltering = true;
+      // 기존 게시글 제거 및 무한 스크롤 관련 상태 초기화
+      postList.innerHTML = '';
+      filteredPage = 0;
+      
+      // Firestore에서 검색 실행
+      filteredPostsArray = await doSearch(searchQuery);
+      
+      // 첫 페이지 렌더링 (5개씩)
+      await renderFilteredPostsPage();
+    }
+
+    // 검색 필터 모달 내 "검색" 버튼 클릭 이벤트
+    document.getElementById('applyFilterBtn').addEventListener('click', async () => {
+      const searchQuery = document.getElementById('filterInput').value.trim();
+      if (searchQuery === '') {
+        showToast('검색어를 입력하세요.', '검색');
+        return;
+      }
+      await searchPosts(searchQuery);
+      // 모달 닫기
+      bootstrap.Modal.getInstance(document.getElementById('filterModal')).hide();
+    });
+
+    // 검색 필터 모달 내 입력창에서 엔터키 누르면 "검색" 버튼 클릭 효과
+    document.getElementById('filterInput').addEventListener('keyup', function(event) {
+      if (event.key === 'Enter') {
+        document.getElementById('applyFilterBtn').click();
+      }
+    });
+
+    // "초기화" 버튼: 검색 모달 내 검색어 초기화하고, 검색 모드를 해제한 후 무한 스크롤 기본 목록을 복원
+    document.getElementById('clearFilterBtn').addEventListener('click', () => {
+      document.getElementById('filterInput').value = '';
+      isFiltering = false;
+      clearPostList();
+      loadMorePosts(); // 기본 무한 스크롤 게시글 로드
+      bootstrap.Modal.getInstance(document.getElementById('filterModal')).hide();
+    });
 
     async function init() {
       fetchActiveNotices();    
