@@ -14,11 +14,7 @@
   <!-- Google Font (Jua) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link 
-    href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
-    rel="stylesheet"
-  />
-  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Comic+Neue:wght@400;700&family=Poor+Story&display=swap" rel="stylesheet">
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
@@ -370,16 +366,32 @@
   /* 퀴즈 카드 전용 스타일 */
   .quiz-card {
     border: 2px solid #4CAF50;
-    background: rgba(255, 255, 255, 0.9);
+    background: repeating-linear-gradient(
+      to bottom,
+      #ffffff,
+      #ffffff 2em,
+      #cce7ff 2em,
+      #cce7ff 2.1em
+    );
     color: #333;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     margin-top: 1rem;
+    padding: 1rem;
+    font-family: 'Poor Story';
   }
   .quiz-card .card-title {
     color: #4CAF50;
+    font-size: 1.1rem; /* 폰트 크기를 키움 */
+    font-weight: 700;
+  }
+  .quiz-question {
+    font-size: 1.1rem; /* 폰트 크기를 키움 */
+    font-weight: bold;
   }
   .quiz-option {
     margin: 0.3rem;
+    font-size: 1.1rem; /* 폰트 크기를 키움 */
+    font-weight: bold;
   }
 
   @media (max-width: 767.98px) { /* Bootstrap의 md 기준 */
@@ -388,6 +400,7 @@
       padding: 0.25rem 0.5rem;
     }
   }
+
   </style>
 </head>
 <body>
