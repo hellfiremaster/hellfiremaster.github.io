@@ -366,13 +366,6 @@
   /* 퀴즈 카드 전용 스타일 */
   .quiz-card {
     border: 2px solid #4CAF50;
-    background: repeating-linear-gradient(
-      to bottom,
-      #ffffff,
-      #ffffff 2em,
-      #cce7ff 2em,
-      #cce7ff 2.1em
-    );
     color: #333;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     margin-top: 1rem;
@@ -388,9 +381,14 @@
     font-size: 1.1rem; /* 폰트 크기를 키움 */
     font-weight: bold;
   }
-  .quiz-option {
+  .quiz-option, .quiz-result {
     margin: 0.3rem;
-    font-size: 1.1rem; /* 폰트 크기를 키움 */
+    font-size: 1.0rem;
+    font-weight: bold;
+  }  
+  .quiz-result .btn {
+    margin: 0.3rem;
+    font-size: 1.0rem;
     font-weight: bold;
   }
 
