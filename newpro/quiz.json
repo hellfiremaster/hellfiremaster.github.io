@@ -160,7 +160,7 @@
     "answer": "catch"
   },
   {
-    "question": "자바스크립트 문법에서 JavaScript 프레임워크 중 하나는 무엇인가요?",
+    "question": "자바스크립트 문법에서 JavaScript 라이브러리 중 하나는 무엇인가요?",
     "options": [
       "React",
       "Django",
