@@ -1447,8 +1447,7 @@
 
       function isOnlyEmoji(text) {
         const trimmed = text.trim();
-        // 정규표현식: 텍스트가 단일 이모지(필수적으로 FE0F 선택적 포함)만 포함하는지 검사
-        const regex = /^(?:\p{Extended_Pictographic}(?:\uFE0F)?)$/u;
+        const regex = /^(?:\p{Extended_Pictographic}(?:\uFE0F)?(?:\u200D\p{Extended_Pictographic}(?:\uFE0F)?)*)$/u;
         return regex.test(trimmed);
       }
 
