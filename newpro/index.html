@@ -278,11 +278,11 @@
     }
 
     @keyframes ultimateGlow {
-      0%   { transform: scale(0.9) rotate(-10deg); }
-      25%   { transform: scale(0.9) rotate(360deg); }
-      50%  { transform: scale(1.1) rotate(10deg); }
-      50%  { transform: scale(1.25) rotate(10deg); }
-      100% { transform: scale(0.9) rotate(-10deg); }
+      0%   { transform: perspective(1200px) scale(1.0) rotateY(-10deg); }
+      25%   { transform: perspective(1200px) scale(0.9) rotateY(360deg); }
+      50%  { transform: perspective(1200px) scale(1.0) rotateY(10deg); }
+      50%  { transform: perspective(1200px) scale(0.9) rotateY(10deg); }
+      100% { transform: perspective(1200px) scale(1.0) rotateY(-10deg); }
     }
 
     @keyframes pulseGlow {
@@ -437,7 +437,7 @@
     <!-- 기존 버튼들 옆에 검색 필터 버튼 추가 -->
     <div class="d-flex justify-content-end mb-2">
       <button class="btn btn-outline-info me-2 mobile-sm-btn" id="filterBtn" data-bs-toggle="modal" data-bs-target="#filterModal">🔎 검색</button>
-      <button class="btn btn-outline-info me-2 mobile-sm-btn" id="showRankingBtn" data-bs-toggle="modal" data-bs-target="#rankingModal">🎭 랭킹</button>
+      <button class="btn btn-outline-info me-2 mobile-sm-btn" id="showRankingBtn" data-bs-toggle="modal" data-bs-target="#rankingModal">🔝 랭킹</button>
       <button class="btn shining-btn me-2 mobile-sm-btn" id="showRankBtn" data-bs-toggle="modal" data-bs-target="#rankModal">👤 내 등급</button>
       <button class="btn btn-light mobile-sm-btn" id="togglePostFormBtn">✍️ 글쓰기</button>
     </div>
