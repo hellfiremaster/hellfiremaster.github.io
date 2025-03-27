@@ -1037,8 +1037,13 @@
       return seconds;
     }
     function convertYouTubeLinks(text) {
-      // 이미 iframe 태그가 있다면 변환하지 않고 원본 반환
-      if (/(&lt;iframe|<iframe)/i.test(text)) return text;
+        // 이미 iframe 태그가 있거나, a 태그 안에 youtube 링크가 있으면 원본 반환
+      if (
+        /(&lt;iframe|<iframe)/i.test(text) ||
+        /(&lt;a|<a).*?(youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/))/i.test(text)
+      ) {
+        return text;
+      }
 
       return text.replace(
         /(?:https?:\/\/)?(?:www\.)?(?:(?:youtu\.be\/)|(?:youtube\.com\/(?:watch\?v=|shorts\/)))([A-Za-z0-9_-]{11})([^<\s]*)/g,
