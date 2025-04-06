@@ -479,11 +479,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <!-- 검색어 입력 -->
-          <div class="mb-3">
-            <label for="filterInput" class="form-label">검색어</label>
-            <input type="text" class="form-control" id="filterInput" placeholder="검색어를 입력하세요">
-          </div>
           <!-- 검색 대상 선택: 제목 또는 닉네임 -->
           <div class="mb-3">
             <label class="form-label">검색 대상</label>
@@ -493,6 +488,11 @@
               <input type="radio" id="searchByNickname" name="searchField" value="nickname" class="ms-3">
               <label for="searchByNickname">닉네임</label>
             </div>
+          </div>
+          <!-- 검색어 입력 -->
+          <div class="mb-3">
+            <label for="filterInput" class="form-label">검색어</label>
+            <input type="text" class="form-control" id="filterInput" placeholder="검색어를 입력하세요">
           </div>
         </div>
         <div class="modal-footer">
