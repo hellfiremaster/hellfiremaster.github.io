@@ -710,10 +710,12 @@
      * Firebase 초기화 및 모듈 임포트
      ********************************/
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js';
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
     import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app-check.js';
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
     import { getFirestore, collection, doc, setDoc, getDoc, updateDoc, deleteDoc, runTransaction, serverTimestamp, arrayUnion, arrayRemove, where, query, orderBy, getDocs, startAfter, limit, onSnapshot, Timestamp, deleteField } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
     import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';
+    import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
@@ -729,11 +731,46 @@
       provider: new ReCaptchaV3Provider('6LcKb8QqAAAAAKReI1hvkatzxiNvquuoryudyXi4'),
       isTokenAutoRefreshEnabled: true
     });
+    const analytics = getAnalytics(app);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const functions = getFunctions(app);
 
     const awardPoints = httpsCallable(functions, 'awardPoints');
+
+    // 1) Messaging 객체 생성
+    if(location.protocol === 'https:') {
+      const messaging = getMessaging(app);
+  
+      // 2) 푸시 권한 요청 & 토큰 발급
+      Notification.requestPermission().then(async (permission) => {
+        if (permission === 'granted' && auth.currentUser) {
+          try {
+            const currentToken = await getToken(messaging, {
+              vapidKey: 'BI4TCRiStLi-urYEy8MPM3A8Q2ciQkI7LwvkqQrudLDoXznHllqGN61b0ueM57BSltpgqJsoL4nMt7lcyQL6pbc'
+            });
+            if (currentToken) {
+              // 3) 유저 전용 서브컬렉션에 토큰 저장 (문서ID = 토큰 문자열)
+              await setDoc(
+                doc(db, 'users_private', auth.currentUser.uid, 'fcmTokens', currentToken),
+                { createdAt: serverTimestamp() }
+              );
+              console.log('FCM 토큰 저장 완료💕', currentToken);
+            }
+          } catch (err) {
+            console.error('FCM 토큰 가져오기 실패💦', err);
+          }
+        }
+      });
+
+      // 4) 앱이 켜져 있을 때 수신 메시지 처리 (optional)
+      onMessage(messaging, (payload) => {
+        console.log('새 알림 도착✨', payload);
+        showToast(payload.notification.title, payload.notification.body);
+      });
+    }
+
+
     /********************************
      * 전역 사용자 캐시 및 함수
      ********************************/
@@ -1459,6 +1496,7 @@
         let rankIcon = '';
         let commentNickname = comment.nickname || '익명';
         const div = document.createElement('div');
+        div.id = 'commentNode-' + comment.commentId;   // ★ 이 부분 추가!
         div.className = 'comment-item';
         // indent는 rem 단위로 적용되며, 최대 2rem까지만 들여쓰기합니다.
         div.style.marginLeft = indent + 'rem';
@@ -2428,6 +2466,22 @@
       }
     });
 
+    function scrollToComment() {
+      const params = new URLSearchParams(window.location.search);
+      const commentId = params.get('commentId');
+      if (commentId) {
+        const el = document.getElementById('commentNode-' + commentId);
+        if (el) {
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // 강조 효과
+            el.classList.add('magic-shimmer');
+            setTimeout(() => el.classList.remove('magic-shimmer'), 2000);
+          }, 500);
+        }
+      }
+    }
+
     async function init() {
       fetchActiveNotices();    
       const response = await fetch('quiz.json');
@@ -2435,6 +2489,7 @@
 
       await loadMorePosts();
       await highlightPostFromQuery();
+      scrollToComment();
     }
 
     init();
