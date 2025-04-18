@@ -2465,7 +2465,7 @@
               });
               if (currentToken) {
                 await setDoc(doc(db, 'users_private', auth.currentUser.uid), {
-                  fcmTokens: currentToken,
+                  fcmToken: currentToken,
                   updatedAt: serverTimestamp()
                 });
                 console.log('FCM 토큰 저장 완료💕', currentToken);
