@@ -15,10 +15,10 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(payload => {
     console.log('onBackgroundMessage received.', payload);  
-    self.registration.showNotification(
-      payload.notification.title,
-      payload.notification
-    );
+    // self.registration.showNotification(
+    //   payload.notification.title,
+    //   payload.notification
+    // );
   });
   
   messaging.onMessage((payload) => {
