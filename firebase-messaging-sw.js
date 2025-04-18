@@ -28,6 +28,7 @@ messaging.onMessage((payload) => {
 // 백그라운드 메시지는 자동으로 노티로 보여준다고 가정
 // 클릭 시 동작 정의
 self.addEventListener('notificationclick', event => {
+    console.log('notificationclick', event);
     event.notification.close();
     const { postId, commentId } = event.notification.data || {};
     const url = `${self.location.origin}/?postId=${postId}&commentId=${commentId}`;
