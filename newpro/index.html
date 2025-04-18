@@ -2464,11 +2464,10 @@
                 vapidKey: 'BI4TCRiStLi-urYEy8MPM3A8Q2ciQkI7LwvkqQrudLDoXznHllqGN61b0ueM57BSltpgqJsoL4nMt7lcyQL6pbc'
               });
               if (currentToken) {
-                // 3) 유저 전용 서브컬렉션에 토큰 저장 (문서ID = 토큰 문자열)
-                await setDoc(
-                  doc(db, 'users_private', auth.currentUser.uid, 'fcmTokens', currentToken),
-                  { createdAt: serverTimestamp() }
-                );
+                await setDoc(doc(db, 'users_private', auth.currentUser.uid), {
+                  fcmTokens: currentToken,
+                  updatedAt: serverTimestamp()
+                });
                 console.log('FCM 토큰 저장 완료💕', currentToken);
               }
             } catch (err) {
