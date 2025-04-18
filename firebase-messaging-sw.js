@@ -1,6 +1,5 @@
-//서비스 워커는 importScripts로만 로드해용
-importScripts('https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/11.2.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging-compat.js');
 
 const firebaseConfig = {
   apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
