@@ -14,13 +14,13 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(payload => {
-  console.log('Message received. ', payload);  
-  self.registration.showNotification(
-    payload.notification.title,
-    payload.notification
-  );
-});
-
-messaging.onMessage((payload) => {
-  console.log('Message received. ', payload);
-});
+    console.log('onBackgroundMessage received.', payload);  
+    self.registration.showNotification(
+      payload.notification.title,
+      payload.notification
+    );
+  });
+  
+  messaging.onMessage((payload) => {
+    console.log('onMessage received. ', payload);
+  });
