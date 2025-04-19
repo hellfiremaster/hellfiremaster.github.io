@@ -737,6 +737,7 @@
     const functions = getFunctions(app);
 
     const awardPoints = httpsCallable(functions, 'awardPoints');
+    let fcmTokenUpdated = false;
 
     /********************************
      * 전역 사용자 캐시 및 함수
@@ -1185,6 +1186,13 @@
         postCard.classList.add('d-none');
         currentNickname = null;
         currentScore = 0;
+
+        if(fcmTokenUpdated) {
+          await setDoc(doc(db, 'users_private', auth.currentUser.uid), {
+            fcmToken: null,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+        }
       }
       const commentForms = document.querySelectorAll('[id^="commentForm-"]');
       if (user) {
@@ -2467,7 +2475,8 @@
                 await setDoc(doc(db, 'users_private', auth.currentUser.uid), {
                   fcmToken: currentToken,
                   updatedAt: serverTimestamp()
-                });
+                }, { merge: true });
+                fcmTokenUpdated = true;
                 console.log('FCM 토큰 저장 완료💕', currentToken);
               }
             } catch (err) {
@@ -2479,7 +2488,7 @@
         // 4) 앱이 켜져 있을 때 수신 메시지 처리 (optional)
         onMessage(messaging, (payload) => {
           console.log('새 알림 도착✨', payload);
-          showToast(payload.notification.title, payload.notification.body);
+          // showToast(payload.notification.title, payload.notification.body);
         });
       }
     }
