@@ -1186,13 +1186,6 @@
         postCard.classList.add('d-none');
         currentNickname = null;
         currentScore = 0;
-
-        if(fcmTokenUpdated) {
-          await setDoc(doc(db, 'users_private', auth.currentUser.uid), {
-            fcmToken: null,
-            updatedAt: serverTimestamp()
-          }, { merge: true });
-        }
       }
       const commentForms = document.querySelectorAll('[id^="commentForm-"]');
       if (user) {
@@ -1204,6 +1197,12 @@
     // 드롭다운의 로그아웃 버튼 이벤트 처리
     document.getElementById('logoutBtnDropdown').addEventListener('click', async () => {
       try {
+        if(fcmTokenUpdated) {
+          await setDoc(doc(db, 'users_private', auth.currentUser.uid), {
+            fcmToken: null,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+        }
         await signOut(auth);
         showToast('로그아웃 완료', '로그아웃');
         location.reload();
