@@ -2447,15 +2447,16 @@
       const params = new URLSearchParams(window.location.search);
       const commentId = params.get('commentId');
       if (commentId) {
-        const el = document.getElementById('commentNode-' + commentId);
-        if (el) {
-          setTimeout(() => {
+        setTimeout(() => {
+          const el = document.getElementById('commentNode-' + commentId);
+          console.log('el', el);
+          if (el) {
             el.scrollIntoView({ behavior: 'smooth', block: 'center' });
             // 강조 효과
             el.classList.add('magic-shimmer');
             setTimeout(() => el.classList.remove('magic-shimmer'), 2000);
-          }, 500);
-        }
+          }
+        }, 500);
       }
     }
 
