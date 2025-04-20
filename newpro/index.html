@@ -2515,11 +2515,12 @@
             el.classList.add('magic-shimmer');
             setTimeout(() => {              
               el.classList.remove('magic-shimmer'), 2000
-              const url = new URL(window.location);
-              url.searchParams.delete('commentId');
-              url.searchParams.delete('postId');
-              window.history.replaceState({}, '', url);
             });
+            
+            const url = new URL(window.location);
+            url.searchParams.delete('commentId');
+            url.searchParams.delete('postId');
+            window.history.replaceState({}, '', url);
           }
         }, 500);
       }
