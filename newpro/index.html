@@ -401,6 +401,13 @@
     }
   }
 
+  .image-upload-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
   </style>
 </head>
 <body>
@@ -454,9 +461,15 @@
           <label for="postTitle" class="form-label">제목</label>
           <input type="text" class="form-control" id="postTitle" placeholder="제목을 입력하세요" />
         </div>
-        <div class="mb-3">
+        <div class="mb-3 position-relative">
           <label for="editor" class="form-label">내용</label>
           <div id="editor"></div>
+          <!-- ✨ 여기에 스피너 -->
+          <div id="imageUploadSpinnerNew" class="image-upload-spinner d-none">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
         </div>
         <button class="btn btn-primary mt-2" id="savePostBtn">글 저장하기</button>
       </div>
@@ -519,9 +532,15 @@
             <label for="editTitle" class="form-label">제목</label>
             <input type="text" class="form-control" id="editTitle" placeholder="제목을 입력하세요" />
           </div>
-          <div class="mb-3">
+          <div class="mb-3 position-relative">
             <label for="editContentEditor" class="form-label">내용</label>
             <div id="editContentEditor"></div>
+            <!-- ✨ 여기도 스피너 -->
+            <div id="imageUploadSpinnerEdit" class="image-upload-spinner d-none">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -773,33 +792,54 @@
     const { Editor } = toastui;
     const { codeSyntaxHighlight } = Editor.plugin;
 
+    function toggleSpinner(spinnerId, show) {
+      const spinner = document.getElementById(spinnerId);
+      if (show) spinner.classList.remove('d-none');
+      else      spinner.classList.add('d-none');
+    }
+
+    // 공통 에디터 설정
     const editorConfig = {
       initialEditType: 'wysiwyg',
       previewStyle: 'vertical',
       plugins: [codeSyntaxHighlight],
-      hooks: {
-        addImageBlobHook: async (blob, callback) => {
-          try {
-            const url = await uploadImageToFirebase(blob);
-            callback(url, blob.name);
-          } catch (e) {
-            console.error('이미지 업로드 실패', e);
-          }
-          return false; // 기본 Base64 삽입 방지
-        }
-      }
     };
 
     const createEditor = new Editor({
       el: document.querySelector('#editor'),
-      ...editorConfig
+      ...editorConfig,
+      hooks: {
+        addImageBlobHook: createImageUploadHook('imageUploadSpinnerNew')
+      }
     });
 
-    // 수정용 에디터
+    // 5) 수정 모달 에디터
     const editEditor = new Editor({
       el: document.querySelector('#editContentEditor'),
-      ...editorConfig
+      ...editorConfig,
+      hooks: {
+        addImageBlobHook: createImageUploadHook('imageUploadSpinnerEdit')
+      }
     });
+
+    function createImageUploadHook(spinnerId) {
+      return async function(blob, callback) {
+        // 업로드 시작!
+        toggleSpinner(spinnerId, true);
+
+        try {
+          const url = await uploadImageToFirebase(blob);
+          callback(url, blob.name);
+        } catch (err) {
+          console.error('🖼️ 이미지 업로드 실패:', err);
+          showToast('이미지 업로드에 실패했습니다');
+        } finally {
+          // 끝나면 스피너 감추기
+          toggleSpinner(spinnerId, false);
+        }
+        return false; // 기본 Base64 삽입 막기
+      }
+    }
 
     let quizQuestionsAll;
 
