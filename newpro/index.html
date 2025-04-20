@@ -831,7 +831,7 @@
           const url = await uploadImageToFirebase(blob);
           callback(url, blob.name);
         } catch (err) {
-          console.error('🖼️ 이미지 업로드 실패:', err);
+          console.error('이미지 업로드 실패:', err);
           showToast('이미지 업로드에 실패했습니다');
         } finally {
           // 끝나면 스피너 감추기
@@ -2514,6 +2514,11 @@
             // 강조 효과
             el.classList.add('magic-shimmer');
             setTimeout(() => el.classList.remove('magic-shimmer'), 2000);
+
+            const url = new URL(window.location);
+            url.searchParams.delete('commentId');
+            url.searchParams.delete('postId');
+            window.history.replaceState({}, '', url);
           }
         }, 500);
       }
