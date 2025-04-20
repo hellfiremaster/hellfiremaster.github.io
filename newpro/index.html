@@ -712,6 +712,7 @@
      ********************************/
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js';
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
     import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app-check.js';
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
     import { getFirestore, collection, doc, setDoc, getDoc, updateDoc, deleteDoc, runTransaction, serverTimestamp, arrayUnion, arrayRemove, where, query, orderBy, getDocs, startAfter, limit, onSnapshot, Timestamp, deleteField } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
@@ -738,6 +739,8 @@
     const functions = getFunctions(app);
 
     const awardPoints = httpsCallable(functions, 'awardPoints');
+    const storage = getStorage(app);
+
     let fcmTokenUpdated = false;
 
     /********************************
@@ -766,20 +769,36 @@
 
     /********************************
      * Toast UI Editor 및 DOMPurify 초기화
-     ********************************/
+     ********************************/    
     const { Editor } = toastui;
     const { codeSyntaxHighlight } = Editor.plugin;
-    let createEditor = new Editor({
+
+    const editorConfig = {
+      initialEditType: 'wysiwyg',
+      previewStyle: 'vertical',
+      plugins: [codeSyntaxHighlight],
+      hooks: {
+        addImageBlobHook: async (blob, callback) => {
+          try {
+            const url = await uploadImageToFirebase(blob);
+            callback(url, blob.name);
+          } catch (e) {
+            console.error('이미지 업로드 실패', e);
+          }
+          return false; // 기본 Base64 삽입 방지
+        }
+      }
+    };
+
+    const createEditor = new Editor({
       el: document.querySelector('#editor'),
-      initialEditType: 'wysiwyg',
-      previewStyle: 'vertical',
-      plugins: [codeSyntaxHighlight]
+      ...editorConfig
     });
-    let editEditor = new Editor({
+
+    // 수정용 에디터
+    const editEditor = new Editor({
       el: document.querySelector('#editContentEditor'),
-      initialEditType: 'wysiwyg',
-      previewStyle: 'vertical',
-      plugins: [codeSyntaxHighlight]
+      ...editorConfig
     });
 
     let quizQuestionsAll;
@@ -2492,6 +2511,13 @@
           // showToast(payload.notification.title, payload.notification.body);
         });
       }
+    }
+
+    async function uploadImageToFirebase(blob) {
+      const fileName = `posts/${Date.now()}_${blob.name}`;
+      const imgRef   = ref(storage, fileName);
+      const snap     = await uploadBytes(imgRef, blob);
+      return await getDownloadURL(snap.ref);
     }
 
     async function init() {
