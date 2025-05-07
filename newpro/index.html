@@ -315,6 +315,19 @@
         display: flex;
         gap: 0.1rem;
       }
+
+      /* Toast UI Editor 의 팝업 클래스 명은 버전에 따라 toastui-editor-popup, țu-image-popup 등일 수 있어요.
+     실제 클래스명을 확인해서 앞부분을 바꿔서 써 주시면 됩니다! */
+      .toastui-editor-popup {
+        position: fixed !important;       /* 뷰포트 기준으로 */
+        top: 50% !important;              /* 세로 중앙 */
+        left: 95% !important;             /* 가로 중앙 */
+        transform: translate(-50%, -50%) !important;
+        max-width: 90vw !important;       /* 화면 너비의 90% */
+        max-height: 90vh !important;      /* 화면 높이의 90% */
+        overflow: auto !important;        /* 내용용 스크롤 허용 */
+        z-index: 1050 !important;         /* 다른 요소 위에 뜨도록 */
+      }
     }
 
     /* 좋아요(추천) 버튼 타오르는 애니메이션 */
