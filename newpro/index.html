@@ -774,6 +774,7 @@
     const storage = getStorage(app);
 
     let fcmTokenUpdated = false;
+    const ADMIN_UID = 'dCgOsOVWCZhSQBwU38NHogTE0dE2';
 
     /********************************
      * 전역 사용자 캐시 및 함수
@@ -1426,7 +1427,7 @@
         return;
       }
       const postData = postDoc.data();
-      if (postData.uid !== user.uid) {
+      if (user.uid !== ADMIN_UID && postData.uid !== user.uid) {
         showToast('본인 글만 삭제할 수 있습니다.', '오류');
         return;
       }
@@ -1499,7 +1500,7 @@
           showToast('존재하지 않는 댓글입니다.', '오류');
           return;
         }
-        if (commentSnap.data().uid !== user.uid) {
+        if (user.uid !== ADMIN_UID && commentSnap.data().uid !== user.uid) {
           showToast('본인 댓글만 삭제할 수 있습니다.', '오류');
           return;
         }
@@ -1544,7 +1545,7 @@
 
       function renderCommentNode(comment, indent = 0) {
         let rankIcon = '';
-        let commentNickname = comment.nickname || '익명';
+        let commentNickname = comment.nickname || '익명';        
         const div = document.createElement('div');
         div.id = 'commentNode-' + comment.commentId;   // ★ 이 부분 추가!
         div.className = 'comment-item';
@@ -1561,6 +1562,7 @@
         const dateStr = formatDateTime(comment.createdAt);
 
         const currentUser = auth.currentUser;
+        const canDelete = currentUser && (currentUser.uid === comment.uid || currentUser.uid === ADMIN_UID);
         // 최상위 댓글(indent가 0인 경우)에만 답글 버튼과 폼을 노출
         const replyButtonHtml = (indent === 0 && currentUser)
           ? `<button class="btn btn-sm btn-link" id="replyBtn-${postId}-${comment.commentId}">답글</button>`
@@ -1585,7 +1587,7 @@
             <span id="commentLikeCount-${postId}-${comment.commentId}">${comment.likes ? comment.likes.length : 0}</span>
             <button class="btn btn-sm btn-outline-danger" id="commentDislikeBtn-${postId}-${comment.commentId}">👎</button>
             <span id="commentDislikeCount-${postId}-${comment.commentId}">${comment.dislikes ? comment.dislikes.length : 0}</span>            
-            ${auth.currentUser && auth.currentUser.uid === comment.uid ? `<button id="delBtn-${postId}-${comment.commentId}" class="btn btn-sm btn-danger ms-2">삭제</button>` : ''}
+            ${canDelete ? `<button id="delBtn-${postId}-${comment.commentId}" class="btn btn-sm btn-danger ms-2">삭제</button>` : ''}
             ${replyButtonHtml}
           </div>
           ${replyFormHtml}
@@ -1859,9 +1861,9 @@
           authorNickname = userData.nickname || authorNickname;
         }
       } catch (_) {}
-      let isAuthor = false;
       const currentUser = auth.currentUser;
-      if (currentUser && currentUser.uid === data.uid) isAuthor = true;
+      const isAdmin = currentUser && currentUser.uid === ADMIN_UID;
+      const isAuthor = currentUser && (currentUser.uid === data.uid || isAdmin);
       const likeCount = data.likes ? data.likes.length : 0;
       const dislikeCount = data.dislikes ? data.dislikes.length : 0;
       const title = DOMPurify.sanitize(data.title, { ALLOWED_TAGS: [] });
