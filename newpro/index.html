@@ -123,6 +123,14 @@
       max-width: 100%;
       height: auto;
     }
+    .toastui-editor-contents img {
+      max-width: 90%;         /* 화면 가로의 90%까지만 차지 */
+      max-height: 80vh;       /* 화면 세로의 80%까지만 표시 */
+      object-fit: contain;     /* 비율 그대로 예쁘게 */
+      display: block;          /* 가운데 정렬을 위해 block */
+      margin: 1rem 0;       /* 위아래 여백 + 가로 중앙 */
+      border-radius: 0.5rem;   /* 둥글둥글 귀엽게 */
+    }
     .shining-btn {
       position: relative;
       overflow: hidden;
@@ -443,6 +451,7 @@
     50%  { transform: scale(1.1); }
     100% { transform: scale(1);   }
   }
+  
   </style>
 </head>
 <body>
