@@ -1587,11 +1587,15 @@
         const currentUser = auth.currentUser;
         const canDelete = currentUser && (currentUser.uid === comment.uid || currentUser.uid === ADMIN_UID);
         // 최상위 댓글(indent가 0인 경우)에만 답글 버튼과 폼을 노출
-        const replyButtonHtml = `<button class="btn btn-sm btn-link" id="replyBtn-${postId}-${comment.commentId}">답글</button>`;
-        const replyFormHtml = `<div class="reply-form d-none" id="replyForm-${postId}-${comment.commentId}">
-          <textarea class="form-control mb-2" rows="2" placeholder="댓글을 입력하세요" id="replyInput-${postId}-${comment.commentId}"></textarea>
-          <button class="btn btn-secondary btn-sm" id="replySubmitBtn-${postId}-${comment.commentId}">댓글 달기</button>
-        </div>`;
+        const replyButtonHtml = (indent === 0) 
+          ? `<button class="btn btn-sm btn-link" id="replyBtn-${postId}-${comment.commentId}">답글</button>`
+          : '';
+        const replyFormHtml = (indent === 0)  
+          ? `<div class="reply-form d-none" id="replyForm-${postId}-${comment.commentId}">
+              <textarea class="form-control mb-2" rows="2" placeholder="댓글을 입력하세요" id="replyInput-${postId}-${comment.commentId}"></textarea>
+              <button class="btn btn-secondary btn-sm" id="replySubmitBtn-${postId}-${comment.commentId}">댓글 달기</button>
+            </div>`
+          : '';
 
         div.innerHTML = `
           <div class="fw-bold">
