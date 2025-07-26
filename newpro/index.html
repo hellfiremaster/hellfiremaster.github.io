@@ -972,7 +972,7 @@
     async function awardQuizPoints(points) {
       const user = auth.currentUser;
       if (!user) {
-        showToast("로그인이 필요합니다.", "오류");
+        requireLogin();
         return null;
       }
       try {
@@ -1281,16 +1281,15 @@
         loginBtn.classList.remove('d-none');
         signupBtn.classList.remove('d-none');
         document.getElementById('userDropdown').classList.add('d-none');
-        postCard.classList.add('d-none');
         currentNickname = null;
         currentScore = 0;
       }
-      const commentForms = document.querySelectorAll('[id^="commentForm-"]');
-      if (user) {
-        commentForms.forEach(form => form.classList.remove('d-none'));
-      } else {
-        commentForms.forEach(form => form.classList.add('d-none'));
-      }
+      // const commentForms = document.querySelectorAll('[id^="commentForm-"]');
+      // if (user) {
+      //   commentForms.forEach(form => form.classList.remove('d-none'));
+      // } else {
+      //   commentForms.forEach(form => form.classList.add('d-none'));
+      // }
     });
     // 드롭다운의 로그아웃 버튼 이벤트 처리
     document.getElementById('logoutBtnDropdown').addEventListener('click', async () => {
@@ -1311,7 +1310,7 @@
     });
     togglePostFormBtn.addEventListener('click', () => {
       if(!auth.currentUser) {
-        showToast('로그인이 필요합니다.', '오류');
+        requireLogin();
         return;
       }
       postCard.classList.toggle('d-none');
@@ -1472,7 +1471,7 @@
      async function addComment(postId, content, parentCommentId = null) {
       const user = auth.currentUser;
       if (!user) {
-        showToast('로그인이 필요합니다.', '오류');
+        requireLogin();
         return;
       }
       const sanitizedContent = DOMPurify.sanitize(content, { ALLOWED_TAGS: [] });
@@ -1588,15 +1587,11 @@
         const currentUser = auth.currentUser;
         const canDelete = currentUser && (currentUser.uid === comment.uid || currentUser.uid === ADMIN_UID);
         // 최상위 댓글(indent가 0인 경우)에만 답글 버튼과 폼을 노출
-        const replyButtonHtml = (indent === 0 && currentUser)
-          ? `<button class="btn btn-sm btn-link" id="replyBtn-${postId}-${comment.commentId}">답글</button>`
-          : '';
-        const replyFormHtml = (indent === 0 && currentUser)
-          ? `<div class="reply-form d-none" id="replyForm-${postId}-${comment.commentId}">
-              <textarea class="form-control mb-2" rows="2" placeholder="댓글을 입력하세요" id="replyInput-${postId}-${comment.commentId}"></textarea>
-              <button class="btn btn-secondary btn-sm" id="replySubmitBtn-${postId}-${comment.commentId}">댓글 달기</button>
-            </div>`
-          : '';
+        const replyButtonHtml = `<button class="btn btn-sm btn-link" id="replyBtn-${postId}-${comment.commentId}">답글</button>`;
+        const replyFormHtml = `<div class="reply-form d-none" id="replyForm-${postId}-${comment.commentId}">
+          <textarea class="form-control mb-2" rows="2" placeholder="댓글을 입력하세요" id="replyInput-${postId}-${comment.commentId}"></textarea>
+          <button class="btn btn-secondary btn-sm" id="replySubmitBtn-${postId}-${comment.commentId}">댓글 달기</button>
+        </div>`;
 
         div.innerHTML = `
           <div class="fw-bold">
@@ -1650,10 +1645,14 @@
         commentDislikeBtn.addEventListener('click', () => toggleCommentDislike(postId, comment.commentId));
 
         // 답글 버튼과 폼은 indent가 0인 경우(최상위 댓글)일 때만 이벤트를 등록합니다.
-        if (indent === 0 && currentUser) {
+        if (indent === 0) {
           const replyBtn = div.querySelector(`#replyBtn-${postId}-${comment.commentId}`);
           const replyForm = div.querySelector(`#replyForm-${postId}-${comment.commentId}`);
           replyBtn.addEventListener('click', () => {
+            if(!currentUser) {
+              requireLogin();
+              return;
+            }
             replyForm.classList.toggle('d-none');
             if (!replyForm.classList.contains('d-none')) {
               const replyInput = div.querySelector(`#replyInput-${postId}-${comment.commentId}`);
@@ -1714,7 +1713,7 @@
     async function toggleLike(postId) {
       const user = auth.currentUser;
       if (!user) {
-        showToast('로그인이 필요합니다.', '오류');
+        requireLogin();
         return;
       }
       const postRef = doc(db, 'posts', postId);
@@ -1749,7 +1748,7 @@
     async function toggleDislike(postId) {
       const user = auth.currentUser;
       if (!user) {
-        showToast("로그인이 필요합니다.", "오류");
+        requireLogin();
         return;
       }
       const postRef = doc(db, "posts", postId);
@@ -1787,7 +1786,7 @@
     async function toggleCommentLike(postId, commentId) {
       const user = auth.currentUser;
       if (!user) {
-        showToast("로그인이 필요합니다.", "오류");
+        requireLogin();
         return;
       }
       const commentRef = doc(db, "posts", postId, "comments", commentId);
@@ -1826,8 +1825,8 @@
     // 댓글 싫어요 토글 함수
     async function toggleCommentDislike(postId, commentId) {
       const user = auth.currentUser;
-      if (!user) {
-        showToast("로그인이 필요합니다.", "오류");
+      if (!user) {        
+        requireLogin();
         return;
       }
       const commentRef = doc(db, "posts", postId, "comments", commentId);
@@ -1921,7 +1920,7 @@
             <h6 id="commentHeader-${postId}">댓글</h6>
             <div id="commentList-${postId}"></div>
           </div>
-          <div class="mt-2 d-none" id="commentForm-${postId}">
+          <div class="mt-2" id="commentForm-${postId}">
             <textarea class="form-control mb-2" rows="2" placeholder="댓글을 입력하세요" id="commentInput-${postId}"></textarea>
             <button class="btn btn-secondary" id="commentBtn-${postId}">댓글 달기</button>
           </div>
@@ -1984,7 +1983,10 @@
       const commentFormEl = card.querySelector(`#commentForm-${postId}`);
       const commentInputEl = card.querySelector(`#commentInput-${postId}`);
       const commentBtn = card.querySelector(`#commentBtn-${postId}`);
-      if (currentUser) commentFormEl.classList.remove('d-none');
+      if (!currentUser) {
+        commentInputEl.readOnly = true;
+        commentInputEl.addEventListener('click', requireLogin);
+      }
       commentBtn.addEventListener('click', () => {
         const text = commentInputEl.value.trim();
         addComment(postId, text);
@@ -2614,6 +2616,14 @@
       document.getElementById('fullScreenLoader').classList.add('d-none');
     }
 
+    function requireLogin() {
+      // 회원가입 모달 띄우기
+      showToast("로그인이 필요합니다.", "반가워요.");
+      const modalEl = document.getElementById('signupModal');
+      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+      modal.show();
+    }
+
     async function init() {
       fetchActiveNotices();    
       const response = await fetch('quiz.json');
@@ -2622,6 +2632,20 @@
       await loadMorePosts();
       await highlightPostFromQuery();
       scrollToComment();
+
+      // 회원가입 버튼( data-bs-target="#signupModal" ) 클릭 → signupModal 열릴 때
+      document.getElementById('signupModal')
+        .addEventListener('shown.bs.modal', () => {
+          const el = document.getElementById('signupEmail');
+          if (el) el.focus();
+        });
+
+      // 로그인 버튼( data-bs-target="#loginModal" ) 클릭 → loginModal 열릴 때
+      document.getElementById('loginModal')
+        .addEventListener('shown.bs.modal', () => {
+          const el = document.getElementById('loginEmail');
+          if (el) el.focus();
+        });
     }
 
     init();
