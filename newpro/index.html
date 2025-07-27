@@ -2190,6 +2190,9 @@
           }
 
           postList.appendChild(item);
+          onSnapshot(doc(db, 'posts', docSnap.id), (updatedSnap) => {
+            if (updatedSnap.exists()) updatePostUI(updatedSnap);
+          });
           if (!commentUnsubscribers[docSnap.id]) {
             const cmtQuery = query(
               collection(db, 'posts', docSnap.id, 'comments'),
@@ -2311,6 +2314,11 @@
           const card = await createPostItem(postSnap);
           card.style.border = '3px solid gold';
           postList.insertBefore(card, postList.firstChild);
+          
+          // → 추가: 실시간 업데이트를 위한 onSnapshot 리스너 등록 (게시글)
+          onSnapshot(postRef, (updatedSnap) => {
+            if (updatedSnap.exists()) updatePostUI(updatedSnap);
+          });
           
           // → 추가: 댓글 리스너 등록 (댓글이 보이지 않는 버그 수정)
           if (!commentUnsubscribers[highlightPostId]) {
