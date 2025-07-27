@@ -2158,63 +2158,6 @@
       }
     }
 
-    /********************************
-     * 실시간 글 UI 및 댓글 업데이트, 무한 스크롤
-     ********************************/
-     function updatePostUI(postSnap) {
-      const postId = postSnap.id;
-      const data = postSnap.data();
-      const likeCountEl = document.getElementById(`likeCount-${postId}`);
-      const dislikeCountEl = document.getElementById(`dislikeCount-${postId}`);
-      if (likeCountEl) likeCountEl.textContent = data.likes?.length || 0;
-      if (dislikeCountEl) dislikeCountEl.textContent = data.dislikes?.length || 0;
-      
-      // → 추가: 좋아요/싫어요 버튼 상태 업데이트
-      const currentUser = auth.currentUser;
-      const likeBtn = document.getElementById(`likeBtn-${postId}`);
-      const dislikeBtn = document.getElementById(`dislikeBtn-${postId}`);
-      if (likeBtn) {
-        if (currentUser && data.likes && data.likes.includes(currentUser.uid)) {
-          likeBtn.classList.remove('btn-outline-primary');
-          likeBtn.classList.add('btn-primary');
-        } else {
-          likeBtn.classList.remove('btn-primary');
-          likeBtn.classList.add('btn-outline-primary');
-        }
-      }
-      if (dislikeBtn) {
-        if (currentUser && data.dislikes && data.dislikes.includes(currentUser.uid)) {
-          dislikeBtn.classList.remove('btn-outline-danger');
-          dislikeBtn.classList.add('btn-danger');
-        } else {
-          dislikeBtn.classList.remove('btn-danger');
-          dislikeBtn.classList.add('btn-outline-danger');
-        }
-      }
-      
-      // 기존의 마법 효과 및 burning 효과 처리
-      const cardEl = document.getElementById(`postCard-${postId}`);
-      if (cardEl) {
-        if (data.magic && data.magic.expiresAt) {
-          const now = new Date();
-          const exp = new Date(data.magic.expiresAt.seconds * 1000);
-          if (now < exp) {
-            cardEl.className = cardEl.className.replace(/\bmagic-\S+\b/g, '');
-            cardEl.classList.add(data.magic.magicType);
-          } else {
-            cardEl.className = cardEl.className.replace(/\bmagic-\S+\b/g, '');
-          }
-        } else {
-          cardEl.className = cardEl.className.replace(/\bmagic-\S+\b/g, '');
-        }
-        if (data.likes && data.likes.length >= 3) {
-          cardEl.classList.add('burning');
-        } else {
-          cardEl.classList.remove('burning');
-        }
-      }
-    }
-
     let lastVisible = null;
     let isLoading = false;
     const PAGE_SIZE = 5;
@@ -2247,9 +2190,6 @@
           }
 
           postList.appendChild(item);
-          onSnapshot(doc(db, 'posts', docSnap.id), (updatedSnap) => {
-            if (updatedSnap.exists()) updatePostUI(updatedSnap);
-          });
           if (!commentUnsubscribers[docSnap.id]) {
             const cmtQuery = query(
               collection(db, 'posts', docSnap.id, 'comments'),
@@ -2274,15 +2214,15 @@
     }
 
     window.addEventListener('scroll', () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-        if(isFiltering) {
-          const totalRendered = filteredPage * FILTER_PAGE_SIZE;
-          if (totalRendered < filteredPostsArray.length) {
-            renderFilteredPostsPage();
-          }
-        } else {
-          loadMorePosts();
-        }
+      const atBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+      if (!atBottom) {
+        return;
+      }
+
+      if (isFiltering) {
+        renderFilteredPostsPage();
+      } else {
+        loadMorePosts();
       }
     });
 
@@ -2371,11 +2311,6 @@
           const card = await createPostItem(postSnap);
           card.style.border = '3px solid gold';
           postList.insertBefore(card, postList.firstChild);
-          
-          // → 추가: 실시간 업데이트를 위한 onSnapshot 리스너 등록 (게시글)
-          onSnapshot(postRef, (updatedSnap) => {
-            if (updatedSnap.exists()) updatePostUI(updatedSnap);
-          });
           
           // → 추가: 댓글 리스너 등록 (댓글이 보이지 않는 버그 수정)
           if (!commentUnsubscribers[highlightPostId]) {
@@ -2536,16 +2471,6 @@
       clearPostList();
       loadMorePosts();
       bootstrap.Modal.getInstance(document.getElementById('filterModal')).hide();
-    });
-
-    // 스크롤 이벤트: 검색 모드(isFiltering)가 활성화된 경우, 스크롤이 바닥에 도달하면 다음 페이지(5개)를 렌더링
-    window.addEventListener('scroll', () => {
-      if (isFiltering && window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-        const totalRendered = filteredPage * FILTER_PAGE_SIZE;
-        if (totalRendered < filteredPostsArray.length) {
-          renderFilteredPostsPage();
-        }
-      }
     });
 
     function scrollToComment() {
