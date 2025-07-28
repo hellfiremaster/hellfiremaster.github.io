@@ -713,15 +713,21 @@
   </div>
 
   <!-- [랭킹 모달] -->
-  <div class="modal fade" id="rankingModal" tabindex="-1" aria-labelledby="rankingModalLabel" aria-hidden="true">
+  <div class="modal fade" id="rankingModal" tabindex="-1" ...>
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="rankingModalLabel">랭킹</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body" id="rankingContainer" style="max-height: 70vh; overflow-y: auto;">
-          <!-- Firestore users 랭킹 항목들이 무한 스크롤로 로드됩니다 -->
+        <div class="modal-body">
+          <!-- 랭킹 리스트 -->
+          <div id="rankingContainer" style="max-height: 60vh; overflow-y: auto;"></div>
+          <!-- 페이지네이션 버튼 -->
+          <div id="rankingPagination" class="d-flex justify-content-center mt-2">
+            <button id="prevRankingBtn" class="btn btn-secondary btn-sm me-2" disabled>이전</button>
+            <button id="nextRankingBtn" class="btn btn-secondary btn-sm">다음</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1025,13 +1031,16 @@
     /********************************
      * Toast 함수
      ********************************/
-    function showToast(message, title = '알림') {
-      const toastEl = document.getElementById('liveToast');
+     function showToast(message, title = '알림') {
+      const toastEl    = document.getElementById('liveToast');
       const toastTitle = document.getElementById('toastTitle');
-      const toastMessage = document.getElementById('toastMessage');
-      const toastTime = document.getElementById('toastTime');
+      const toastMsg   = document.getElementById('toastMessage');
+      const toastTime  = document.getElementById('toastTime');
+
       toastTitle.textContent = title;
-      toastMessage.textContent = message;
+      // — textContent 대신 innerHTML, 줄바꿈 → <br> 변환
+      toastMsg.innerHTML = message.replace(/\n/g, '<br/>');
+
       toastTime.textContent = formatDateForToast(new Date());
       const bsToast = new bootstrap.Toast(toastEl);
       bsToast.show();
@@ -1751,7 +1760,8 @@
               const rankInfo = getRankByScore(userScore);
               rankIconEl.textContent = rankInfo.icon;
               rankIconEl.addEventListener('click', () => {
-                showToast(`계급: ${rankInfo.name} (${userScore}점)`, userData.nickname || '익명');
+                const desc = userData.description ? `${userData.description}` : '소개 정보 없음';
+                showToast(`${rankInfo.name} (${userScore}점)\n${desc}`, userData.nickname || '익명');
               });
             }
           });
@@ -2074,7 +2084,8 @@
             const uData = snap.data();
             const s = uData.score || 0;
             const rInfo = getRankByScore(s);
-            showToast(`계급: ${rInfo.name} (${s}점)`, authorNickname);
+            const desc = uData.description ? `${uData.description}` : '소개 정보 없음';
+            showToast(`${rInfo.name} (${s}점)\n${desc}`, authorNickname);
           } else {
             showToast('유저 정보 없음', '알림');
           }
@@ -2284,53 +2295,73 @@
     /********************************
      * 랭킹 관련 (무한 스크롤)
      ********************************/
-    let rankingLastVisible = null;
-    let isRankingLoading = false;
-    let rankingCount = 0;
     const RANKING_PAGE_SIZE = 10;
-    async function loadMoreRanking() {
-      if (isRankingLoading) return;
-      isRankingLoading = true;
+    let rankingPage = 1;
+    let rankingCursors = [null]; // 0번 unused, 1페이지는 null
+    let rankingSnapshots = {};   // 페이지별 스냅샷 저장
+
+    async function loadRankingPage(page) {
+      const container = document.getElementById('rankingContainer');
+      container.innerHTML = '';
+      const prevBtn = document.getElementById('prevRankingBtn');
+      const nextBtn = document.getElementById('nextRankingBtn');
+
+      // 쿼리 만들기
       let q = query(
         collection(db, 'users'),
         orderBy('score', 'desc'),
         limit(RANKING_PAGE_SIZE)
       );
-      if (rankingLastVisible) {
-        q = query(
-          collection(db, 'users'),
-          orderBy('score', 'desc'),
-          startAfter(rankingLastVisible),
-          limit(RANKING_PAGE_SIZE)
-        );
-      }
-      const snapshot = await getDocs(q);
-      const rankingContainer = document.getElementById('rankingContainer');
-      if (!snapshot.empty) {
-        snapshot.forEach(docSnap => {
-          rankingCount++;
-          const userData = docSnap.data();
-          const rankInfo = getRankByScore(userData.score || 0);
-          const item = document.createElement('div');
-          item.className = 'p-2 border-bottom';
-          item.innerHTML = `<strong>${rankingCount}위</strong> - ${userData.nickname || '익명'} : ${userData.score}점 ${rankInfo.icon}`;
-          rankingContainer.appendChild(item);
-          rankingLastVisible = docSnap;
-        });
-      }
-      isRankingLoading = false;
+      const cursor = rankingCursors[page];
+      if (cursor) q = query(q, startAfter(cursor));
+
+      const snap = await getDocs(q);
+      rankingSnapshots[page] = snap;
+      // 다음 페이지 커서 저장
+      const lastDoc = snap.docs[snap.docs.length - 1] || null;
+      rankingCursors[page + 1] = lastDoc;
+
+      // 랭킹 표시
+      snap.docs.forEach((docSnap, idx) => {
+        const userData = docSnap.data();
+        const rankNum = (page - 1) * RANKING_PAGE_SIZE + idx + 1;
+        const rInfo = getRankByScore(userData.score || 0);
+        const desc = userData.description ? `<p class="mb-0 text-muted small">소개: ${userData.description}</p>` : '';
+        const item = document.createElement('div');
+        item.className = 'p-2 border-bottom';
+        item.innerHTML = `
+          <strong>${rankNum}위</strong> - ${userData.nickname || '익명'} : 
+          ${userData.score}점 ${rInfo.icon}
+          ${desc}
+        `;
+        container.appendChild(item);
+      });
+
+      // 버튼 상태 업데이트
+      prevBtn.disabled = page === 1;
+      nextBtn.disabled = !lastDoc;
+
+      // 페이지 표시
+      rankingPage = page;
     }
+
+    // 모달 열릴 때 초기화
     const rankingModalEl = document.getElementById('rankingModal');
     rankingModalEl.addEventListener('show.bs.modal', () => {
-      rankingLastVisible = null;
-      rankingCount = 0;
-      document.getElementById('rankingContainer').innerHTML = '';
-      loadMoreRanking();
+      rankingPage = 1;
+      rankingCursors = [null];
+      document.getElementById('prevRankingBtn').disabled = true;
+      loadRankingPage(1);
     });
-    const rankingContainer = document.getElementById('rankingContainer');
-    rankingContainer.addEventListener('scroll', () => {
-      if (rankingContainer.scrollTop + rankingContainer.clientHeight >= rankingContainer.scrollHeight - 50) loadMoreRanking();
+
+    // 버튼 이벤트
+    document.getElementById('prevRankingBtn').addEventListener('click', () => {
+      if (rankingPage > 1) loadRankingPage(rankingPage - 1);
     });
+    document.getElementById('nextRankingBtn').addEventListener('click', () => {
+      if (rankingCursors[rankingPage + 1]) loadRankingPage(rankingPage + 1);
+    });
+
 
     /********************************
      * 폭죽(Confetti) 애니메이션
