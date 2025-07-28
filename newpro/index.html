@@ -2326,7 +2326,7 @@
         const userData = docSnap.data();
         const rankNum = (page - 1) * RANKING_PAGE_SIZE + idx + 1;
         const rInfo = getRankByScore(userData.score || 0);
-        const desc = userData.description ? `<p class="mb-0 text-muted small">소개: ${userData.description}</p>` : '';
+        const desc = userData.description ? `<p class="mb-0 text-muted small">${userData.description}</p>` : '';
         const item = document.createElement('div');
         item.className = 'p-2 border-bottom';
         item.innerHTML = `
