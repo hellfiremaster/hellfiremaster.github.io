@@ -2606,9 +2606,10 @@
         // 4) 앱이 켜져 있을 때 수신 메시지 처리 (optional)
         onMessage(messaging, (payload) => {
           console.log('새 알림 도착✨', payload);
-          const urlParams = new URLSearchParams(payload.fcmOptions.link);
-          const postId = urlParams.get("postId");
-          fetchComment(postId);
+          const postId = payload.data?.postId;
+          if(postId) {
+            fetchComment(postId);
+          }
           // showToast(payload.notification.title, payload.notification.body);
         });
       }
