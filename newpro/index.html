@@ -1761,7 +1761,7 @@
               rankIconEl.textContent = rankInfo.icon;
               rankIconEl.addEventListener('click', () => {
                 const desc = userData.description ? `${userData.description}` : '소개 정보 없음';
-                showToast(`${rankInfo.name} (${userScore}점)\n${desc}`, userData.nickname || '익명');
+                showToast(desc, `${userData.nickname} - ${rankInfo.name}(${userScore}점)`);                
               });
             }
           });
@@ -2085,7 +2085,7 @@
             const s = uData.score || 0;
             const rInfo = getRankByScore(s);
             const desc = uData.description ? `${uData.description}` : '소개 정보 없음';
-            showToast(`${rInfo.name} (${s}점)\n${desc}`, authorNickname);
+            showToast(desc,  `${authorNickname} - ${rInfo.name}(${s}점)`);
           } else {
             showToast('유저 정보 없음', '알림');
           }
