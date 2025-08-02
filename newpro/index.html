@@ -452,6 +452,9 @@
     100% { transform: scale(1);   }
   }
   
+  .auto-height {
+    field-sizing: content
+  }
   </style>
 </head>
 <body>
@@ -1667,7 +1670,7 @@
           : '';
         const replyFormHtml = (indent === 0)  
           ? `<div class="reply-form d-none" id="replyForm-${postId}-${comment.commentId}">
-              <textarea class="form-control mb-2" rows="2" placeholder="댓글을 입력하세요" id="replyInput-${postId}-${comment.commentId}"></textarea>
+              <textarea class="form-control mb-2 auto-height" rows="2" placeholder="댓글을 입력하세요" id="replyInput-${postId}-${comment.commentId}"></textarea>
               <button class="btn btn-secondary btn-sm" id="replySubmitBtn-${postId}-${comment.commentId}">댓글 달기</button>
             </div>`
           : '';
@@ -2005,7 +2008,7 @@
             <div id="commentList-${postId}"></div>
           </div>
           <div class="mt-2" id="commentForm-${postId}">
-            <textarea class="form-control mb-2" rows="2" placeholder="댓글을 입력하세요" id="commentInput-${postId}"></textarea>
+            <textarea class="form-control mb-2 auto-height" rows="2" placeholder="댓글을 입력하세요" id="commentInput-${postId}"></textarea>
             <button class="btn btn-secondary" id="commentBtn-${postId}">댓글 달기</button>
           </div>
         </div>
