@@ -519,7 +519,9 @@
           <label for="editor" class="form-label">내용</label>
           <div id="editor"></div>
         </div>
-        <button class="btn btn-primary mt-2" id="savePostBtn">글 저장하기</button>
+        <div class="text-end">
+          <button class="btn btn-primary mt-2" id="savePostBtn">글 저장하기</button>
+        </div>
       </div>
     </div>
 
@@ -850,7 +852,8 @@
     // 공통 에디터 설정
     const editorConfig = {
       initialEditType: 'wysiwyg',
-      previewStyle: 'vertical',
+      previewStyle: 'vertical',      
+      height: 'auto',
       plugins: [codeSyntaxHighlight],
     };
 
