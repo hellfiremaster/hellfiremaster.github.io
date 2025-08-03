@@ -762,7 +762,7 @@
     <div id="liveToast" class="toast align-items-center dark-bg" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
         <strong class="me-auto" id="toastTitle">알림</strong>
-        <small class="text-muted" id="toastTime"></small>
+        <!-- <small class="text-muted" id="toastTime"></small> -->
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body" id="toastMessage">메시지 내용</div>
@@ -1037,18 +1037,18 @@
     /********************************
      * Toast 함수
      ********************************/
-     function showToast(message, title = '알림') {
+     function showToast(message, title = '알림', duration = 5000) {
       const toastEl    = document.getElementById('liveToast');
       const toastTitle = document.getElementById('toastTitle');
       const toastMsg   = document.getElementById('toastMessage');
-      const toastTime  = document.getElementById('toastTime');
+      // const toastTime  = document.getElementById('toastTime');
 
       toastTitle.textContent = title;
       // — textContent 대신 innerHTML, 줄바꿈 → <br> 변환
       toastMsg.innerHTML = message.replace(/\n/g, '<br/>');
 
-      toastTime.textContent = formatDateForToast(new Date());
-      const bsToast = new bootstrap.Toast(toastEl);
+      // toastTime.textContent = formatDateForToast(new Date());
+      const bsToast = new bootstrap.Toast(toastEl, { delay: duration });
       bsToast.show();
     }
 
@@ -1792,7 +1792,7 @@
               rankIconEl.textContent = rankInfo.icon;
               rankIconEl.addEventListener('click', () => {
                 const desc = userData.description ? `${userData.description}` : '소개 정보 없음';
-                showToast(desc, `${userData.nickname} - ${rankInfo.name}(${userScore}점)`);                
+                showToast(desc, `${userData.nickname} - ${rankInfo.name}(${userScore}점)`, 8000);                
               });
             }
           });
@@ -2116,7 +2116,7 @@
             const s = uData.score || 0;
             const rInfo = getRankByScore(s);
             const desc = uData.description ? `${uData.description}` : '소개 정보 없음';
-            showToast(desc,  `${authorNickname} - ${rInfo.name}(${s}점)`);
+            showToast(desc,  `${authorNickname} - ${rInfo.name}(${s}점)`, 8000);
           } else {
             showToast('유저 정보 없음', '알림');
           }
