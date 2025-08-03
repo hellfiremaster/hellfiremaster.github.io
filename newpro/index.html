@@ -1133,6 +1133,12 @@
       // 기존의 마법 효과 및 burning 효과 처리
       const cardEl = document.getElementById(`postCard-${postId}`);
       if (cardEl) {
+        const header = document.querySelector(`#postCard-${postId} .card-header span`);
+        header.textContent = data.title;
+
+        const body = document.querySelector(`#postCard-${postId} .toastui-editor-contents`);
+        body.innerHTML = data.content;
+
         if (data.magic && data.magic.expiresAt) {
           const now = new Date();
           const exp = new Date(data.magic.expiresAt.seconds * 1000);
@@ -1515,8 +1521,7 @@
         await updateDoc(postRef, { title: newTitle, content: newContent });
         showToast('글이 수정되었습니다.', '성공');
         editModal.hide();
-        clearPostList();
-        await loadMorePosts();
+        fetchPost(docId);
       } catch (err) {
         showToast(err.message, '수정 실패');
       }
@@ -1978,7 +1983,7 @@
       } catch (_) {}
       const currentUser = auth.currentUser;
       const isAdmin = currentUser && currentUser.uid === ADMIN_UID;
-      const isAuthor = currentUser && (currentUser.uid === data.uid || isAdmin);
+      const isAuthor = currentUser && currentUser.uid === data.uid;
       const likeCount = data.likes ? data.likes.length : 0;
       const dislikeCount = data.dislikes ? data.dislikes.length : 0;
       const title = DOMPurify.sanitize(data.title, { ALLOWED_TAGS: [] });
@@ -1987,10 +1992,8 @@
         <div class="card-header fw-bold d-flex justify-content-between align-items-center">
           <span>${title}</span>
           <div class="action-buttons">
-            ${isAuthor ? `
-              <button class="btn btn-sm btn-warning me-2" id="editBtn-${postId}">수정</button>
-              <button class="btn btn-sm btn-danger me-2" id="deleteBtn-${postId}">삭제</button>
-            ` : ''}
+            ${isAuthor ? `<button class="btn btn-sm btn-warning me-2" id="editBtn-${postId}">수정</button>` : ''}
+            ${isAuthor || isAdmin ? `<button class="btn btn-sm btn-danger me-2" id="deleteBtn-${postId}">삭제</button>` : ''}
             ${currentUser ? `<button class="btn btn-sm magic-btn" id="magicBtn-${postId}">💫</button>` : ''}
           </div>
         </div>
