@@ -988,7 +988,7 @@
         return null;
       }
       try {
-        const res = await awardPoints({ points });        
+        const res = await awardPointsAndCheckRank({ points });        
         if(res.data.awarded === 0) {
           showToast(`축하합니다!`, "퀴즈 챌린지");
         } else {
@@ -1488,15 +1488,14 @@
           likes: [],
           dislikes: []
         });
-        // 글 작성 후 +50점 부여 (서버에서 하루 최대 +500점 제한 적용)
-        awardPoints({ points: 50 });
         // console.log('Awarded points:', res.data.awarded);
         showToast('글이 등록되었습니다.', '글 작성');
         postTitle.value = '';
         createEditor.setHTML('');
         postCard.classList.add('d-none');
         clearPostList();
-        await loadMorePosts();
+        loadMorePosts();
+        await awardPointsAndCheckRank({ points: 50 });
       } catch (err) {
         showToast(err.message, '글 작성 실패');
       }
@@ -1596,7 +1595,7 @@
         fetchComment(postId);
         showToast('댓글이 등록되었습니다.', '댓글 작성');
         // 댓글 작성 후 +20점 부여
-        awardPoints({ points: 20 });
+        await awardPointsAndCheckRank({ points: 20 });
         // console.log('Awarded points:', res.data.awarded);
       } catch (err) {
         showToast(err.message, '댓글 등록 실패');
@@ -1853,7 +1852,7 @@
       await updateDoc(postRef, updateData);
       fetchPost(postId);
       if (scoreDiff !== 0) {
-        await awardPoints({ points: scoreDiff });
+        await awardPointsAndCheckRank({ points: scoreDiff });
       }
     }
 
@@ -1888,7 +1887,7 @@
       await updateDoc(postRef, updateData);
       fetchPost(postId);
       if (scoreDiff !== 0) {
-        await awardPoints({ points: scoreDiff });
+        await awardPointsAndCheckRank({ points: scoreDiff });
       }
     }
 
@@ -1929,7 +1928,7 @@
         await updateDoc(commentRef, updateData);
         fetchComment(postId);
         if (scoreDiff !== 0) {
-          await awardPoints({ points: scoreDiff });
+          await awardPointsAndCheckRank({ points: scoreDiff });
         }
       } catch (err) {
         showToast(err.message, "오류");
@@ -1970,7 +1969,7 @@
         await updateDoc(commentRef, updateData);
         fetchComment(postId);
         if (scoreDiff !== 0) {
-          await awardPoints({ points: scoreDiff });
+          await awardPointsAndCheckRank({ points: scoreDiff });
         }
       } catch (err) {
         showToast(err.message, "오류");
@@ -2717,6 +2716,25 @@
           const el = document.getElementById('loginEmail');
           if (el) el.focus();
         });
+    }
+
+    async function awardPointsAndCheckRank(params) {
+      // 이전 계급 저장
+      const oldScore = currentScore;
+      const oldRank = getRankByScore(currentScore).name;
+      // 포인트 적립 호출
+      const res = await awardPoints(params);
+      // 새 점수 및 계급 계산
+      const newScore = res.data.score;
+      const newRank = getRankByScore(newScore).name;
+      // 세션 점수 업데이트
+      currentScore = newScore;
+      // 계급이 변했다면 축하
+      if (oldScore < newScore && oldRank !== newRank) {
+        launchFireworks();
+        showToast(`레벨업! 등급이 ${newRank}로 올랐습니다!`, '축하합니다', 8000);
+      }
+      return res.data.awarded;
     }
 
     init();
