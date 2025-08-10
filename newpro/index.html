@@ -2064,6 +2064,8 @@
           if (postSnap.exists()) openEditModal(postSnap);
           else showToast('글 정보를 불러오지 못했습니다.', '오류');
         });
+      }
+      if(isAuthor || isAdmin) {
         const deleteBtn = card.querySelector(`#deleteBtn-${postId}`);
         deleteBtn.addEventListener('click', async () => {
           const postSnap = await getDoc(doc(db, 'posts', postId));
