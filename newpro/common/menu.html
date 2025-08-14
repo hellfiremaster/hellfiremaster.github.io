@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <!-- 브랜드 -->
+    <a class="navbar-brand fw-bold" href="index.html">뉴프로</a>
+
+    <!-- 햄버거 버튼 -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- 메뉴 -->
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">🗺️ 모험의 기록</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="card.html">🃏 카드게임</a>
+        </li>
+      </ul>
+
+    <!-- 로그인/회원가입 -->
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <!-- 로그인/회원가입 버튼 -->
+      <li class="nav-item">
+        <button class="btn btn-outline-light me-2 auth-loading" id="authLoadingBtn">로딩중...</button>
+      </li>
+      <li class="nav-item mb-2 mb-lg-0">
+        <button class="btn btn-outline-light me-2 d-none" id="loginBtn"
+          data-bs-toggle="modal" data-bs-target="#loginModal">로그인</button>
+      </li>
+      <li class="nav-item mb-2 mb-lg-0">
+        <button class="btn btn-success me-2 d-none" id="signupBtn"
+          data-bs-toggle="modal" data-bs-target="#signupModal">회원가입</button>
+      </li>
+
+      <!-- 로그인 후 드롭다운 -->
+      <li class="nav-item dropdown d-none" id="userDropdown">
+        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"></button>
+
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownMenuButton">
+          <li><a class="dropdown-item" href="terms.html" target="_blank">📜 이용 약관</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="#" id="logoutBtnDropdown">🚪 로그아웃</a></li>
+        </ul>
+      </li>
+    </ul>
+
+  </div>
+</nav>

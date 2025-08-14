@@ -474,28 +474,7 @@
   </div>
   
   <!-- 네비게이션 바 -->
-  <nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="index.html">뉴프로</a>
-      <div class="ms-auto">
-        <button class="btn btn-outline-light me-2 auth-loading" id="authLoadingBtn">로딩중...</button>
-        <button class="btn btn-outline-light me-2 d-none" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">로그인</button>
-        <button class="btn btn-success me-2 d-none" id="signupBtn" data-bs-toggle="modal" data-bs-target="#signupModal">회원가입</button>
-        <!-- 로그인 시 보여질 사용자 프로필(드롭다운) -->
-        <div class="dropdown d-none" id="userDropdown">
-          <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-            <!-- 닉네임, 등급, 점수로 동적 업데이트 -->
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownMenuButton">
-            <!-- <li><a class="dropdown-item" href="#">프로필</a></li> -->
-            <!-- <li><hr class="dropdown-divider"></li> -->
-            <a class="dropdown-item" href="terms.html" target="_blank">📜 이용 약관</a>
-            <li><a class="dropdown-item" href="#" id="logoutBtnDropdown">🚪 로그아웃</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </nav>
+  <div id="menu-container"></div>
 
   <!-- Hero Section -->
   <section class="hero-section">
@@ -624,75 +603,9 @@
     </div>
   </div>
 
-  <!-- 회원가입 모달 -->
-  <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <form id="signupForm">
-          <div class="modal-header">
-            <h5 class="modal-title" id="signupModalLabel">회원가입</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="signupEmail" class="form-label">이메일</label>
-              <input type="email" class="form-control" id="signupEmail" required />
-              <small class="text-muted">올바른 이메일을 입력하면 비밀번호를 잊어버려도 계정을 찾을 수 있어요!</small>
-            </div>
-            <div class="mb-3">
-              <label for="signupPassword" class="form-label">비밀번호</label>
-              <input type="password" class="form-control" id="signupPassword" required />
-            </div>
-            <div class="mb-3">
-              <label for="signupNickname" class="form-label">닉네임</label>
-              <input type="text" class="form-control" id="signupNickname" required />
-            </div>
-            <div class="text-center">
-              <small>
-                회원가입을 진행하면 <a href="terms.html" target="_blank">이용약관</a>에 동의하는 것으로 간주됩니다.
-              </small>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-            <button type="submit" class="btn btn-success">회원가입</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+  <!-- 로그인/회원가입 모달 -->
+  <div id="auth-modal-container"></div>
   
-  <!-- 로그인 모달 -->
-  <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <form id="loginForm">
-          <div class="modal-header">
-            <h5 class="modal-title" id="loginModalLabel">로그인</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="loginEmail" class="form-label">이메일</label>
-              <input type="email" class="form-control" id="loginEmail" required />
-            </div>
-            <div class="mb-3">
-              <label for="loginPassword" class="form-label">비밀번호</label>
-              <input type="password" class="form-control" id="loginPassword" required />
-            </div>
-            <div class="text-end">
-              <button type="button" id="resetPasswordBtn" class="btn btn-link btn-sm">비밀번호 찾기</button>              
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-            <button type="submit" class="btn btn-primary">로그인</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
   <!-- [계급 안내 모달] -->
   <div class="modal fade" id="rankModal" tabindex="-1" aria-labelledby="rankModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -766,59 +679,27 @@
   </div>
 
   <!-- Toast (알림) -->
-  <div class="toast-container">
-    <div id="liveToast" class="toast align-items-center dark-bg" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="toast-header">
-        <strong class="me-auto" id="toastTitle">알림</strong>
-        <!-- <small class="text-muted" id="toastTime"></small> -->
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div class="toast-body" id="toastMessage">메시지 내용</div>
-    </div>
-  </div>
+  <div id="toast-container"></div>
 
   <!-- canvas-confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./common/common.js"></script>
+  <script type="module" src="./common/auth.js"></script>
 
   <!-- Firebase ES Modules (모듈 방식) -->
   <script type="module">
     /********************************
      * Firebase 초기화 및 모듈 임포트
      ********************************/
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js';
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
-    import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app-check.js';
+    import { auth, db, functions, storage, analytics } from './common/firebase-init.js';
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";    
+    import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';    
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
     import { getFirestore, collection, doc, setDoc, getDoc, updateDoc, deleteDoc, runTransaction, serverTimestamp, arrayUnion, arrayRemove, where, query, orderBy, getDocs, startAfter, limit, Timestamp, deleteField } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
-    import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';
-    import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js';
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyC-etI5o4uWbBp2Arj9KpxdDyRebguErnY",
-      authDomain: "newpro-4bc73.firebaseapp.com",
-      projectId: "newpro-4bc73",
-      storageBucket: "newpro-4bc73.firebasestorage.app",
-      messagingSenderId: "267192611563",
-      appId: "1:267192611563:web:94fb5ec97872cd452a84ae"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    initializeAppCheck(app, {
-      provider: new ReCaptchaV3Provider('6LcKb8QqAAAAAKReI1hvkatzxiNvquuoryudyXi4'),
-      isTokenAutoRefreshEnabled: true
-    });
-    const analytics = getAnalytics(app);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const functions = getFunctions(app);
 
     const awardPoints = httpsCallable(functions, 'awardPoints');
-    const storage = getStorage(app);
-
-    let fcmTokenUpdated = false;
     const ADMIN_UID = 'dCgOsOVWCZhSQBwU38NHogTE0dE2';
 
     /********************************
@@ -836,6 +717,7 @@
       }
       return snap;
     }
+
     async function fetchUserNicknameAndScore(uid) {
       const snap = await fetchUserDoc(uid);
       if (snap.exists()) {
@@ -996,13 +878,13 @@
         return null;
       }
       try {
-        const res = await awardPointsAndCheckRank({ points });        
-        if(res.data.awarded === 0) {
+        const awarded = await awardPointsAndCheckRank({ points });        
+        if(awarded === 0) {
           showToast(`축하합니다!`, "퀴즈 챌린지");
         } else {
-          showToast(`퀴즈 포인트 ${res.data.awarded}점 획득!`, "퀴즈 챌린지");
+          showToast(`퀴즈 포인트 ${awarded}점 획득!`, "퀴즈 챌린지");
         }
-        return res.data.awarded;
+        return awarded;
       } catch (err) {
         showToast(err.message, "오류");
       }
@@ -1033,53 +915,16 @@
       minutes = minutes.toString().padStart(2, '0'); seconds = seconds.toString().padStart(2, '0');
       return `${year}.${month}.${day}, ${hours}:${minutes}:${seconds} ${ampm}`;
     }
-    function formatDateForToast(date) {
-      let year = date.getFullYear(), month = date.getMonth() + 1, day = date.getDate();
-      let hours = date.getHours(), minutes = date.getMinutes(), seconds = date.getSeconds();
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12; hours = hours === 0 ? 12 : hours;
-      minutes = minutes.toString().padStart(2, '0'); seconds = seconds.toString().padStart(2, '0');
-      return `${year}.${month}.${day}, ${hours}:${minutes}:${seconds} ${ampm}`;
-    }
-
-    /********************************
-     * Toast 함수
-     ********************************/
-     function showToast(message, title = '알림', duration = 5000) {
-      const toastEl    = document.getElementById('liveToast');
-      const toastTitle = document.getElementById('toastTitle');
-      const toastMsg   = document.getElementById('toastMessage');
-      // const toastTime  = document.getElementById('toastTime');
-
-      toastTitle.textContent = title;
-      // — textContent 대신 innerHTML, 줄바꿈 → <br> 변환
-      toastMsg.innerHTML = message.replace(/\n/g, '<br/>');
-
-      // toastTime.textContent = formatDateForToast(new Date());
-      const bsToast = new bootstrap.Toast(toastEl, { delay: duration });
-      bsToast.show();
-    }
 
     /********************************
      * DOM 요소 참조
      ********************************/
-    const authLoadingBtn = document.getElementById('authLoadingBtn');
-    const loginBtn = document.getElementById('loginBtn');
-    const signupBtn = document.getElementById('signupBtn');
     // 기존 logoutBtn는 제거하고 드롭다운에서 처리함
     const togglePostFormBtn = document.getElementById('togglePostFormBtn');
     const showRankBtn = document.getElementById('showRankBtn');
     const postCard = document.getElementById('postCard');
     const savePostBtn = document.getElementById('savePostBtn');
     const postList = document.getElementById('postList');
-    const signupForm = document.getElementById('signupForm');
-    const signupEmail = document.getElementById('signupEmail');
-    const signupPassword = document.getElementById('signupPassword');
-    const signupNickname = document.getElementById('signupNickname');
-    const loginForm = document.getElementById('loginForm');
-    const loginEmail = document.getElementById('loginEmail');
-    const loginPassword = document.getElementById('loginPassword');
-    const resetPasswordBtn = document.getElementById('resetPasswordBtn');
     const postTitle = document.getElementById('postTitle');
     const editModalEl = document.getElementById('editModal');
     const editModal = new bootstrap.Modal(editModalEl);
@@ -1292,132 +1137,18 @@
       if (celebrating) launchFireworks();
     }
 
-    /********************************
-     * 회원가입, 로그인, 비밀번호 초기화, 로그아웃
-     ********************************/
-    signupForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const emailVal = signupEmail.value.trim();
-      const pwVal = signupPassword.value.trim();
-      const nickVal = signupNickname.value.trim();
-      if (!emailVal || !pwVal || !nickVal) {
-        showToast('모든 항목을 입력하세요.', '회원가입 실패');
-        return;
-      }
-
-      try {
-        const nickQuery = query(
-          collection(db, 'users'),
-          where('nickname', '==', nickVal),
-          limit(1)
-        );
-        const snap = await getDocs(nickQuery);
-        if (!snap.empty) {
-          showToast('이미 사용 중인 닉네임입니다. 다른 닉네임으로 시도해주세요.', '회원가입 실패');
-          return;
-        }
-      } catch (err) {
-        console.error(err);
-        showToast('닉네임 확인 중 오류가 났습니다. 다시 시도해주세요.', '오류');
-        return;
-      }
-
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, emailVal, pwVal);
-        const user = userCredential.user;
-        await setDoc(doc(db, 'users', user.uid), {
-          nickname: nickVal,
-          score: 0,
-          createdAt: serverTimestamp()
-        });
-        showToast('회원가입 성공!', '회원가입');
-        bootstrap.Modal.getInstance(document.getElementById('signupModal')).hide();
-        location.reload();
-      } catch (err) {
-        showToast(err.message, '회원가입 실패');
-      }
-    });
-
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const emailVal = loginEmail.value.trim();
-      const pwVal = loginPassword.value.trim();
-      if (!emailVal || !pwVal) {
-        showToast('이메일/비밀번호를 입력하세요.', '로그인 실패');
-        return;
-      }
-      try {
-        await signInWithEmailAndPassword(auth, emailVal, pwVal);
-        showToast('로그인 성공!', '로그인');
-        bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
-        location.reload();
-      } catch (err) {
-        showToast(err.message, '로그인 실패');
-      }
-    });
-    
-    resetPasswordBtn.addEventListener('click', async () => {
-      const emailVal = loginEmail.value.trim();
-      if (!emailVal) {
-        showToast('이메일을 입력하세요.', '오류');
-        return;
-      }
-      if (confirm(`${emailVal}로 비밀번호 초기화 메일을 보내시겠습니까?`)) {
-        try {
-          await sendPasswordResetEmail(auth, emailVal);
-          showToast('비밀번호 초기화 메일을 보냈습니다.', '비밀번호 초기화');
-        } catch (err) {
-          showToast(err.message, '오류');
-        }
-      }
-    });
-
     // 기존 logoutBtn 이벤트 리스너는 제거하고 아래에서 드롭다운 로그아웃 이벤트를 추가합니다.
     onAuthStateChanged(auth, async (user) => {
-      authLoadingBtn.classList.add('d-none');
       if (user) {
-        loginBtn.classList.add('d-none');
-        signupBtn.classList.add('d-none');
-        document.getElementById('userDropdown').classList.remove('d-none');
         const userData = await fetchUserNicknameAndScore(user.uid);
         currentNickname = userData.nickname;
         currentScore = userData.score;
-        const rankInfo = getRankByScore(currentScore);
-        document.getElementById('userDropdownMenuButton').innerText = `${currentNickname} ${rankInfo.icon}`;
-
-        saveFcmToken();
       } else {
-        loginBtn.classList.remove('d-none');
-        signupBtn.classList.remove('d-none');
-        document.getElementById('userDropdown').classList.add('d-none');
         currentNickname = null;
         currentScore = 0;
       }
-      // const commentForms = document.querySelectorAll('[id^="commentForm-"]');
-      // if (user) {
-      //   commentForms.forEach(form => form.classList.remove('d-none'));
-      // } else {
-      //   commentForms.forEach(form => form.classList.add('d-none'));
-      // }
     });
 
-    // 드롭다운의 로그아웃 버튼 이벤트 처리
-    document.getElementById('logoutBtnDropdown').addEventListener('click', async () => {
-      try {
-        if(fcmTokenUpdated) {
-          await setDoc(doc(db, 'users_private', auth.currentUser.uid), {
-            fcmToken: null,
-            updatedAt: serverTimestamp()
-          }, { merge: true });
-        }
-        await signOut(auth);
-        alert('안녕히 가세요^^');
-        showToast('로그아웃 완료', '로그아웃');
-        location.reload();
-      } catch (error) {
-        showToast(error.message, '로그아웃 실패');
-      }
-    });
     togglePostFormBtn.addEventListener('click', () => {
       if(!auth.currentUser) {
         requireLogin();
@@ -2618,48 +2349,6 @@
       }
     }
 
-    function saveFcmToken() {
-      // 1) Messaging 객체 생성
-      if(location.protocol === 'https:') {
-        const messaging = getMessaging(app);
-
-        if (Notification.permission === 'default') {
-          showToast('알림을 허용하면 댓글 알림을 받을수 있습니다.');
-        }
-    
-        // 2) 푸시 권한 요청 & 토큰 발급
-        Notification.requestPermission().then(async (permission) => {
-          if (permission === 'granted' && auth.currentUser) {
-            try {
-              const currentToken = await getToken(messaging, {
-                vapidKey: 'BI4TCRiStLi-urYEy8MPM3A8Q2ciQkI7LwvkqQrudLDoXznHllqGN61b0ueM57BSltpgqJsoL4nMt7lcyQL6pbc'
-              });
-              if (currentToken) {
-                await setDoc(doc(db, 'users_private', auth.currentUser.uid), {
-                  fcmToken: currentToken,
-                  updatedAt: serverTimestamp()
-                }, { merge: true });
-                fcmTokenUpdated = true;
-                // console.log('FCM 토큰 저장 완료💕', currentToken);
-              }
-            } catch (err) {
-              console.error('FCM 토큰 가져오기 실패💦', err);
-            }
-          }
-        });
-
-        // 4) 앱이 켜져 있을 때 수신 메시지 처리 (optional)
-        onMessage(messaging, (payload) => {
-          console.log('새 알림 도착✨', payload);
-          const postId = payload.data?.postId;
-          if(postId) {
-            fetchComment(postId);
-          }
-          // showToast(payload.notification.title, payload.notification.body);
-        });
-      }
-    }
-
     async function uploadImageToFirebase(blob) {
       const fileName = `posts/${Date.now()}_${blob.name}`;
       const imgRef   = ref(storage, fileName);
@@ -2672,14 +2361,6 @@
     }
     function hideFullScreenLoader() {
       document.getElementById('fullScreenLoader').classList.add('d-none');
-    }
-
-    function requireLogin() {
-      // 회원가입 모달 띄우기
-      showToast("로그인이 필요합니다.", "반가워요.");
-      const modalEl = document.getElementById('signupModal');
-      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-      modal.show();
     }
 
     async function fetchComment(postId) {
@@ -2749,6 +2430,6 @@
     }
 
     init();
-  </script>
+  </script>  
 </body>
 </html>

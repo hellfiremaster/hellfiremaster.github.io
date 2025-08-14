@@ -1,0 +1,65 @@
+<!-- 회원가입 모달 -->
+<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form id="signupForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signupModalLabel">회원가입</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="signupEmail" class="form-label">이메일</label>
+            <input type="email" class="form-control" id="signupEmail" required />
+          </div>
+          <div class="mb-3">
+            <label for="signupPassword" class="form-label">비밀번호</label>
+            <input type="password" class="form-control" id="signupPassword" required />
+          </div>
+          <div class="mb-3">
+            <label for="signupNickname" class="form-label">닉네임</label>
+            <input type="text" class="form-control" id="signupNickname" required />
+          </div>
+          <small class="text-muted">
+            진행 시 <a href="terms.html" target="_blank">이용약관</a>에 동의하는 것으로 간주됩니다.
+          </small>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+          <button type="submit" class="btn btn-success">회원가입</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 로그인 모달 -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form id="loginForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">로그인</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="loginEmail" class="form-label">이메일</label>
+            <input type="email" class="form-control" id="loginEmail" required />
+          </div>
+          <div class="mb-3">
+            <label for="loginPassword" class="form-label">비밀번호</label>
+            <input type="password" class="form-control" id="loginPassword" required />
+          </div>
+          <div class="text-end">
+            <button type="button" id="resetPasswordBtn" class="btn btn-link btn-sm">비밀번호 찾기</button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+          <button type="submit" class="btn btn-primary">로그인</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
