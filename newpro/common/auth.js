@@ -36,15 +36,13 @@ function waitForEl(selector, timeout=5000) {
   });
 }
 
-function qs(id) { return document.getElementById(id); }
-
 function bindAuthUI() {
-  const authLoadingBtn = qs('authLoadingBtn');
-  const loginBtn       = qs('loginBtn');
-  const signupBtn      = qs('signupBtn');
-  const userDropdown   = qs('userDropdown');
-  const userDropBtn    = qs('userDropdownMenuButton');
-  const logoutBtn      = qs('logoutBtnDropdown');
+  const authLoadingBtn = document.getElementById('authLoadingBtn');
+  const loginBtn       = document.getElementById('loginBtn');
+  const signupBtn      = document.getElementById('signupBtn');
+  const userDropdown   = document.getElementById('userDropdown');
+  const userDropBtn    = document.getElementById('userDropdownMenuButton');
+  const logoutBtn      = document.getElementById('logoutBtnDropdown');
 
   // 상태 반영
   onAuthStateChanged(auth, async (user) => {
@@ -121,29 +119,29 @@ function saveFcmToken() {
 }
 
 function bindModals() {
-  const signupForm = qs('signupForm');
-  const loginForm  = qs('loginForm');
-  const resetBtn   = qs('resetPasswordBtn');
+  const signupForm = document.getElementById('signupForm');
+  const loginForm  = document.getElementById('loginForm');
+  const resetBtn   = document.getElementById('resetPasswordBtn');
 
   // 회원가입
   if (signupForm) {
     signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = qs('signupEmail').value.trim();
-      const pw    = qs('signupPassword').value.trim();
-      const nick  = qs('signupNickname').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const pw    = document.getElementById('signupPassword').value.trim();
+      const nick  = document.getElementById('signupNickname').value.trim();
       if (!email || !pw || !nick) {
         return window.showToast('모든 항목을 입력하세요.', '회원가입 실패');
       }
       // 닉네임 중복 체크
-      const qSnap = await getDocs(query(collection(db,'users'), where('nickname','==', nick), limit(1)));
-      if (!qSnap.empty) return window.showToast('이미 사용 중인 닉네임이에요.', '회원가입 실패');
+      const snap = await getDocs(query(collection(db,'users'), where('nickname','==', nick), limit(1)));
+      if (!snap.empty) return window.showToast('이미 사용 중인 닉네임이에요.', '회원가입 실패');
 
       try {
         const cred = await createUserWithEmailAndPassword(auth, email, pw);
         await setDoc(doc(db,'users', cred.user.uid), { nickname: nick, score: 0, createdAt: serverTimestamp() });
         window.showToast('회원가입 성공!', '회원가입');
-        bootstrap.Modal.getInstance(qs('signupModal'))?.hide();
+        bootstrap.Modal.getInstance(document.getElementById('signupModal'))?.hide();
       } catch (err) {
         window.showToast(err.message, '회원가입 실패');
       }
@@ -154,13 +152,13 @@ function bindModals() {
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = qs('loginEmail').value.trim();
-      const pw    = qs('loginPassword').value.trim();
+      const email = document.getElementById('loginEmail').value.trim();
+      const pw    = document.getElementById('loginPassword').value.trim();
       if (!email || !pw) return window.showToast('이메일/비밀번호를 입력하세요.', '로그인 실패');
       try {
         await signInWithEmailAndPassword(auth, email, pw);
         window.showToast('로그인 성공!', '로그인');
-        bootstrap.Modal.getInstance(qs('loginModal'))?.hide();
+        bootstrap.Modal.getInstance(document.getElementById('loginModal'))?.hide();
       } catch (err) {
         window.showToast(err.message, '로그인 실패');
       }
@@ -170,7 +168,7 @@ function bindModals() {
   // 비밀번호 초기화
   if (resetBtn) {
     resetBtn.addEventListener('click', async () => {
-      const email = qs('loginEmail').value.trim();
+      const email = document.getElementById('loginEmail').value.trim();
       if (!email) return window.showToast('이메일을 입력하세요.', '오류');
       try {
         await sendPasswordResetEmail(auth, email);
@@ -185,7 +183,7 @@ function bindModals() {
 // 로그인 요구 헬퍼 (다른 페이지에서도 씀)
 function requireLogin() {
   window.showToast('로그인이 필요합니다.', '반가워요.');
-  const el = qs('signupModal');
+  const el = document.getElementById('signupModal');
   bootstrap.Modal.getOrCreateInstance(el).show();
 }
 window.requireLogin = requireLogin;
@@ -200,8 +198,8 @@ window.requireLogin = requireLogin;
     bindModals();
 
     // 모달 열릴 때 포커스 (귀염 포인트✨)
-    qs('signupModal')?.addEventListener('shown.bs.modal', () => qs('signupEmail')?.focus());
-    qs('loginModal') ?.addEventListener('shown.bs.modal', () => qs('loginEmail') ?.focus());
+    document.getElementById('signupModal')?.addEventListener('shown.bs.modal', () => document.getElementById('signupEmail')?.focus());
+    document.getElementById('loginModal') ?.addEventListener('shown.bs.modal', () => document.getElementById('loginEmail') ?.focus());
   } catch (e) {
     // 페이지에 컨테이너가 없을 수도 있으니 조용히 패스~
   }

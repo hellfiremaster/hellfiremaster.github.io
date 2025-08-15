@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
   loadPart('#menu-container', 'common/menu.html').then(r => {
     updateActiveMenu();
   });
-
   loadPart('#toast-container', 'common/toast.html');
   loadPart('#auth-modal-container', 'common/auth.html'); // ← 추가: 있으면 자동 로드
 });

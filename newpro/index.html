@@ -28,77 +28,10 @@
 
   <!-- DOMPurify -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.3/purify.min.js" integrity="sha512-Ll+TuDvrWDNNRnFFIM8dOiw7Go7dsHyxRp4RutiIFW/wm3DgDmCnRZow6AqbXnCbpWu93yM1O34q+4ggzGeXVA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+  <link rel="stylesheet" href="./common/common.css" />
   <style>
-    /* 기본 배경 및 글꼴 등 */
-    body {
-      background: linear-gradient(135deg, #1f2945, #2a4065);      
-      background-color: #1f2945;
-      min-height: 100vh;
-      color: #fff;
-      margin: 0;
-      padding: 0;
-    }
-    .navbar {
-      background: rgba(10, 10, 20, 0.7) !important;
-    }
-    .navbar-brand {
-      font-family: 'Jua', sans-serif;
-      font-size: 1.8rem;
-    }
-    .hero-section {
-      text-align: center;
-      padding: 3rem 1rem;
-      background: transparent;
-    }
-    .hero-title {
-      font-size: 3rem;
-      font-weight: bold;
-      margin-bottom: 1rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-      color: #fff;
-      font-family: 'Jua', sans-serif;
-    }
-    .hero-subtitle {
-      font-size: 1.25rem;
-      opacity: 0.9;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
-      color: #d5d9e0;
-      font-family: 'Jua', sans-serif;
-    }
-    .glass-card {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(8px);
-      border-radius: 1rem;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      color: #000;
-    }
-    .toast-container {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 9999;
-    }
-    .toast.dark-bg {
-      background-color: rgba(0,0,0,0.8);
-      color: #fff;
-    }
-    .toast.dark-bg .toast-header {
-      background-color: transparent;
-      color: #fff;
-      border-bottom: 1px solid #666;
-    }
-    .toast.dark-bg .btn-close {
-      filter: invert(1);
-    }
-    .d-none {
-      display: none !important;
-    }
-    .modal-content {
-      background-color: #fff !important;
-      color: #000 !important;
-    }
+
+    
     .comment-item {
       background-color: #f8f9fa;
       border-radius: 0.5rem;
@@ -111,14 +44,7 @@
       justify-content: space-between;
       flex-wrap: wrap;
     }
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-    .auth-loading {
-      animation: spin 1.0s linear infinite;
-    }
+
     #postList img {
       max-width: 100%;
       height: auto;
@@ -130,45 +56,6 @@
       display: block;          /* 가운데 정렬을 위해 block */
       margin: 1rem 0;       /* 위아래 여백 + 가로 중앙 */
       border-radius: 0.5rem;   /* 둥글둥글 귀엽게 */
-    }
-    .shining-btn {
-      position: relative;
-      overflow: hidden;
-      background-color: #ff69b4;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      box-shadow: 0 0 8px rgba(255,105,180, 0.6);
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .shining-btn::before {
-      content: "";
-      position: absolute;
-      top: -100%;
-      left: -100%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(
-        45deg,
-        rgba(255, 255, 255, 0.7) 0%,
-        rgba(255, 255, 255, 0) 40%,
-        rgba(255, 255, 255, 0) 60%,
-        rgba(255, 255, 255, 0.7) 100%
-      );
-      animation: shine 2.5s infinite;
-      transform: rotate(0deg);
-    }
-    @keyframes shine {
-      0% {
-        transform: translate(-100%, -100%);
-      }
-      50% {
-        transform: translate(100%, 100%);
-      }
-      100% {
-        transform: translate(-100%, -100%);
-      }
     }
     .keep-line-breaks {
       white-space: pre-line;
@@ -356,9 +243,6 @@
     .like-flame {
       animation: likeFlame 0.5s ease-in-out;
     }
-    .adventure {
-      font-family: 'Jua', sans-serif !important;
-    }
 
     @keyframes burningAnimation {
       0% {
@@ -428,36 +312,6 @@
       font-size: 0.875rem; /* sm 크기 */
       padding: 0.25rem 0.5rem;
     }
-  }
-
-  /* 풀스크린 오버레이 */
-  #fullScreenLoader {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 3000;
-  }
-  /* 컨텐츠 애니메이션 */
-  .loader-content {
-    text-align: center;
-    color: #fff;
-    animation: pulse 1.5s infinite;
-  }
-  .loader-text {
-    font-size: 1.5rem;
-    margin-top: 1rem;
-    font-family: 'Poor Story', sans-serif;
-  }
-  /* 펄스 효과 */
-  @keyframes pulse {
-    0%   { transform: scale(1);   }
-    50%  { transform: scale(1.1); }
-    100% { transform: scale(1);   }
   }
   
   .auto-height {
@@ -601,10 +455,7 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- 로그인/회원가입 모달 -->
-  <div id="auth-modal-container"></div>
+  </div>  
   
   <!-- [계급 안내 모달] -->
   <div class="modal fade" id="rankModal" tabindex="-1" aria-labelledby="rankModalLabel" aria-hidden="true">
@@ -677,6 +528,9 @@
       </div>
     </div>
   </div>
+
+  <!-- 로그인/회원가입 모달 -->
+  <div id="auth-modal-container"></div>
 
   <!-- Toast (알림) -->
   <div id="toast-container"></div>
