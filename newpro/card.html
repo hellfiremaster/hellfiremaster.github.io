@@ -420,6 +420,10 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    #cardModalTitle.card-caption {
+      cursor: default;
+      user-select: none;
+    }
   </style>
 </head>
 
@@ -480,7 +484,7 @@
           <img id="cardModalImg" src="" alt="card" />
 
           <!-- 카드 제목 (card.name 세팅됨) -->
-          <h5 id="cardModalTitle" class="card-caption mt-3"></h5>
+          <h5 id="cardModalTitle" class="card-caption mt-3" data-bs-dismiss="modal" aria-label="Close"></h5>
         </div>
       </div>
     </div>
