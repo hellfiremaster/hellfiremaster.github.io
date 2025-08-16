@@ -364,6 +364,62 @@
         transform: scale(1)
       }
     }
+
+    /* --- 카드 모달 전용 --- */
+    #cardModal .modal-content {
+      background: transparent !important;
+      border: none;
+      box-shadow: none;
+    }
+
+    #cardModal .modal-header,
+    #cardModal .modal-footer {
+      display: none;
+    }
+
+    #cardModal .modal-body {
+      padding: 0;
+    }
+
+    /* 카드 이미지 */
+    #cardModalImg {
+      max-width: 90%;
+      border-radius: 16px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
+      transform: translateY(0);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    #cardModalImg:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+    }
+
+    /* 제목 (캡션 스타일) */
+    #cardModalTitle.card-caption {
+      font-family: 'Jua', cursive;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 
+        0 2px 4px rgba(0,0,0,0.6),
+        0 0 8px rgba(255,255,255,0.2);
+      letter-spacing: 1px;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    /* 뒷배경 */
+    #cardModal.modal.fade .modal-backdrop.show {
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(4px);
+    }
+
+    /* 등장 애니메이션 */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
   </style>
 </head>
 
@@ -416,19 +472,15 @@
   </div>
 
   <!-- Preview Modal -->
-  <div class="modal fade" id="cardModal" tabindex="-1" aria-hidden="true">
+  <div class="modal fade card-preview-modal" id="cardModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="cardModalTitle">카드</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
         <div class="modal-body text-center">
-          <img id="cardModalImg" src="" alt="card"
-            style="max-width:100%; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,.2)" />
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+          <!-- 카드 이미지 -->
+          <img id="cardModalImg" src="" alt="card" />
+
+          <!-- 카드 제목 (card.name 세팅됨) -->
+          <h5 id="cardModalTitle" class="card-caption mt-3"></h5>
         </div>
       </div>
     </div>
