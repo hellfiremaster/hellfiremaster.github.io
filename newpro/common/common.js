@@ -1,8 +1,7 @@
 import { auth, db, functions, storage, analytics } from './firebase-init.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs, limit, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
+import { doc, setDoc, getDoc, collection, query, where, getDocs, limit, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
 import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js';
-import * as common from './common.js';
 
 // ---- 유틸: 점수→랭크 이모지(간단판) ----
 function getRankByScore(score=0) {
@@ -205,7 +204,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await Promise.all([
       loadPart('#menu-container', 'common/menu.html'),
       loadPart('#toast-container', 'common/toast.html'),
-      loadPart('#auth-modal-container', 'common/auth.html'),
     ]);
 
     // 모든 HTML 로딩이 끝났으니, 이제 안심하고 함수들을 실행할 수 있어!

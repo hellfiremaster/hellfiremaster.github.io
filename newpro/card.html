@@ -19,11 +19,17 @@
 
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-
-  <!-- Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <link rel="stylesheet" href="./common/common.css" />
   <style>
+    .gift-image {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
     .badge-soft {
       background: rgba(42, 64, 101, .15);
       color: #2a4065;
@@ -387,7 +393,7 @@
           <span class="fw-bold" id="progressText">0 / 0</span>
         </div>
         <div class="d-flex align-items-center gap-2">
-          <button class="btn btn-light btn-sm" id="showGiftBtn" disabled>🎁 기프트 확인</button>
+          <button class="btn btn-light btn-sm" id="showGiftBtn">🎁 기프트 확인</button>
           <button class="btn btn-draw" id="drawBtn">🎲 카드 뽑기</button>
         </div>
       </div>
@@ -398,7 +404,9 @@
           <div class="face front"><img id="frontImg" src="" alt="card"></div>
         </div>
       </div>
-      <small class="text-muted d-block mt-2">버튼을 누르면 카드가 섞이다가 번쩍! 앞면이 공개돼요. (결과 카드는 Firebase Functions에서 리턴!)</small>
+
+      <!-- <small class="text-muted d-block mt-2">버튼을 누르면 카드가 섞이다가 번쩍! 앞면이 공개!</small> -->
+      <small id="eventInfoText" class="text-muted d-block"></small>
     </div>
 
     <!-- Album -->
@@ -430,35 +438,49 @@
   <!-- Giftcon Modal -->
   <div class="modal fade" id="giftModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
+      <div class="modal-content" style="border-radius: 16px; overflow: hidden;">
+        
+        <div class="modal-header border-0 pb-0">
           <h5 class="modal-title">축하해요! 모든 카드 모음 완료 🎉</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+  
         <div class="modal-body">
-          <div class="giftcon">
-            <div class="giftcon-header">뉴프로 기프트콘</div>
-            <div class="giftcon-body">
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <div class="p-3 rounded" style="background:#f8fafc; border:1px solid #e9eef6">
-                    <h6 class="mb-2">🎁 상품명</h6>
-                    <div class="fs-5 fw-bold">뉴프로 모험가 기프트</div>
-                    <div class="small text-muted">모은 날짜: <span id="giftDate">-</span></div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="barcode-wrap">
-                    <canvas id="barcodeCanvas" width="420" height="120" aria-label="barcode"></canvas>
-                  </div>
-                  <div class="text-center mt-2 small text-muted">바코드 번호: <span id="barcodeNum">-</span></div>
-                </div>
-              </div>
+          <!-- 정보 카드 -->
+          <div class="p-3 rounded" style="background:#f8fafc; border:1px solid #e9eef6">
+            <h6 class="mb-2">🎁 상품명</h6>
+            <div class="fs-5 fw-bold">뉴프로 모험가 기프트</div>
+            <div class="small text-muted">모은 날짜: <span id="giftDate">-</span></div>
+            <img id="giftImg" alt="gift" class="gift-image mt-3" />
+            <div class="small text-danger mt-3">
+              이벤트 종료일까지만 저장 가능하니 꼭 미리 다운받아주세요!
             </div>
           </div>
-        </div>
-        <div class="modal-footer">
+        </div> 
+
+        <div class="modal-footer border-0">
+          <button class="btn btn-outline-secondary" id="saveGiftBtn">이미지 저장</button>
           <button class="btn btn-primary" data-bs-dismiss="modal">꺄~ 고마워요!</button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Winner Confirm Modal -->
+  <div class="modal fade" id="submitModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius:16px; overflow:hidden;">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title">카드 제출 & 기프트콘 받기</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          모든 카드를 모았어요! 지금 바로 제출하고 기프트콘을 받으시겠습니까? 🥳
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-outline-secondary" id="cancelSubmitBtn" data-bs-dismiss="modal">음.. 나중에</button>
+          <button type="button" class="btn btn-primary" id="confirmSubmitBtn">네! 제출할래요 💝</button>
         </div>
       </div>
     </div>
@@ -472,24 +494,21 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
   <script type="module" src="./common/common.js"></script>
 
   <!-- Firebase (ESM) -->
   <script type="module">
     import { auth, db, functions, storage, analytics } from './common/firebase-init.js';
-    import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-app-check.js';
-    import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
-    import { getFirestore, doc, getDoc, setDoc, getDocs, collection, query, where } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
+    import { doc, getDoc, setDoc, getDocs, collection, query, where, orderBy, limit, Timestamp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
     import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';
 
+    const getGiftcon = httpsCallable(functions, 'getGiftcon');
+    const drawCard = httpsCallable(functions, 'drawCard'); 
+    const addWinner  = httpsCallable(functions, 'addWinner');
+
     /* ------------------ UI Helpers ------------------ */
-    const toastEl = document.getElementById('liveToast');
-    const toastTitle = document.getElementById('toastTitle');
-    const toastMsg = document.getElementById('toastMessage');
-    function showToast(message, title = '알림', duration = 4000) {
-      toastTitle.textContent = title; toastMsg.innerHTML = message.replace(/\n/g, '<br/>');
-      const bsToast = new bootstrap.Toast(toastEl, { delay: duration }); bsToast.show();
-    }
     function showLoader(show) { document.getElementById('fullScreenLoader').style.display = show ? 'flex' : 'none'; }
     function launchFireworks(ms = 1600) {
       const end = Date.now() + ms; const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 2000 };
@@ -504,11 +523,11 @@
       { key: 'svn', name: 'svn', file: './images/svn.png' },
       { key: 'pierrot', name: '피에로가르뎅', file: './images/pierrot.png' },
       { key: 'aska', name: '아스카', file: './images/aska.png' },
-      { key: 'mungyu', name: '멍규', file: './images/mungyu.png' },
-      { key: 'ryudog_master', name: '류독 마스터', file: './images/ryudog_master.png' },
-      { key: 'gayuna', name: '가유나', file: './images/gayuna.png' },
+      { key: 'mungyu', name: '멍유', file: './images/mungyu.png' },
+      { key: 'ryudog_master', name: '루도그둠둥', file: './images/ryudog_master.png' },
+      { key: 'gayuna', name: '가연아', file: './images/gayuna.png' },
       { key: 'mungmyu', name: '멍뮤', file: './images/mungmyu.png' },
-      { key: 'tdt', name: 'TDT', file: './images/tdt.png' }
+      { key: 'tdt', name: 'ㅆㅇㅆ', file: './images/tdt.png' }
     ];
 
     const progressText = document.getElementById('progressText');
@@ -518,6 +537,33 @@
     const drawBtn = document.getElementById('drawBtn');
     const showGiftBtn = document.getElementById('showGiftBtn');
     // (single card mode - no reel build)
+
+    const submitModalEl = document.getElementById('submitModal');
+    const submitModal   = new bootstrap.Modal(submitModalEl, { backdrop: 'static', keyboard: false });
+    const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
+    const cancelSubmitBtn  = document.getElementById('cancelSubmitBtn');
+
+    function confirmSubmitModal() {
+      return new Promise((resolve) => {
+        let decision = null;
+
+        const onHidden = () => { off(); resolve(!!decision); };
+        const onConfirm = () => { decision = true;  submitModal.hide(); };
+        const onCancel  = () => { decision = false; submitModal.hide(); };
+
+        function off() {
+          confirmSubmitBtn.removeEventListener('click', onConfirm);
+          cancelSubmitBtn.removeEventListener('click', onCancel);
+          submitModalEl.removeEventListener('hidden.bs.modal', onHidden);
+        }
+
+        confirmSubmitBtn.addEventListener('click', onConfirm, { once: true });
+        cancelSubmitBtn.addEventListener('click', onCancel,  { once: true });
+        submitModalEl.addEventListener('hidden.bs.modal', onHidden, { once: true });
+
+        submitModal.show();
+      });
+    }
 
     // Album grid
     function renderAlbum(collectedSet) {
@@ -533,7 +579,7 @@
         albumGrid.appendChild(div);
       });
       progressText.textContent = `${collectedSet.size} / ${CARDS.length}`;
-      showGiftBtn.disabled = !(collectedSet.size === CARDS.length);
+      // showGiftBtn.disabled = !(collectedSet.size === CARDS.length);
     }
 
     // Modals
@@ -559,49 +605,105 @@
         if (x > W - 10) break;
       }
     }
-    function openGift() {
-      const now = new Date();
-      document.getElementById('giftDate').textContent = now.toLocaleString();
-      (async () => {
+
+    async function maybeSubmitWinner() {      
+      // 최신 winnerUid 확인을 위해 한번 더 새로고침!
+      await initEventInfo();
+
+      // 조건: 이벤트 진행중 + 전카드 모음 완료 + 아직 우승자 미정
+      if (eventActive && collected.size === CARDS.length && !winnerUid) {
+        const ok = await confirmSubmitModal();
+        if (!ok) return false;
+
         try {
-          const getGiftcon = httpsCallable(functions, 'getGiftcon');
-          const res = await getGiftcon();
-          const url = res?.data?.url || null;
-          const barcode = res?.data?.barcode || null;
-          const body = document.querySelector('#giftModal .giftcon-body');
-          let img = document.getElementById('giftImg');
-          if (!img) { img = document.createElement('img'); img.id = 'giftImg'; img.alt = 'gift'; img.style.cssText = 'width:100%;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.15);margin-bottom:12px'; body.prepend(img); }
-          if (url) img.src = url;
-          const canvas = document.getElementById('barcodeCanvas');
-          const numEl = document.getElementById('barcodeNum');
-          if (barcode) { numEl.textContent = barcode; drawBarcode(canvas, barcode); }
-          else {
-            const code = 'NP-' + now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0') + '-' + Math.random().toString(36).slice(2, 8).toUpperCase();
-            numEl.textContent = code; drawBarcode(canvas, code);
-          }
-          giftModal.show(); launchFireworks(2000);
+          showLoader(true);
+          // 서버 측 addWinner가 현재 활성 이벤트의 승자를 "나"로 기록한다고 가정!
+          await addWinner();
+          // 등록이 끝났으니 다시 이벤트 정보 가져와서 winnerUid가 채워졌는지 보정
+          await initEventInfo();
         } catch (e) {
-          // 폴백: 로컬 바코드만 표시
-          const code = 'NP-' + now.getFullYear() + String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0') + '-' + Math.random().toString(36).slice(2, 8).toUpperCase();
-          document.getElementById('barcodeNum').textContent = code;
-          drawBarcode(document.getElementById('barcodeCanvas'), code);
-          giftModal.show(); launchFireworks(2000);
+          showToast(e?.message ?? '승자 등록에 실패했어요 ㅠㅠ');
+          return false;
+        } finally {
+          showLoader(false);
         }
-      })();
+      }
+      return true;
     }
+
+    async function openGift() { 
+      if (!eventActive) {
+        showToast('현재 이벤트 진행중이 아니에요!');
+        return;
+      }
+      const user = auth.currentUser;
+      if (!user) { 
+        requireLogin(); 
+        return; 
+      }
+      if(collected.size !== CARDS.length && winnerUid !== user.uid) {
+        showToast('모든 카드를 모으지 못했거나 당첨자가 아니에요!');
+        return; 
+      }
+      // 상황에 따라 승자 등록 먼저
+      const proceed = await maybeSubmitWinner();
+      if (!proceed) return; // 사용자가 취소했거나 실패
+
+      try {
+        const res = await getGiftcon();
+        console.log('res', res)
+        const url = res.data.url;
+        const strDate = moment(res.data.winnerAt).format('YYYY-MM-DD HH:mm');
+        document.getElementById('giftDate').textContent = strDate;
+        const img = document.getElementById('giftImg');
+        img.src = url;
+
+        giftModal.show();
+        launchFireworks(2000);
+      } catch (e) {
+        showToast(e.message);
+      }
+    }
+
     document.getElementById('showGiftBtn').addEventListener('click', openGift);
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        collected = await fetchMyCards(user.uid); renderAlbum(collected);
-      } else {
-        collected = new Set(); renderAlbum(collected);
+    document.getElementById('saveGiftBtn').addEventListener('click', async (e) => {
+      e.preventDefault();
+
+      const img = document.getElementById('giftImg');
+      const filename = 'gift.png';
+
+      // 1) fetch로 Blob 받아서 저장 (가장 호환성 좋음)
+      try {
+        const res = await fetch(img.src, { mode: 'cors', cache: 'no-store' });
+        // 일부 브라우저는 opaque 응답(no-cors)로 오면 다운로드 불가
+        if (!res.ok || !res.body) throw new Error('fetch failed');
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        return;
+      } catch (err) {
+        console.warn('blob download failed, try canvas:', err);
       }
     });
 
-    async function getNickname(uid) {
-      try { const snap = await getDoc(doc(db, 'users', uid)); return snap.exists() ? (snap.data().nickname || '익명') : '익명'; } catch { return '익명'; }
-    }
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        collected = await fetchMyCards(user.uid); 
+        renderAlbum(collected);
+      } else {
+        collected = new Set();
+        renderAlbum(collected);
+      }
+    });
 
     /* ------------------ Draw Animation (single card shuffle + flip reveal) ------------------ */
     let collected = new Set();
@@ -610,80 +712,111 @@
     const frontImg = document.getElementById('frontImg');
     let isShuffling = false;
 
-    const SOUND_ENABLED = true;     // 소리 끄려면 false로!
+    // const SOUND_ENABLED = true;     // 소리 끄려면 false로!
     const MIN_WAIT = 1200;          // 최소 섞는 시간(ms)
     const TICK_EVERY = 160;         // 딱- 소리 템포
 
     const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
-    function playTick() {
-      try {
-        const Ctx = window.AudioContext || window.webkitAudioContext;
-        const ctx = new Ctx(); const o = ctx.createOscillator(); const g = ctx.createGain();
-        o.type = 'square'; o.frequency.value = 1000; o.connect(g); g.connect(ctx.destination);
-        g.gain.setValueAtTime(0.0001, ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.005);
-        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.05);
-        o.start(); o.stop(ctx.currentTime + 0.06);
-      } catch (_) { }
-    }
-
-    async function fetchChosenKey() {
-      try { const drawCard = httpsCallable(functions, 'drawCard'); const res = await drawCard(); return res?.data?.cardKey; }
-      catch (_) { /* ignore */ }
-      const notOwned = CARDS.filter(c => !collected.has(c.key));
-      const pool = notOwned.length ? notOwned : CARDS;
-      return pool[Math.floor(Math.random() * pool.length)].key;
-    }
-
     let tickTimer = null, faceTimer = null; // 사운드 & 물음표 애니메이션
     const BACK_GLYPHS = ['?', '★', '☆', '❋', '✦', '✧', '❖', '♦'];
 
-    async function drawOnce() {
-      const user = auth.currentUser;
-      if (!user) { showToast('로그인해줘~ 카드 뽑으려면 필요해!', '반가워'); const modal = new bootstrap.Modal(document.getElementById('loginModal')); modal.show(); return; }
-      if (isShuffling) return;
-
-      isShuffling = true; drawBtn.disabled = true;
-      card3d.classList.remove('revealed');
-      card3d.classList.add('shuffling');
-      backFace.textContent = BACK_GLYPHS[0];
-
-      if (SOUND_ENABLED) tickTimer = setInterval(playTick, TICK_EVERY);
-      faceTimer = setInterval(() => {
-        const i = Math.floor(Math.random() * BACK_GLYPHS.length);
-        backFace.textContent = BACK_GLYPHS[i];
-      }, 120);
-
-      const keyPromise = fetchChosenKey();
-      await Promise.all([keyPromise, wait(MIN_WAIT)]);
-
-      let chosenKey = null; try { chosenKey = await keyPromise; } catch { }
-      const card = CARDS.find(c => c.key === chosenKey) || CARDS[Math.floor(Math.random() * CARDS.length)];
-
+    // --- 공통 리셋 유틸 ---
+    function resetShuffleUI() {
+      // 1) 타이머 정리
       if (tickTimer) { clearInterval(tickTimer); tickTimer = null; }
       if (faceTimer) { clearInterval(faceTimer); faceTimer = null; }
 
-      frontImg.src = card.file;          // 앞면 세팅
-      card3d.classList.remove('shuffling');
-      card3d.classList.add('flash');     // 반짝!
-      setTimeout(() => { card3d.classList.remove('flash'); card3d.classList.add('revealed'); }, 120);
+      // 2) 애니메이션 클래스 정리 (revealed는 건드리지 않음)
+      card3d.classList.remove('shuffling', 'flash');
 
-      openCardModal(card);
+      // 3) 애니메이션 잔상 끊기 (리플로우)
+      card3d.style.animation = 'none';
+      card3d.getBoundingClientRect(); // 강제 리플로우
+      card3d.style.animation = '';
 
-      collected = await fetchMyCards(user.uid);
-      console.log('collected', collected);
-      renderAlbum(collected);
-      if (collected.size === CARDS.length) { openGift(); }
+      // 4) 백면 텍스트 초기화 + 상태 복구
+      backFace.textContent = BACK_GLYPHS[0];
+      isShuffling = false;
+      drawBtn.disabled = false;
+    }
 
-      isShuffling = false; drawBtn.disabled = false;
+    async function drawOnce() {
+      if (!eventActive) {
+        showToast('현재 이벤트 진행중이 아니에요!');
+        return;
+      }
+      if(winnerNickname) {
+        showToast(`${winnerNickname}씨가 이미 이벤트 당첨자 이십니다!`);
+
+        return;
+      }
+
+      const user = auth.currentUser;
+      if (!user) { requireLogin(); return; }
+      if (isShuffling) return;
+
+      isShuffling = true;
+      drawBtn.disabled = true;
+
+      // 시작 상태 세팅
+      card3d.classList.remove('revealed', 'flash'); // 앞면 닫고
+      card3d.classList.add('shuffling');            // 흔들흔들 시작
+      backFace.textContent = BACK_GLYPHS[0];
+
+      // if (SOUND_ENABLED) tickTimer = setInterval(playTick, TICK_EVERY);
+      faceTimer = setInterval(() => {
+        backFace.textContent = BACK_GLYPHS[Math.floor(Math.random() * BACK_GLYPHS.length)];
+      }, 120);
+
+      try {
+        // 서버 결과 + 최소 대기 동시
+        const [cardRes] = await Promise.all([drawCard(), wait(MIN_WAIT)]);
+        const chosenKey = cardRes.data.cardKey
+        const card = CARDS.find(c => c.key === chosenKey) || CARDS[Math.floor(Math.random() * CARDS.length)];
+
+        // 섞기 종료
+        if (tickTimer) { clearInterval(tickTimer); tickTimer = null; }
+        if (faceTimer) { clearInterval(faceTimer); faceTimer = null; }
+        card3d.classList.remove('shuffling');
+
+        // 앞면 세팅 + 반짝 → 뒤집
+        frontImg.src = card.file;
+
+        // flash 효과가 매번 확실히 재생되도록 리플로우 후 재적용
+        card3d.classList.remove('flash');
+        card3d.getBoundingClientRect();
+        card3d.classList.add('flash');
+        await wait(120);
+        card3d.classList.remove('flash');
+        card3d.classList.add('revealed');
+
+        // 미리보기, 앨범 갱신, 보상 체크
+        openCardModal(card);
+        collected = await fetchMyCards(user.uid);
+        renderAlbum(collected);
+        if (collected.size === CARDS.length) {
+          // 여기서도 혹시 winnerUid가 비어있으면 등록 → 그 다음 기프트 열기!
+          const proceed = await maybeSubmitWinner();
+          if (!proceed) { 
+            return; 
+          }
+          await openGift();
+        }
+
+      } catch (e) {
+        console.error(e);
+        showToast(e?.message ?? String(e));
+      } finally {
+        // 성공/에러 모두 항상 정리 (revealed는 유지되므로 성공 시 앞면 그대로!)
+        resetShuffleUI();
+      }
     }
 
     drawBtn.addEventListener('click', drawOnce);
 
     async function fetchMyCards(uid) {
       try {
-        // /users_private/{uid}/cards에서 pulls >= 1 인 문서만!
         const q = query(
           collection(db, 'users_private', uid, 'cards'),
           where('pulls', '>=', 1)
@@ -704,6 +837,57 @@
         return new Set();
       }
     }
+
+    // ---- 이벤트 안내 ----
+    const eventInfoText = document.getElementById('eventInfoText');
+    let eventActive = false;
+    let winnerUid = null;
+    let winnerNickname = null;
+
+    function formatKST(ts) {
+      return moment(ts.toDate()).format('YYYY.MM.DD');
+    }
+
+    // 서버(admin) 예시와 동일한 조건으로 활성 이벤트 1건 조회
+    async function findActiveEventClient() {
+      const nowTs = Timestamp.now();
+      const q = query(
+        collection(db, 'card_events'),
+        where('startAt', '<=', nowTs),
+        where('endAt', '>=', nowTs),
+        orderBy('endAt'),
+        orderBy('startAt', 'desc'),
+        limit(1)
+      );
+      const snap = await getDocs(q);
+      if (snap.empty) return null;
+      const docSnap = snap.docs[0];
+      return { id: docSnap.id, data: docSnap.data() };
+    }
+
+    // 초기 표시
+    async function initEventInfo() {
+      try {
+        const active = await findActiveEventClient();
+        if (active) {
+          const { startAt, endAt } = active.data;
+          eventInfoText.textContent = `이벤트 기간(${formatKST(startAt)} ~ ${formatKST(endAt)})`;
+          eventActive = true;
+          winnerUid = active.data.winnerUid;
+          winnerNickname = active.data.winnerNickname;
+        } else {
+          eventInfoText.textContent = '현재 이벤트 진행중이 아니에요.';
+          eventActive = false;
+        }
+      } catch (e) {
+        eventInfoText.textContent = '이벤트 정보를 불러오지 못했어요.';
+        console.error(e);
+      }
+    }
+
+    // 바로 실행
+    initEventInfo();
+
   </script>
 </body>
 
