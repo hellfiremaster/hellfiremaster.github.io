@@ -54,7 +54,7 @@ function bindAuthUI() {
     logoutBtn.addEventListener('click', async () => {
       try {
         await signOut(auth);
-        window.showToast('로그아웃 완료', '로그아웃');
+        window.showToast('안녕히 가세요^^', '로그아웃');
       } catch (err) {
         window.showToast(err.message, '로그아웃 실패');
       }
