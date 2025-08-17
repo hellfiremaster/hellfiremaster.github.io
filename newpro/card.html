@@ -557,7 +557,7 @@
         </div> 
 
         <div class="modal-footer border-0">
-          <button class="btn btn-outline-secondary" id="saveGiftBtn">이미지 저장</button>
+          <!-- <button class="btn btn-outline-secondary" id="saveGiftBtn">이미지 저장</button> -->
           <button class="btn btn-primary" data-bs-dismiss="modal">꺄~ 고마워요!</button>
         </div>
   
@@ -765,33 +765,33 @@
 
     document.getElementById('showGiftBtn').addEventListener('click', openGift);
 
-    document.getElementById('saveGiftBtn').addEventListener('click', async (e) => {
-      e.preventDefault();
+    // document.getElementById('saveGiftBtn').addEventListener('click', async (e) => {
+    //   e.preventDefault();
 
-      const img = document.getElementById('giftImg');
-      const filename = 'gift.png';
+    //   const img = document.getElementById('giftImg');
+    //   const filename = 'gift.png';
 
-      // 1) fetch로 Blob 받아서 저장 (가장 호환성 좋음)
-      try {
-        const res = await fetch(img.src, { mode: 'cors', cache: 'no-store' });
-        // 일부 브라우저는 opaque 응답(no-cors)로 오면 다운로드 불가
-        if (!res.ok || !res.body) throw new Error('fetch failed');
+    //   // 1) fetch로 Blob 받아서 저장 (가장 호환성 좋음)
+    //   try {
+    //     const res = await fetch(img.src, { mode: 'cors', cache: 'no-store' });
+    //     // 일부 브라우저는 opaque 응답(no-cors)로 오면 다운로드 불가
+    //     if (!res.ok || !res.body) throw new Error('fetch failed');
 
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
+    //     const blob = await res.blob();
+    //     const url = URL.createObjectURL(blob);
 
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-        return;
-      } catch (err) {
-        console.warn('blob download failed, try canvas:', err);
-      }
-    });
+    //     const a = document.createElement('a');
+    //     a.href = url;
+    //     a.download = filename;
+    //     document.body.appendChild(a);
+    //     a.click();
+    //     a.remove();
+    //     URL.revokeObjectURL(url);
+    //     return;
+    //   } catch (err) {
+    //     console.warn('blob download failed, try canvas:', err);
+    //   }
+    // });
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
