@@ -870,11 +870,11 @@
 
       try {
         // 서버 결과 + 최소 대기 동시
+        showPointFloat(`-${drawPoint}`);
         const [cardRes] = await Promise.all([drawCard(), wait(MIN_WAIT)]);
-        const { cardKey, newScore, drawPoint } = cardRes.data;
+        const { cardKey, newScore } = cardRes.data;
         const card = CARDS.find(c => c.key === cardKey);
 
-        showPointFloat(`-${drawPoint}`);
         setScoreUI(newScore);
 
         // 섞기 종료
@@ -898,8 +898,8 @@
         collected = await fetchMyCards(user.uid);
         renderAlbum(collected);
 
-        const remainTxt = (typeof newScore === 'number') ? ` 남은 점수 ${newScore}점` : '';
-        showToast(`카드 획득! ✨${remainTxt}`);
+        // const remainTxt = (typeof newScore === 'number') ? ` 남은 점수 ${newScore}점` : '';
+        // showToast(`카드 획득! ✨${remainTxt}`);
       } catch (e) {
         console.error(e);
         showToast(e?.message ?? String(e));
@@ -971,6 +971,7 @@
           eventActive = true;
           winnerUid = active.data.winnerUid;
           winnerNickname = active.data.winnerNickname;
+          drawPoint = active.data.drawPoint;
         } else {
           eventInfoText.textContent = '현재 이벤트 진행중이 아니에요.';
           eventActive = false;
@@ -985,6 +986,7 @@
     const scoreDisplay = document.getElementById('scoreDisplay');
 
     let currentScore = null;
+    let drawPoint = null;
 
     function setScoreUI(score) {
       currentScore = score;
