@@ -23,7 +23,7 @@
   <style>
     .gift-image {
       max-width: 100%;
-      height: auto;
+      height: 95vh;
       display: block;
       margin: 0 auto;
       border-radius: 12px;
@@ -460,7 +460,15 @@
       50% { filter: drop-shadow(0 0 8px rgba(255,105,180,.8)); }
       100% { filter: drop-shadow(0 0 0 rgba(255,105,180,0)); }
     }
-
+    /* --- 이전 기프트 모달 빈 상태 --- */
+    .gift-empty{
+      background:#f8fafc;
+      border:1px dashed #e2e8f0;
+      border-radius:12px;
+      padding:24px;
+      text-align:center;
+      color:#64748b;
+    }
   </style>
 </head>
 
@@ -495,10 +503,22 @@
           </span>
         </div>
         <div class="w-100 d-sm-none"></div>
-        <div class="d-flex align-items-center gap-2 ms-auto ms-sm-0">
-          <button class="btn btn-light btn-sm" id="showGiftBtn">🎁 기프트 확인</button>
-          <button class="btn btn-draw" id="drawBtn">🎲 카드 뽑기</button>
+        <div class="d-flex align-items-center gap-1 gap-sm-2 ms-auto ms-sm-0 flex-wrap">
+          <!-- 모바일 1줄: 기프트 내역(오른쪽 정렬). JS로 받은 사람만 보이게 d-none 토글 -->
+          <button
+            class="btn btn-outline-secondary btn-sm d-none order-1 order-sm-0 ms-auto ms-sm-0 py-1"
+            id="showGiftHistoryBtn">
+            🗂️ 기프트 내역
+          </button>
+        
+          <!-- 모바일에서만 줄바꿈(데스크탑에선 감춤) -->
+          <div class="w-100 d-sm-none order-2"></div>
+        
+          <!-- 모바일 2줄째: 기프트 확인 + 카드 뽑기(오른쪽 정렬) -->
+          <button class="btn btn-light btn-sm order-3 order-sm-0 ms-auto ms-sm-0" id="showGiftBtn">🎁 기프트 확인</button>
+          <button class="btn btn-draw order-3 order-sm-0" id="drawBtn">🎲 카드 뽑기</button>
         </div>
+        
       </div>
 
       <div class="single-wrap d-flex justify-content-center align-items-center">
@@ -533,6 +553,29 @@
     </div>
   </div>
 
+  <!-- Gift History Modal -->
+  <div class="modal fade" id="giftHistoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content" style="border-radius:16px; overflow:hidden;">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title">기프트 내역</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="giftHistoryContainer">
+            <div class="gift-empty" id="giftHistoryEmpty" style="display:none;">
+              아직 받은 기프트가 없어요. 이벤트에 참여해보자! ✨
+            </div>
+            <div class="accordion accordion-flush" id="giftHistoryAccordion"></div>
+          </div>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Giftcon Modal -->
   <div class="modal fade" id="giftModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -550,9 +593,9 @@
             <div class="fs-5 fw-bold">뉴프로 모험가 기프트</div>
             <div class="small text-muted">모은 날짜: <span id="giftDate">-</span></div>
             <img id="giftImg" alt="gift" class="gift-image mt-3" />
-            <div class="small text-danger mt-3">
+            <!-- <div class="small text-danger mt-3">
               이벤트 종료일까지만 저장 가능하니 꼭 미리 다운받아주세요!
-            </div>
+            </div> -->
           </div>
         </div> 
 
@@ -634,6 +677,8 @@
     const reelWrap = document.getElementById('reelWrap');
     const drawBtn = document.getElementById('drawBtn');
     const showGiftBtn = document.getElementById('showGiftBtn');
+    const showGiftHistoryBtn = document.getElementById('showGiftHistoryBtn');
+
     // (single card mode - no reel build)
 
     const submitModalEl = document.getElementById('submitModal');
@@ -687,6 +732,98 @@
       document.getElementById('cardModalImg').src = card.file;
       cardModal.show();
     }
+
+    // ---------- Gift History(기프트 내역) ----------
+    const giftHistoryModal = new bootstrap.Modal(document.getElementById('giftHistoryModal'));
+    const giftHistoryAccordion = document.getElementById('giftHistoryAccordion');
+    const giftHistoryEmpty = document.getElementById('giftHistoryEmpty');
+
+    function setHistoryBtnVisible(visible) {
+      if (!showGiftHistoryBtn) return;
+      showGiftHistoryBtn.classList.toggle('d-none', !visible);
+    }
+
+    function normalizeDate(input) {
+      if (!input) return null;
+      if (typeof input?.toDate === 'function') return input.toDate(); // Firestore Timestamp
+      if (typeof input === 'number') return new Date(input);          // epoch ms
+      if (input instanceof Date) return input;
+      return new Date(input);
+    }
+    function formatDate(dt) { return moment(dt).format('YYYY-MM-DD'); }
+
+    async function fetchGiftHistory(uid) {
+      try {
+        const userPrivateDoc = await getDoc(doc(db, 'users_private', uid));
+        const data = userPrivateDoc.exists() ? userPrivateDoc.data() : null;
+        const arr = Array.isArray(data?.gifts) ? data.gifts : [];
+        arr.sort((a, b) => {
+          const ad = normalizeDate(a?.winnerAt) || 0;
+          const bd = normalizeDate(b?.winnerAt) || 0;
+          return bd - ad; // 최신순
+        });
+        return arr;
+      } catch (e) {
+        console.warn('fetchGiftHistory failed', e);
+        return [];
+      }
+    }
+
+    function buildGiftHistoryAccordion(items) {
+      giftHistoryAccordion.innerHTML = '';
+      if (!items.length) {
+        giftHistoryEmpty.style.display = 'block';
+        return;
+      }
+      giftHistoryEmpty.style.display = 'none';
+
+      items.forEach((g, idx) => {
+        const when = normalizeDate(g?.winnerAt);
+        const whenStr = when ? formatDate(when) : '날짜 미상';
+        const collapseId = `giftCollapse${idx}`;
+        const headerId = `giftHeader${idx}`;
+
+        const item = document.createElement('div');
+        item.className = 'accordion-item';
+        item.innerHTML = `
+          <h2 class="accordion-header" id="${headerId}">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#${collapseId}" aria-expanded="false" aria-controls="${collapseId}">
+              ${whenStr}
+            </button>
+          </h2>
+          <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headerId}"
+              data-bs-parent="#giftHistoryAccordion">
+            <div class="accordion-body">
+              <img src="${g?.url || ''}" alt="gift ${whenStr}" class="gift-image"/>          
+            </div>
+          </div>`;
+        giftHistoryAccordion.appendChild(item);
+      });
+    }
+
+    async function openGiftHistory() {
+      const user = auth.currentUser;
+      if (!user) { requireLogin(); return; }
+      showLoader(true);
+      try {
+        const items = await fetchGiftHistory(user.uid);
+        buildGiftHistoryAccordion(items);
+        giftHistoryModal.show();
+      } catch (e) {
+        showToast(e?.message ?? '기프트 내역을 불러오지 못했어요.');
+      } finally {
+        showLoader(false);
+      }
+    }
+
+    async function updateGiftHistoryButton(uid) {
+      const items = await fetchGiftHistory(uid);
+      setHistoryBtnVisible(items.length > 0); // 기프트 받은 사람만 보이기
+    }
+
+    showGiftHistoryBtn?.addEventListener('click', openGiftHistory);
+
 
     // Giftcon
     const giftModal = new bootstrap.Modal(document.getElementById('giftModal'));
@@ -751,7 +888,7 @@
         const res = await getGiftcon();
         console.log('res', res)
         const url = res.data.url;
-        const strDate = moment(res.data.winnerAt).format('YYYY-MM-DD HH:mm');
+        const strDate = moment(res.data.winnerAt).format('YYYY-MM-DD');
         document.getElementById('giftDate').textContent = strDate;
         const img = document.getElementById('giftImg');
         img.src = url;
@@ -765,43 +902,18 @@
 
     document.getElementById('showGiftBtn').addEventListener('click', openGift);
 
-    // document.getElementById('saveGiftBtn').addEventListener('click', async (e) => {
-    //   e.preventDefault();
-
-    //   const img = document.getElementById('giftImg');
-    //   const filename = 'gift.png';
-
-    //   // 1) fetch로 Blob 받아서 저장 (가장 호환성 좋음)
-    //   try {
-    //     const res = await fetch(img.src, { mode: 'cors', cache: 'no-store' });
-    //     // 일부 브라우저는 opaque 응답(no-cors)로 오면 다운로드 불가
-    //     if (!res.ok || !res.body) throw new Error('fetch failed');
-
-    //     const blob = await res.blob();
-    //     const url = URL.createObjectURL(blob);
-
-    //     const a = document.createElement('a');
-    //     a.href = url;
-    //     a.download = filename;
-    //     document.body.appendChild(a);
-    //     a.click();
-    //     a.remove();
-    //     URL.revokeObjectURL(url);
-    //     return;
-    //   } catch (err) {
-    //     console.warn('blob download failed, try canvas:', err);
-    //   }
-    // });
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         collected = await fetchMyCards(user.uid); 
         renderAlbum(collected);
         fetchMyScore(user.uid);
+        updateGiftHistoryButton(user.uid);
       } else {
         collected = new Set();
         renderAlbum(collected);
         setScoreUI('—');
+        setHistoryBtnVisible(false);
       }
     });
 
