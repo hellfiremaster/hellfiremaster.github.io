@@ -805,7 +805,6 @@
       }
       if(winnerNickname) {
         showToast(`${winnerNickname}씨가 이미 이벤트 당첨자 이십니다!`);
-
         return;
       }
 
@@ -829,8 +828,8 @@
       try {
         // 서버 결과 + 최소 대기 동시
         const [cardRes] = await Promise.all([drawCard(), wait(MIN_WAIT)]);
-        const chosenKey = cardRes.data.cardKey
-        const card = CARDS.find(c => c.key === chosenKey) || CARDS[Math.floor(Math.random() * CARDS.length)];
+        const { chosenKey, newScore, drawPoint } = cardRes.data;
+        const card = CARDS.find(c => c.key === chosenKey);
 
         // 섞기 종료
         if (tickTimer) { clearInterval(tickTimer); tickTimer = null; }
@@ -852,15 +851,6 @@
         openCardModal(card);
         collected = await fetchMyCards(user.uid);
         renderAlbum(collected);
-        if (collected.size === CARDS.length) {
-          // 여기서도 혹시 winnerUid가 비어있으면 등록 → 그 다음 기프트 열기!
-          const proceed = await maybeSubmitWinner();
-          if (!proceed) { 
-            return; 
-          }
-          await openGift();
-        }
-
       } catch (e) {
         console.error(e);
         showToast(e?.message ?? String(e));
