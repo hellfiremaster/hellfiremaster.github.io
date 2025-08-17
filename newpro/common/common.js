@@ -1,7 +1,7 @@
 import { auth, db, functions, storage, analytics, app } from './firebase-init.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
 import { doc, setDoc, getDoc, collection, query, where, getDocs, limit, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
-import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js';
+import { getMessaging, getToken } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js';
 
 // ---- 유틸: 점수→랭크 이모지(간단판) ----
 function getRankByScore(score=0) {
@@ -54,7 +54,7 @@ function bindAuthUI() {
     logoutBtn.addEventListener('click', async () => {
       try {
         await signOut(auth);
-        window.showToast('안녕히 가세요^^', '로그아웃');
+        alert('안녕히 가세요. ^^');
       } catch (err) {
         window.showToast(err.message, '로그아웃 실패');
       }
@@ -89,16 +89,6 @@ function saveFcmToken() {
           console.error('FCM 토큰 가져오기 실패💦', err);
         }
       }
-    });
-
-    // 4) 앱이 켜져 있을 때 수신 메시지 처리 (optional)
-    onMessage(messaging, (payload) => {
-      console.log('새 알림 도착✨', payload);
-      const postId = payload.data?.postId;
-      if(postId) {
-        fetchComment(postId);
-      }
-      // showToast(payload.notification.title, payload.notification.body);
     });
   }
 }

@@ -551,6 +551,7 @@
     import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';    
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, deleteUser } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
     import { getFirestore, collection, doc, setDoc, getDoc, updateDoc, deleteDoc, runTransaction, serverTimestamp, arrayUnion, arrayRemove, where, query, orderBy, getDocs, startAfter, limit, Timestamp, deleteField } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
+    import { onMessage } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js';
 
     const awardPoints = httpsCallable(functions, 'awardPoints');
     const ADMIN_UID = 'dCgOsOVWCZhSQBwU38NHogTE0dE2';
@@ -2248,19 +2249,30 @@
       await highlightPostFromQuery();
       scrollToComment();
 
-      // 회원가입 버튼( data-bs-target="#signupModal" ) 클릭 → signupModal 열릴 때
-      document.getElementById('signupModal')
-        .addEventListener('shown.bs.modal', () => {
-          const el = document.getElementById('signupEmail');
-          if (el) el.focus();
+      if (location.protocol === 'https:') {
+        const messaging = getMessaging(app);
+        onMessage(messaging, (payload) => {
+          console.log('새 알림 도착✨', payload);
+          const postId = payload.data?.postId;
+          if (postId) {
+            fetchComment(postId);
+          }
         });
+      }
 
-      // 로그인 버튼( data-bs-target="#loginModal" ) 클릭 → loginModal 열릴 때
-      document.getElementById('loginModal')
-        .addEventListener('shown.bs.modal', () => {
-          const el = document.getElementById('loginEmail');
-          if (el) el.focus();
-        });
+      // 회원가입 버튼( data-bs-target="#signupModal" ) 클릭 → signupModal 열릴 때
+      // document.getElementById('signupModal')
+      //   .addEventListener('shown.bs.modal', () => {
+      //     const el = document.getElementById('signupEmail');
+      //     if (el) el.focus();
+      //   });
+
+      // // 로그인 버튼( data-bs-target="#loginModal" ) 클릭 → loginModal 열릴 때
+      // document.getElementById('loginModal')
+      //   .addEventListener('shown.bs.modal', () => {
+      //     const el = document.getElementById('loginEmail');
+      //     if (el) el.focus();
+      //   });
     }
 
     async function awardPointsAndCheckRank(params) {
