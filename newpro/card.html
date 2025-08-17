@@ -426,6 +426,41 @@
       cursor: default;
       user-select: none;
     }
+
+    /* 작은 점수 플로팅 칩 */
+    .point-float {
+      position: absolute;
+      left: 50%;
+      top: 40%;
+      transform: translate(-50%, -50%);
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 105, 180, .95);
+      color: #fff;
+      font-weight: 800;
+      font-family: 'Comic Neue', cursive;
+      pointer-events: none;
+      opacity: 0;
+      animation: floatPop 800ms ease-out forwards;
+      box-shadow: 0 6px 16px rgba(255, 105, 180, .35);
+    }
+
+    @keyframes floatPop {
+      0%   { transform: translate(-50%, -20%) scale(.85); opacity: 0; }
+      20%  { transform: translate(-50%, -30%) scale(1.05); opacity: 1; }
+      100% { transform: translate(-50%, -80%) scale(1.0);  opacity: 0; }
+    }
+
+    /* 포인트 배지 살짝 뛰는 느낌 */
+    #scoreDisplay.pulse {
+      animation: scorePulse 600ms ease;
+    }
+    @keyframes scorePulse {
+      0% { filter: drop-shadow(0 0 0 rgba(255,105,180,0)); }
+      50% { filter: drop-shadow(0 0 8px rgba(255,105,180,.8)); }
+      100% { filter: drop-shadow(0 0 0 rgba(255,105,180,0)); }
+    }
+
   </style>
 </head>
 
@@ -454,6 +489,12 @@
           <span class="badge badge-soft me-2">수집 현황</span>
           <span class="fw-bold" id="progressText">0 / 0</span>
         </div>
+        <div class="ms-auto">
+          <span class="badge badge-soft">
+            내 포인트: <b id="scoreDisplay">—</b>
+          </span>
+        </div>
+        <div class="w-100 d-sm-none"></div>
         <div class="d-flex align-items-center gap-2">
           <button class="btn btn-light btn-sm" id="showGiftBtn">🎁 기프트 확인</button>
           <button class="btn btn-draw" id="drawBtn">🎲 카드 뽑기</button>
@@ -756,9 +797,11 @@
       if (user) {
         collected = await fetchMyCards(user.uid); 
         renderAlbum(collected);
+        fetchMyScore(user.uid);
       } else {
         collected = new Set();
         renderAlbum(collected);
+        setScoreUI('—');
       }
     });
 
@@ -828,8 +871,11 @@
       try {
         // 서버 결과 + 최소 대기 동시
         const [cardRes] = await Promise.all([drawCard(), wait(MIN_WAIT)]);
-        const { chosenKey, newScore, drawPoint } = cardRes.data;
-        const card = CARDS.find(c => c.key === chosenKey);
+        const { cardKey, newScore, drawPoint } = cardRes.data;
+        const card = CARDS.find(c => c.key === cardKey);
+
+        showPointFloat(`-${drawPoint}`);
+        setScoreUI(newScore);
 
         // 섞기 종료
         if (tickTimer) { clearInterval(tickTimer); tickTimer = null; }
@@ -851,6 +897,9 @@
         openCardModal(card);
         collected = await fetchMyCards(user.uid);
         renderAlbum(collected);
+
+        const remainTxt = (typeof newScore === 'number') ? ` 남은 점수 ${newScore}점` : '';
+        showToast(`카드 획득! ✨${remainTxt}`);
       } catch (e) {
         console.error(e);
         showToast(e?.message ?? String(e));
@@ -931,6 +980,46 @@
         console.error(e);
       }
     }
+
+    /* ------------------ Points UI helpers (NEW) ------------------ */
+    const scoreDisplay = document.getElementById('scoreDisplay');
+
+    let currentScore = null;
+
+    function setScoreUI(score) {
+      currentScore = score;
+      if (scoreDisplay) {
+        scoreDisplay.textContent = `${score}점`;
+        scoreDisplay.classList.remove('pulse');
+        // 리플로우로 애니메 재생 보장
+        void scoreDisplay.offsetWidth;
+        scoreDisplay.classList.add('pulse');
+      }
+    }
+
+    // 카드 위로 작은 "-5" 같은 칩 띄우기
+    function showPointFloat(deltaText = '-5') {
+      const host = document.querySelector('.single-wrap') || document.body;
+      const el = document.createElement('div');
+      el.className = 'point-float';
+      el.textContent = deltaText;
+      host.appendChild(el);
+      setTimeout(() => el.remove(), 900);
+    }
+
+    /* 내 포인트 초깃값 가져오기 (필드명은 상황에 맞게 바꿔줘)
+      users_private/{uid} 루트 문서에 score 필드가 있다고 가정 */
+    async function fetchMyScore(uid) {
+      try {
+        const userDoc = await getDoc(doc(db, 'users', uid));
+        const data = userDoc.exists() ? userDoc.data() : null;
+        const score = data?.score ?? data?.points ?? null;
+        if (score != null) setScoreUI(score);
+      } catch (e) {
+        console.warn('fetchMyScore failed', e);
+      }
+    }
+
 
     // 바로 실행
     initEventInfo();
