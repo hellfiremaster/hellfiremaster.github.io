@@ -32,6 +32,19 @@
 
     /* 모바일/태블릿에서만: 기프트 내역 모달을 꽉 채우고 여백 제거 */
     @media (max-width: 991.98px) { /* md 이하 전용 */
+      #giftHistoryModal .modal-title { 
+        display: none !important;      /* "기프트 내역" 숨김 */
+      }
+      #giftHistoryModal .modal-footer { 
+        display: none !important;      /* 닫기(텍스트) 버튼 제거 */
+      }
+      #giftHistoryModal .modal-header {
+        border: 0;                      /* 라인 제거 */
+        padding: .5rem .5rem 0 .5rem;   /* X를 꼭대기에 딱 붙게 */
+      }
+      #giftHistoryModal .btn-close {
+        padding: .75rem;
+      }
       #giftHistoryModal .modal-content {
         border-radius: 0;
       }
