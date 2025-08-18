@@ -864,12 +864,13 @@
       if (!user) { requireLogin(); return; }
       try {
         const items = await fetchGiftHistory(user.uid);
+        if (!items.length) {
+          showToast('아직 받은 기프트콘이 없어요. 카드를 뽑아보자! ✨');
+          return;
+        }
         buildGiftHistoryAccordion(items);
         giftHistoryModal.show();
 
-        if (!items.length) {
-          return;
-        }
 
         // 1) 모달이 보이기 시작한 뒤 살짝 텀을 주고 첫 항목 펼치기
         setTimeout(() => {
