@@ -503,22 +503,10 @@
           </span>
         </div>
         <div class="w-100 d-sm-none"></div>
-        <div class="d-flex align-items-center gap-1 gap-sm-2 ms-auto ms-sm-0 flex-wrap">
-          <!-- 모바일 1줄: 기프트 내역(오른쪽 정렬). JS로 받은 사람만 보이게 d-none 토글 -->
-          <button
-            class="btn btn-outline-secondary btn-sm d-none order-1 order-sm-0 ms-auto ms-sm-0 py-1"
-            id="showGiftHistoryBtn">
-            🗂️ 기프트 내역
-          </button>
-        
-          <!-- 모바일에서만 줄바꿈(데스크탑에선 감춤) -->
-          <div class="w-100 d-sm-none order-2"></div>
-        
-          <!-- 모바일 2줄째: 기프트 확인 + 카드 뽑기(오른쪽 정렬) -->
-          <button class="btn btn-light btn-sm order-3 order-sm-0 ms-auto ms-sm-0" id="showGiftBtn">🎁 기프트 확인</button>
+        <div class="d-flex align-items-center gap-1 gap-sm-2 ms-auto ms-sm-0 flex-wrap">        
+          <button class="btn btn-light btn-sm order-3 order-sm-0 ms-auto ms-sm-0" id="showGiftHistoryBtn">🎁 기프트 확인</button>
           <button class="btn btn-draw order-3 order-sm-0" id="drawBtn">🎲 카드 뽑기</button>
-        </div>
-        
+        </div>        
       </div>
 
       <div class="single-wrap d-flex justify-content-center align-items-center">
@@ -533,7 +521,13 @@
 
     <!-- Album -->
     <div class="glass-card p-3 p-md-4">
-      <h5 class="mb-3 adventure">내 사진첩</h5>
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <h5 class="mb-0 adventure">내 사진첩</h5>
+        <button id="submitCardsBtn" class="btn btn-light btn-sm ms-auto">
+          📝 카드 제출
+        </button>
+      </div>
+    
       <div class="album-grid" id="albumGrid"></div>
     </div>
   </div>
@@ -564,7 +558,7 @@
         <div class="modal-body">
           <div id="giftHistoryContainer">
             <div class="gift-empty" id="giftHistoryEmpty" style="display:none;">
-              아직 받은 기프트가 없어요. 이벤트에 참여해보자! ✨
+              아직 받은 기프트가 없어요. 카드를 뽑아보자! ✨
             </div>
             <div class="accordion accordion-flush" id="giftHistoryAccordion"></div>
           </div>
@@ -645,7 +639,6 @@
     import { doc, getDoc, setDoc, getDocs, collection, query, where, orderBy, limit, Timestamp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
     import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';
 
-    const getGiftcon = httpsCallable(functions, 'getGiftcon');
     const drawCard = httpsCallable(functions, 'drawCard'); 
     const addWinner  = httpsCallable(functions, 'addWinner');
 
@@ -676,15 +669,50 @@
     const reelStrip = document.getElementById('reelStrip');
     const reelWrap = document.getElementById('reelWrap');
     const drawBtn = document.getElementById('drawBtn');
-    const showGiftBtn = document.getElementById('showGiftBtn');
     const showGiftHistoryBtn = document.getElementById('showGiftHistoryBtn');
-
+    const submitCardsBtn = document.getElementById('submitCardsBtn');
+    
+    submitCardsBtn.addEventListener('click', submitCard);
+    showGiftHistoryBtn.addEventListener('click', openGiftHistory);
+    
     // (single card mode - no reel build)
-
     const submitModalEl = document.getElementById('submitModal');
     const submitModal   = new bootstrap.Modal(submitModalEl, { backdrop: 'static', keyboard: false });
     const confirmSubmitBtn = document.getElementById('confirmSubmitBtn');
     const cancelSubmitBtn  = document.getElementById('cancelSubmitBtn');
+    
+    async function submitCard() {             
+      if (!eventActive) {
+        showToast('현재 이벤트 진행중이 아니에요!');
+        return;
+      }
+      const user = auth.currentUser;
+      if (!user) { 
+        requireLogin(); 
+        return; 
+      }
+      if(collected.size !== CARDS.length) {
+        showToast('모든 카드를 모아 제출하세요!');
+        return; 
+      }
+      // 상황에 따라 승자 등록 먼저
+      const res = await maybeSubmitWinner();
+      console.log('res', res)
+      if (!res) return; // 사용자가 취소했거나 실패
+
+      const url = res.data.url;
+      const strDate = moment(res.data.winnerAt).format('YYYY-MM-DD');
+      document.getElementById('giftDate').textContent = strDate;
+      const img = document.getElementById('giftImg');
+      img.src = url;
+
+      giftModal.show();
+      launchFireworks(2000);
+
+      await wait(2000);
+      collected = await fetchMyCards(user.uid); 
+      renderAlbum(collected);
+    }
 
     function confirmSubmitModal() {
       return new Promise((resolve) => {
@@ -722,7 +750,6 @@
         albumGrid.appendChild(div);
       });
       progressText.textContent = `${collectedSet.size} / ${CARDS.length}`;
-      // showGiftBtn.disabled = !(collectedSet.size === CARDS.length);
     }
 
     // Modals
@@ -738,10 +765,6 @@
     const giftHistoryAccordion = document.getElementById('giftHistoryAccordion');
     const giftHistoryEmpty = document.getElementById('giftHistoryEmpty');
 
-    function setHistoryBtnVisible(visible) {
-      if (!showGiftHistoryBtn) return;
-      showGiftHistoryBtn.classList.toggle('d-none', !visible);
-    }
 
     function normalizeDate(input) {
       if (!input) return null;
@@ -805,25 +828,14 @@
     async function openGiftHistory() {
       const user = auth.currentUser;
       if (!user) { requireLogin(); return; }
-      showLoader(true);
       try {
         const items = await fetchGiftHistory(user.uid);
         buildGiftHistoryAccordion(items);
         giftHistoryModal.show();
       } catch (e) {
         showToast(e?.message ?? '기프트 내역을 불러오지 못했어요.');
-      } finally {
-        showLoader(false);
       }
     }
-
-    async function updateGiftHistoryButton(uid) {
-      const items = await fetchGiftHistory(uid);
-      setHistoryBtnVisible(items.length > 0); // 기프트 받은 사람만 보이기
-    }
-
-    showGiftHistoryBtn?.addEventListener('click', openGiftHistory);
-
 
     // Giftcon
     const giftModal = new bootstrap.Modal(document.getElementById('giftModal'));
@@ -842,78 +854,39 @@
     }
 
     async function maybeSubmitWinner() {      
-      // 최신 winnerUid 확인을 위해 한번 더 새로고침!
       await initEventInfo();
 
       // 조건: 이벤트 진행중 + 전카드 모음 완료 + 아직 우승자 미정
-      if (eventActive && collected.size === CARDS.length && !winnerUid) {
+      if (eventActive && collected.size === CARDS.length) {
         const ok = await confirmSubmitModal();
-        if (!ok) return false;
+        if (!ok) return null;
 
         try {
           showLoader(true);
           // 서버 측 addWinner가 현재 활성 이벤트의 승자를 "나"로 기록한다고 가정!
-          await addWinner();
-          // 등록이 끝났으니 다시 이벤트 정보 가져와서 winnerUid가 채워졌는지 보정
+          const res = await addWinner();
+          // 등록이 끝났으니 다시 이벤트 정보 가져와서 winnerUid가 빈게 있는지 보정
           await initEventInfo();
+          return res;
         } catch (e) {
           showToast(e?.message ?? '승자 등록에 실패했어요 ㅠㅠ');
-          return false;
+          return null;
         } finally {
-          showLoader(false);
+          showLoader(null);
         }
       }
       return true;
     }
-
-    async function openGift() { 
-      if (!eventActive) {
-        showToast('현재 이벤트 진행중이 아니에요!');
-        return;
-      }
-      const user = auth.currentUser;
-      if (!user) { 
-        requireLogin(); 
-        return; 
-      }
-      if(collected.size !== CARDS.length && winnerUid !== user.uid) {
-        showToast('모든 카드를 모아 제출하세요!');
-        return; 
-      }
-      // 상황에 따라 승자 등록 먼저
-      const proceed = await maybeSubmitWinner();
-      if (!proceed) return; // 사용자가 취소했거나 실패
-
-      try {
-        const res = await getGiftcon();
-        console.log('res', res)
-        const url = res.data.url;
-        const strDate = moment(res.data.winnerAt).format('YYYY-MM-DD');
-        document.getElementById('giftDate').textContent = strDate;
-        const img = document.getElementById('giftImg');
-        img.src = url;
-
-        giftModal.show();
-        launchFireworks(2000);
-      } catch (e) {
-        showToast(e.message);
-      }
-    }
-
-    document.getElementById('showGiftBtn').addEventListener('click', openGift);
-
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         collected = await fetchMyCards(user.uid); 
         renderAlbum(collected);
         fetchMyScore(user.uid);
-        updateGiftHistoryButton(user.uid);
       } else {
         collected = new Set();
         renderAlbum(collected);
         setScoreUI('—');
-        setHistoryBtnVisible(false);
       }
     });
 
@@ -956,10 +929,6 @@
     async function drawOnce() {
       if (!eventActive) {
         showToast('현재 이벤트 진행중이 아니에요!');
-        return;
-      }
-      if(winnerNickname) {
-        showToast(`${winnerNickname}씨가 이미 이벤트 당첨자 이십니다!`);
         return;
       }
 
@@ -1049,8 +1018,6 @@
     // ---- 이벤트 안내 ----
     const eventInfoText = document.getElementById('eventInfoText');
     let eventActive = false;
-    let winnerUid = null;
-    let winnerNickname = null;
 
     function formatKST(ts) {
       return moment(ts.toDate()).format('YYYY.MM.DD');
@@ -1061,44 +1028,23 @@
       const nowTs = Timestamp.now();
       const q = query(
         collection(db, 'card_events'),
-        where('startAt', '<=', nowTs),
-        where('endAt', '>=', nowTs),
-        orderBy('endAt'),
-        orderBy('startAt', 'desc'),
+        where('winnerUid', '==', null),
         limit(1)
       );
       const snap = await getDocs(q);
-      if (snap.empty) return null;
-      const docSnap = snap.docs[0];
-      return { id: docSnap.id, data: docSnap.data() };
+      return !snap.empty;
     }
 
     // 초기 표시
     async function initEventInfo() {
-      try {
-        const active = await findActiveEventClient();
-        if (active) {
-          const { startAt, endAt } = active.data;
-          eventInfoText.textContent = `이벤트 기간(${formatKST(startAt)} ~ ${formatKST(endAt)})`;
-          eventActive = true;
-          winnerUid = active.data.winnerUid;
-          winnerNickname = active.data.winnerNickname;
-          drawPoint = active.data.drawPoint;
-        } else {
-          eventInfoText.textContent = '현재 이벤트 진행중이 아니에요.';
-          eventActive = false;
-        }
-      } catch (e) {
-        eventInfoText.textContent = '이벤트 정보를 불러오지 못했어요.';
-        console.error(e);
-      }
+      eventActive = await findActiveEventClient();
     }
 
     /* ------------------ Points UI helpers (NEW) ------------------ */
     const scoreDisplay = document.getElementById('scoreDisplay');
 
     let currentScore = null;
-    let drawPoint = null;
+    let drawPoint = 5;
 
     function setScoreUI(score) {
       currentScore = score;
