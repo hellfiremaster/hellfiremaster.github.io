@@ -30,6 +30,27 @@
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     }
 
+    /* 모바일/태블릿에서만: 기프트 내역 모달을 꽉 채우고 여백 제거 */
+    @media (max-width: 991.98px) { /* md 이하 전용 */
+      #giftHistoryModal .modal-content {
+        border-radius: 0;
+      }
+      #giftHistoryModal .modal-body,
+      #giftHistoryModal .accordion-body {
+        padding: 0;            /* 이미지 주변 여백 쫙 제거 */
+      }
+      #giftHistoryModal .gift-image {
+        display: block;
+        width: 100vw;          /* 화면 가로 꽉 채우기 */
+        max-width: 100%;
+        height: auto !important; /* 전역 height:95vh 덮어쓰기 */
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+        object-fit: contain;   /* 바코드 잘리지 않게 */
+      }
+    }
+
     .badge-soft {
       background: rgba(42, 64, 101, .15);
       color: #2a4065;
@@ -549,7 +570,7 @@
 
   <!-- Gift History Modal -->
   <div class="modal fade" id="giftHistoryModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down">
       <div class="modal-content" style="border-radius:16px; overflow:hidden;">
         <div class="modal-header border-0 pb-0">
           <h5 class="modal-title">기프트 내역</h5>
@@ -832,6 +853,27 @@
         const items = await fetchGiftHistory(user.uid);
         buildGiftHistoryAccordion(items);
         giftHistoryModal.show();
+
+        if (!items.length) {
+          return;
+        }
+
+        // 1) 모달이 보이기 시작한 뒤 살짝 텀을 주고 첫 항목 펼치기
+        setTimeout(() => {
+          const firstCollapseEl = document.getElementById('giftCollapse0');
+          if (firstCollapseEl) {
+            new bootstrap.Collapse(firstCollapseEl, { toggle: true });
+          }
+        }, 150);
+
+        // 2) 첫 항목 날짜가 '최근 3일 이내'면 불꽃놀이 발사! (미래 날짜는 제외)
+        const when = normalizeDate(items[0]?.winnerAt);
+        if (when) {
+          const diffDays = moment().diff(moment(when), 'days'); // 오늘=0, 어제=1 …
+          if (diffDays >= 0 && diffDays <= 3) {
+            setTimeout(() => launchFireworks(1600), 200);
+          }
+        }
       } catch (e) {
         showToast(e?.message ?? '기프트 내역을 불러오지 못했어요.');
       }
