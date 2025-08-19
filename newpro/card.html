@@ -579,6 +579,29 @@
       #probModal .table tbody td{ padding:.8rem .6rem; }
     }
 
+    .album-card.glow::before{
+      content:"";
+      position:absolute; inset:-2px; padding:2px;
+      border-radius:12px;
+      background: conic-gradient(#ff69b4, #ffd166, #7dd3fc, #ff69b4);
+      animation: spinBorder 3s linear infinite;
+      pointer-events:none;
+
+      mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      mask-composite: exclude;
+    }
+
+    .album-card.glow {
+      box-shadow:
+        0 0 0 1px rgba(255, 243, 179, .45),
+        0 0 12px rgba(255, 214, 102, .45),
+        0 0 28px rgba(255, 191, 0, .28);
+    }
+
+    @keyframes spinBorder { to { transform: rotate(1turn); } }
+
   </style>
 </head>
 
@@ -881,16 +904,25 @@
     // Album grid
     function renderAlbum(collectedSet) {
       albumGrid.innerHTML = '';
+      const isComplete = (collectedSet.size === CARDS.length);
+
       CARDS.forEach(card => {
         const isOwned = collectedSet.has(card.key);
         const div = document.createElement('div');
-        div.className = 'album-card' + (isOwned ? '' : ' locked');
+
+        const classes = ['album-card'];
+        if (!isOwned) classes.push('locked');
+        if (isComplete) classes.push('glow');   // ✨ 여기 한 줄!
+
+        div.className = classes.join(' ');
         div.innerHTML = `<span class="label">${card.name}</span><img src="${card.file}" alt="${card.name}">`;
+
         if (isOwned) {
           div.addEventListener('click', () => openCardModal(card));
         }
         albumGrid.appendChild(div);
       });
+
       progressText.textContent = `${collectedSet.size} / ${CARDS.length}`;
     }
 
