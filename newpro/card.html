@@ -856,8 +856,12 @@
     const cancelSubmitBtn  = document.getElementById('cancelSubmitBtn');
     
     async function submitCard() {             
+      if(eventActive == null) {
+        showToast('로딩중!');
+        return;
+      }
       if (!eventActive) {
-        showToast('현재 이벤트 진행중이 아니에요!');
+        showToast('남은 선물이 없어서 지금은 진행할수 없어요… 금방 채워질 수도 있으니까 조금만 기다려줘~ (๑>◡<๑)🎁💖');
         return;
       }
       const user = auth.currentUser;
@@ -1061,16 +1065,13 @@
     async function maybeSubmitWinner() {      
       await initEventInfo();
 
-      // 조건: 이벤트 진행중 + 전카드 모음 완료 + 아직 우승자 미정
       if (eventActive && collected.size === CARDS.length) {
         const ok = await confirmSubmitModal();
         if (!ok) return null;
 
         try {
           showLoader(true);
-          // 서버 측 addWinner가 현재 활성 이벤트의 승자를 "나"로 기록한다고 가정!
           const res = await addWinner();
-          // 등록이 끝났으니 다시 이벤트 정보 가져와서 winnerUid가 빈게 있는지 보정
           await initEventInfo();
           return res;
         } catch (e) {
@@ -1132,8 +1133,12 @@
     }
 
     async function drawOnce() {
+      if(eventActive == null) {
+        showToast('로딩중!');
+        return;
+      }
       if (!eventActive) {
-        showToast('현재 이벤트 진행중이 아니에요!');
+        showToast('남은 선물이 없어서 지금은 진행할수 없어요… 금방 채워질 수도 있으니까 조금만 기다려줘~ (๑>◡<๑)🎁💖');
         return;
       }
 
@@ -1221,14 +1226,13 @@
     }
 
     // ---- 이벤트 안내 ----
-    const eventInfoText = document.getElementById('eventInfoText');
-    let eventActive = false;
+    // const eventInfoText = document.getElementById('eventInfoText');
+    let eventActive = null;
 
     function formatKST(ts) {
       return moment(ts.toDate()).format('YYYY.MM.DD');
     }
 
-    // 서버(admin) 예시와 동일한 조건으로 활성 이벤트 1건 조회
     async function findActiveEventClient() {
       const nowTs = Timestamp.now();
       const q = query(
