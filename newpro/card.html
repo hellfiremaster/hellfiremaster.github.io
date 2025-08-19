@@ -277,10 +277,15 @@
 
     .album-card img {
       width: 100%;
-      height: auto;
-      aspect-ratio: 157 / 200;
+      height: 200px;
       object-fit: fill;
       display: block;
+    }
+
+    @media (max-width: 370px) {
+      .album-card img {
+        object-fit: cover;
+      }
     }
 
     .album-card .label {
