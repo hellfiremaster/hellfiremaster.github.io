@@ -19,6 +19,7 @@
 
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
   <link rel="stylesheet" href="./common/common.css" />
   <style>
     .gift-image {
@@ -503,6 +504,74 @@
       text-align:center;
       color:#64748b;
     }
+
+    /* === [READABILITY TWEAK] 확률 모달 글자 가독성 개선 === */
+    #probModal .modal-content{
+      background:#0f1b32 !important;
+      color:#f8fafc;                    
+      border:1px solid rgba(255,255,255,.12);
+    }
+    #probModal .modal-header,
+    #probModal .modal-footer{
+      border-color: rgba(255,255,255,.12);
+    }
+    #probModal .modal-title{
+      color:#ffffff;
+      text-shadow:0 1px 2px rgba(0,0,0,.4);
+      letter-spacing:.2px;
+    }
+
+    /* 본문 타이포 크기 & 줄간 간격 업 */
+    #probModal .modal-body{
+      font-size:.98rem;
+      line-height:1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* 상단 “확률 합계” 문구도 더 밝게 */
+    #probModal .modal-body .small.text-muted{
+      color:#cbd5e1 !important;
+    }
+
+    /* 테이블 대비 강화 */
+    #probModal .table{
+      --bs-table-bg: transparent;
+    }
+    #probModal .table thead th{
+      color:#e2e8f0;
+      border-bottom:1px solid rgba(255,255,255,.16);
+      font-weight:600;
+    }
+    #probModal .table tbody tr{
+      border-top:1px solid rgba(255,255,255,.08); /* 줄갈이 구분선 */
+    }
+    #probModal .table tbody td{
+      color:#f1f5f9;
+      padding:.65rem .5rem;
+    }
+
+    /* 닫기/푸터 버튼도 더 또렷하게 */
+    #probModal .modal-footer .btn{
+      color:#fff;
+      border-color:rgba(255,255,255,.28);
+    }
+    #probModal .modal-footer .btn:hover{
+      border-color:rgba(255,255,255,.45);
+    }
+
+    /* info 아이콘이 너무 흐리면 주석 해제해서 진하게!
+    #showProbBtn{ opacity:.9; }
+    */
+
+    /* 모바일에서 글자/패딩 조금 더 키우기 */
+    @media (max-width: 575.98px){
+      #probModal .modal-dialog{ margin:.5rem; }
+      #probModal .modal-body{ font-size:1.05rem; }
+      #probModal .table thead th,
+      #probModal .table tbody td{ padding:.8rem .6rem; }
+    }
+
   </style>
 </head>
 
@@ -527,21 +596,26 @@
     <!-- Draw Area -->
     <div class="glass-card p-3 p-md-4 mb-4 draw-area">
       <div class="d-flex justify-content-between flex-wrap align-items-center gap-2 mb-3">
-        <div>
+        <div>          
           <span class="badge badge-soft me-2">수집 현황</span>
           <span class="fw-bold" id="progressText">0 / 0</span>
         </div>
-        <div class="ms-auto">
+      
+        <!-- 포인트 + 정보 아이콘 (NEW) -->
+        <div class="ms-auto d-flex align-items-center gap-2">
           <span class="badge badge-soft">
             내 포인트: <b id="scoreDisplay">—</b>
-          </span>
+          </span>          
         </div>
+      
         <div class="w-100 d-sm-none"></div>
-        <div class="d-flex align-items-center gap-1 gap-sm-2 ms-auto ms-sm-0 flex-wrap">        
+      
+        <div class="d-flex align-items-center gap-1 gap-sm-2 ms-auto ms-sm-0 flex-wrap">
           <button class="btn btn-light btn-sm order-3 order-sm-0 ms-auto ms-sm-0" id="showGiftHistoryBtn">🎁 기프트 확인</button>
           <button class="btn btn-draw order-3 order-sm-0" id="drawBtn">🎲 카드 뽑기</button>
-        </div>        
+        </div>
       </div>
+      
 
       <div class="single-wrap d-flex justify-content-center align-items-center">
         <div class="single-card" id="card3d">
@@ -550,7 +624,10 @@
         </div>
       </div>
 
-      <small id="eventInfoText" class="text-muted d-block mt-3"></small>
+      <button id="showProbBtn" class="btn btn-link btn-sm text-muted p-0 ms-auto" type="button" title="뽑기 확률 안내" aria-label="뽑기 확률 안내">
+        <i class="bi bi-info-circle" style="font-size:1rem;"></i>
+      </button>
+      <!-- <small id="eventInfoText" class="text-muted d-block mt-3"></small> -->
     </div>
 
     <!-- Album -->
@@ -563,6 +640,30 @@
       </div>
     
       <div class="album-grid" id="albumGrid"></div>
+    </div>
+  </div>
+
+  <!-- Probability Modal -->
+  <div class="modal fade" id="probModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title">카드 뽑기 확률 안내</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div id="probBody">
+            <!-- JS에서 테이블을 렌더링합니다 -->
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-outline-light" data-bs-dismiss="modal">닫기</button>
+        </div>
+
+      </div>
     </div>
   </div>
 
@@ -1136,6 +1237,154 @@
       }
     }
 
+    /* ===== 확률 모달 ===== */
+    // 캐시
+    let distribution = null;
+    let probability = null;
+
+    const ALL_KEYS = CARDS.map(c => c.key);
+    const NAME_BY_KEY = Object.fromEntries(CARDS.map(c => [c.key, c.name]));
+
+    // 엘리먼트
+    const probModal = new bootstrap.Modal(document.getElementById('probModal'));
+    const probBody  = document.getElementById('probBody');
+    const showProbBtn = document.getElementById('showProbBtn');
+
+    // 핸들러
+    if (showProbBtn) {
+      showProbBtn.addEventListener('click', openProbModal);
+    }
+
+    async function openProbModal(){
+      try{
+        const raw = await fetchDistributionOnce();
+        const probs = getCompiledProbs(raw);
+        renderProbContent(probs);
+        probModal.show();
+      }catch(e){
+        showToast(e?.message ?? '확률 정보를 불러오지 못했어…');
+      }
+    }
+
+    // Firestore에서 1회만 가져오기
+    async function fetchDistributionOnce(){
+      if (distribution) return distribution;
+      const snap = await getDoc(doc(db, 'config', 'card'));   // config/card 문서
+      const data = snap.exists() ? snap.data() : null;
+      distribution = (data?.distribution) || {};
+      return distribution;
+    }
+
+    // 확률표 캐시/컴파일
+    function getCompiledProbs(raw){
+      if (probability) return probability;
+      probability = compileProbabilities(raw, ALL_KEYS);
+      return probability;
+    }
+
+    /* --- 확률 유틸 --- */
+    function toProb(entry){
+      if (entry == null) return null;
+      if (typeof entry === 'object'){
+        if (entry.p != null) return entry.p;
+        if (entry.oneIn != null && entry.oneIn > 0) return 1 / entry.oneIn;
+      }
+      return null; // 숫자 단독은 weight로 취급(확률 아님)
+    }
+
+    function compileProbabilities(rawConfig, allKeys){
+      // 누락키 보정: 없으면 weight=1
+      const cfg = {};
+      for (let k of allKeys){
+        cfg[k] = (rawConfig && rawConfig[k] != null) ? rawConfig[k] : { weight: 1 };
+      }
+
+      // 1) 고정 확률 합산
+      const fixed = {};
+      const weights = {};
+      let fixedSum = 0;
+
+      for (let k of allKeys){
+        const p = toProb(cfg[k]);
+        if (p != null){
+          fixed[k] = p;
+          fixedSum += p;
+        }else{
+          const v = cfg[k];
+          let w = (typeof v === 'number') ? v : (v && v.weight != null ? v.weight : 1);
+          if (!(typeof w === 'number' && isFinite(w) && w >= 0)) w = 0;
+          weights[k] = w;
+        }
+      }
+      if (fixedSum > 1) throw new Error('총 확률 합이 1을 초과했어요!');
+
+      // 2) 남는 확률을 weight 비율로 배분
+      const leftover = 1 - fixedSum;
+      let wsum = 0;
+      for (let k in weights) if (Object.prototype.hasOwnProperty.call(weights, k)) wsum += weights[k];
+
+      const probs = {};
+      for (let k of allKeys){
+        if (fixed[k] != null){
+          probs[k] = fixed[k];
+        }else{
+          const ww = weights[k] || 0;
+          probs[k] = (wsum > 0) ? leftover * (ww / wsum) : 0;
+        }
+      }
+
+      // 3) 미세 오차 보정
+      let total = 0;
+      for (let k of allKeys) total += (probs[k] || 0);
+      if (Math.abs(total - 1) > 1e-10){
+        const last = allKeys[allKeys.length - 1];
+        probs[last] = (probs[last] || 0) + (1 - total);
+      }
+      return probs;
+    }
+
+    function toPercentStr(p){
+      // 소수 확률 → % 단위 문자열 (최대 소수 2자리, 0 트림)
+      const v = Math.round(p * 10000) / 100; // 2자리 반올림
+      return (v.toFixed(2).replace(/\.?0+$/,'') + '%');
+    }
+
+    function renderProbContent(probs){
+      const rows = ALL_KEYS.map(k => ({
+        key: k,
+        name: NAME_BY_KEY[k] || k,
+        p: probs[k] || 0
+      })).sort((a,b)=> b.p - a.p);
+
+      const sum = rows.reduce((acc,r)=> acc + r.p, 0);
+      const sumStr = toPercentStr(sum);
+
+      const tbody = rows.map((r, i) => `
+        <tr>
+          <td>${i+1}</td>
+          <td>${r.name}</td>
+          <td class="text-end fw-semibold">${toPercentStr(r.p)}</td>
+        </tr>
+      `).join('');
+
+      probBody.innerHTML = `
+        <div class="small text-muted mb-2">
+          확률 합계: <b>${sumStr}</b>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm table-borderless align-middle mb-0">
+            <thead class="border-bottom border-light-subtle">
+              <tr>
+                <th style="width:52px">#</th>
+                <th>카드</th>
+                <th class="text-end">확률</th>
+              </tr>
+            </thead>
+            <tbody>${tbody}</tbody>
+          </table>
+        </div>
+      `;
+    }
 
     // 바로 실행
     initEventInfo();
