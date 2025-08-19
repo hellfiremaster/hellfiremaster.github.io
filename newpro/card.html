@@ -579,29 +579,38 @@
       #probModal .table tbody td{ padding:.8rem .6rem; }
     }
 
-    .album-card.glow::before{
-      content:"";
-      position:absolute; inset:-2px; padding:2px;
-      border-radius:12px;
-      background: conic-gradient(#ff69b4, #ffd166, #7dd3fc, #ff69b4);
-      animation: spinBorder 3s linear infinite;
-      pointer-events:none;
-
-      mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      mask-composite: exclude;
-    }
-
-    .album-card.glow {
+    /* 황금 광채 펄스 */
+    .album-card.glow{
+      /* 기본 은은한 노란빛 */
       box-shadow:
         0 0 0 1px rgba(255, 243, 179, .45),
         0 0 12px rgba(255, 214, 102, .45),
         0 0 28px rgba(255, 191, 0, .28);
+      animation: goldenPulse 2.2s ease-in-out infinite;
     }
 
-    @keyframes spinBorder { to { transform: rotate(1turn); } }
+    /* 펄스 애니메이션: 숨 쉬듯 약↔강 */
+    @keyframes goldenPulse{
+      0%, 100%{
+        box-shadow:
+          0 0 0 1px rgba(255, 243, 179, .45),
+          0 0 12px rgba(255, 214, 102, .45),
+          0 0 28px rgba(255, 191, 0, .28);
+        filter: brightness(1) saturate(1);
+      }
+      50%{
+        box-shadow:
+          0 0 0 1px rgba(255, 250, 200, .75),
+          0 0 20px rgba(255, 220, 120, .70),
+          0 0 46px rgba(255, 200,   0, .55);
+        filter: brightness(1.06) saturate(1.06);
+      }
+    }
 
+    /* 움직임 민감한 친구들 배려 */
+    @media (prefers-reduced-motion: reduce){
+      .album-card.glow{ animation: none; }
+    }
   </style>
 </head>
 
