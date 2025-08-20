@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2a4065">
+  <title>뉴프로 — 관리자 기프트콘 등록</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Comic+Neue:wght@400;700&family=Poor+Story&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
+
+  <!-- 공통 스타일 (그대로 사용) -->
+  <link rel="stylesheet" href="./common/common.css" />
+
+  <style>
+    /* ===== 페이지 전용 최소 스타일만 남겼어! ===== */
+    body { background: linear-gradient(180deg, #f6f8fc 0%, #eef2f8 100%); }
+
+    .hero-section { text-align:center; padding: 32px 12px 16px; }
+    .hero-title { font-family: 'Jua', cursive; font-size: 2rem; margin: 0; }
+    .hero-subtitle { color:#667085; margin-top: .25rem; }
+
+    .glass-card { background: rgba(255,255,255,.72); border:1px solid #e9eef6; border-radius: 16px; box-shadow: 0 8px 24px rgba(16,24,40,.06); }
+
+    /* 업로드 드롭존 */
+    .dropzone { position: relative; border: 2px dashed #cfd8e3; border-radius: 14px; padding: 18px; background:#fafcff; transition: .2s ease; text-align:center; }
+    .dropzone.dragover { background: #f0f7ff; border-color:#99bce8; }
+    .dropzone input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+
+    .preview-wrap { display:flex; gap:16px; flex-wrap:wrap; align-items: stretch; }
+    .preview-img { flex: 1 1 280px; display:flex; align-items:center; justify-content:center; background:#0b1220; border-radius:12px; min-height: 220px; }
+    .preview-img img { max-width: 100%; max-height: 60vh; border-radius: 10px; object-fit: contain; }
+
+    .meta { flex: 1 1 260px; background:#f8fafc; border:1px solid #e9eef6; border-radius:12px; padding:14px; }
+    .meta .row + .row { margin-top:8px; }
+    .meta .key { color:#6b7280; width:95px; }
+
+    .btn-big { padding: .9rem 1.1rem; font-weight:700; border-radius:12px; }
+
+    /* 권한 제한 뷰 */
+    .guard { text-align:center; padding:48px 16px; color:#475467; }
+  </style>
+</head>
+<body>
+  <!-- Navbar (공통) -->
+  <div id="menu-container"></div>
+
+  <section class="hero-section">
+    <h1 class="hero-title">기프트콘 등록</h1>
+  </section>
+
+  <div class="container pb-5">
+    <div id="guardView" class="glass-card p-4 guard d-none">
+      <div class="mb-2">이 페이지는 <b>관리자 전용</b>입니다.</div>
+      <div class="small text-muted mb-3">관리자 권한이 있는 계정으로 로그인해주세요.</div>
+    </div>
+
+    <div id="app" class="glass-card p-3 p-md-4 d-none">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <span class="badge text-bg-secondary">Admin</span>
+        <h5 class="mb-0">기프트콘 이미지 업로드</h5>
+        <div class="ms-auto small text-muted" id="whoami">—</div>
+      </div>
+
+      <!-- 1) 파일 선택 영역 -->
+      <div class="dropzone mb-3" id="dropzone">
+        <input id="fileInput" type="file" accept="image/*" />
+        <div class="d-flex flex-column align-items-center gap-2">
+          <i class="bi bi-cloud-arrow-up" style="font-size:2rem; color:#667085"></i>
+          <div class="fw-semibold">이미지를 끌어다 놓거나 클릭해서 선택해줘</div>
+          <div class="text-muted small">PNG, JPG 권장 · 최대 10MB</div>
+          <button type="button" class="btn btn-outline-secondary btn-sm mt-1" id="chooseBtn">파일 선택</button>
+        </div>
+      </div>
+
+      <!-- 2) 미리보기 & 메타 -->
+      <div class="preview-wrap mb-3">
+        <div class="preview-img"><img id="previewImg" alt="preview" /></div>
+        <div class="meta">
+          <div class="row"><div class="col-auto key">파일명</div><div class="col" id="metaName">—</div></div>
+          <div class="row"><div class="col-auto key">용량</div><div class="col" id="metaSize">—</div></div>
+          <div class="row"><div class="col-auto key">크기</div><div class="col" id="metaDim">—</div></div>
+          <div class="row"><div class="col-auto key">MIME</div><div class="col" id="metaType">—</div></div>
+          <div class="row"><div class="col-auto key">eventId</div><div class="col" id="metaEventId">—</div></div>
+          <div class="row"><div class="col-auto key">문서(루트)</div><div class="col" id="metaDoc">—</div></div>
+          <div class="row"><div class="col-auto key">문서(results)</div><div class="col" id="metaResultDoc">—</div></div>
+          <div class="row"><div class="col-auto key">결과 경로</div><div class="col"><code id="resultPath">—</code></div></div>
+          <div class="mt-2 d-flex gap-2">
+            <button class="btn btn-light btn-sm" id="copyPathBtn" disabled>경로 복사</button>
+            <button class="btn btn-outline-danger btn-sm" id="resetBtn">초기화</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3) 액션 -->
+      <div class="d-flex gap-2 justify-content-end">
+        <button class="btn btn-outline-secondary btn-big" id="cancelBtn">취소</button>
+        <button class="btn btn-primary btn-big" id="uploadBtn" disabled>
+          <span class="me-1">확인</span><i class="bi bi-upload"></i>
+        </button>
+      </div>
+
+      <div class="small text-muted mt-2">※ 업로드하면 Storage 경로를 <b>Callable<\/b>로 Firestore에 기록할게! 화면에 <code>eventId<\/code>와 경로도 함께 보여줄게.</div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast-container"></div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Firebase (ESM) -->
+  <script type="module">    
+    import { showToast } from './common/common.js'
+    import { auth, storage } from './common/firebase-init.js';
+    import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
+    import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';
+    import { ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js';
+
+    // ===== 관리자 UID 고정 체크 =====
+    const ADMIN_UID = 'dCgOsOVWCZhSQBwU38NHogTE0dE2';
+
+    // ------- UI helpers (공통이 없을 때 대비) -------
+    const guardView = document.getElementById('guardView');
+    const app = document.getElementById('app');
+    const whoami = document.getElementById('whoami');
+
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const chooseBtn = document.getElementById('chooseBtn');
+
+    const previewImg = document.getElementById('previewImg');
+    const metaName = document.getElementById('metaName');
+    const metaSize = document.getElementById('metaSize');
+    const metaDim  = document.getElementById('metaDim');
+    const metaType = document.getElementById('metaType');
+    const metaEventId = document.getElementById('metaEventId');
+    const metaDoc = document.getElementById('metaDoc');
+    const metaResultDoc = document.getElementById('metaResultDoc');
+    const resultPath = document.getElementById('resultPath');
+    const copyPathBtn = document.getElementById('copyPathBtn');
+
+    const resetBtn = document.getElementById('resetBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const uploadBtn = document.getElementById('uploadBtn');
+
+    // Firebase Functions (callable)
+    const functions = getFunctions();
+    const registerGiftcon = httpsCallable(functions, 'registerGiftcon');
+
+    let selectedFile = null;
+    let imgDim = null;
+
+    // ------ 권한 체크 (ADMIN_UID만 허용) ------
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        guardView.classList.remove('d-none');
+        app.classList.add('d-none');
+        whoami.textContent = '로그인 필요';
+        return;
+      }
+
+      whoami.textContent = user.email || user.uid;
+      const isAdmin = user.uid === ADMIN_UID;
+
+      if (isAdmin) {
+        guardView.classList.add('d-none');
+        app.classList.remove('d-none');
+      } else {
+        guardView.classList.remove('d-none');
+        app.classList.add('d-none');
+        toast('관리자만 사용할 수 있어!');
+      }
+    });
+
+    // ------ 파일 선택 & 드래그 처리 ------
+    chooseBtn.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault(); dropzone.classList.remove('dragover');
+      const f = e.dataTransfer.files?.[0];
+      if (f) handleFile(f);
+    });
+    fileInput.addEventListener('change', () => { const f = fileInput.files?.[0]; if (f) handleFile(f); });
+
+    function handleFile(file){
+      if (!file.type.startsWith('image/')) { toast('이미지 파일만 가능해!'); return; }
+      if (file.size > 10 * 1024 * 1024) { toast('파일이 너무 커 (최대 10MB)!'); return; }
+
+      selectedFile = file;
+      metaName.textContent = file.name;
+      metaSize.textContent = prettyBytes(file.size);
+      metaType.textContent = file.type;
+      metaEventId.textContent = '—';
+      metaDoc.textContent = '—';
+      metaResultDoc.textContent = '—';
+      resultPath.textContent = '—';
+      copyPathBtn.disabled = true;
+
+      const fr = new FileReader();
+      fr.onload = () => {
+        previewImg.src = fr.result;
+        const img = new Image();
+        img.onload = () => { imgDim = { w: img.width, h: img.height }; metaDim.textContent = `${img.width} × ${img.height}`; };
+        img.src = fr.result;
+      };
+      fr.readAsDataURL(file);
+
+      uploadBtn.disabled = false;
+    }
+
+    function prettyBytes(bytes){
+      const units = ['B','KB','MB','GB'];
+      let i = 0; let v = bytes;
+      while (v >= 1024 && i < units.length - 1) { v /= 1024; i++; }
+      return `${v.toFixed(1)} ${units[i]}`;
+    }
+
+    resetBtn.addEventListener('click', resetAll);
+    cancelBtn.addEventListener('click', resetAll);
+    function resetAll(){
+      selectedFile = null; imgDim = null; fileInput.value = '';
+      previewImg.src = '';
+      metaName.textContent = '—'; metaSize.textContent = '—'; metaDim.textContent = '—'; metaType.textContent = '—';
+      metaEventId.textContent = '—'; metaDoc.textContent = '—'; metaResultDoc.textContent = '—';
+      resultPath.textContent = '—'; copyPathBtn.disabled = true;
+      uploadBtn.disabled = true;
+    }
+
+    copyPathBtn.addEventListener('click', async () => {
+      const txt = resultPath.textContent.trim();
+      if (!txt || txt === '—') return;
+      try { await navigator.clipboard.writeText(txt); toast('경로를 복사했어!'); } catch {}
+    });
+
+    // ===== 규칙: eventId = YYYYMMDD-HHmmss, Storage: giftcons/{eventId}/{fileName}, Firestore 기록은 Callable에서 처리 =====
+    uploadBtn.addEventListener('click', onUpload);
+
+    async function onUpload(){
+      if (!selectedFile) { toast('이미지를 먼저 선택해줘!'); return; }
+      const user = auth.currentUser;
+      if (!user) { toast('로그인부터 해줘!'); return; }
+      if (user.uid !== ADMIN_UID) { toast('관리자만 사용할 수 있어!'); return; }
+
+      try {
+        showLoader(true);
+
+        const eventId = generateEventId();
+        const { fullPath } = await uploadToStorage(selectedFile, eventId, user.uid);
+
+        const res = await registerGiftcon({ eventId, giftconPath: fullPath });
+        const finalEventId = (res && res.data && res.data.eventId) ? res.data.eventId : eventId;
+
+        // UI 반영
+        metaEventId.textContent = finalEventId;
+        metaDoc.textContent = `card_events/${finalEventId}`;
+        metaResultDoc.textContent = `card_events/${finalEventId}/results/result`;
+        resultPath.textContent = fullPath; // giftconPath (Storage 경로)
+        copyPathBtn.disabled = false;
+
+        confetti({ particleCount: 80, spread: 70, origin: { y: .6 } });
+        toast('업로드 & 기록 완료! (트랜잭션 처리) ✨');
+      } catch(e){
+        console.error(e); toast(e?.message || '업로드/기록 실패 ㅠㅠ');
+      } finally { showLoader(false); }
+    }
+
+    function generateEventId(){
+      // 브라우저 로컬 시간 기준 (KST 환경에서 사용)
+      return moment().format('YYYYMMDD-HHmmss');
+    }
+
+    function sanitizeFileName(name){
+      return (name || 'gift.png').replace(/[^a-zA-Z0-9._-]+/g, '_');
+    }
+
+    function buildStoragePath(file, eventId){
+      const safe = sanitizeFileName(file.name);
+      return `giftcons/${eventId}/${safe}`;
+    }
+
+    async function uploadToStorage(file, eventId, uid){
+      const fullPath = buildStoragePath(file, eventId);
+      const storageRef = ref(storage, fullPath);
+      const meta = { contentType: file.type || 'image/png', customMetadata: {
+        uploadedBy: uid,
+        source: 'admin-ui',
+        width: String(imgDim?.w || ''),
+        height: String(imgDim?.h || ''),
+        eventId
+      }};
+      await uploadBytes(storageRef, file, meta);
+      await getDownloadURL(storageRef); // 필요 시 사용
+      return { fullPath };
+    }    
+  </script>
+</body>
+</html>
