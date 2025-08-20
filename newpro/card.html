@@ -63,6 +63,8 @@
         box-shadow: none;
         object-fit: contain;   /* 바코드 잘리지 않게 */
       }
+
+      .gift-loading{ min-height:70vh; }  /* 모바일은 더 크게 */
     }
 
     .badge-soft {
@@ -611,6 +613,21 @@
     @media (prefers-reduced-motion: reduce){
       .album-card.glow{ animation: none; }
     }
+
+    /* 기프트 이미지 로딩용: 중앙 정렬 + 적당한 높이 */
+    .gift-loading{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:50vh;        /* 데스크탑에서 중앙에 보이게 */
+    }
+
+    /* 큰 스피너 사이즈 */
+    .spinner-big{
+      width:3rem;
+      height:3rem;
+      border-width:.35rem;
+    }
   </style>
 </head>
 
@@ -812,6 +829,7 @@
     import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
     import { doc, getDoc, setDoc, getDocs, collection, query, where, orderBy, limit, Timestamp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
     import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';
+    import { ref, getDownloadURL } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js';
 
     const drawCard = httpsCallable(functions, 'drawCard'); 
     const addWinner  = httpsCallable(functions, 'addWinner');
@@ -877,19 +895,25 @@
       const res = await maybeSubmitWinner();
       console.log('res', res)
       if (!res) return; // 사용자가 취소했거나 실패
+      
+      const giftconRef = ref(storage, res.data.giftconPath);
+      try {
+        const url = await getDownloadURL(giftconRef);
+        const strDate = moment(res.data.winnerAt).format('YYYY-MM-DD');
+        document.getElementById('giftDate').textContent = strDate;
+        const img = document.getElementById('giftImg');
+        img.src = url;
 
-      const url = res.data.url;
-      const strDate = moment(res.data.winnerAt).format('YYYY-MM-DD');
-      document.getElementById('giftDate').textContent = strDate;
-      const img = document.getElementById('giftImg');
-      img.src = url;
+        giftModal.show();
+        launchFireworks(2000);
 
-      giftModal.show();
-      launchFireworks(2000);
-
-      await wait(2000);
-      collected = await fetchMyCards(user.uid); 
-      renderAlbum(collected);
+        await wait(2000);
+        collected = await fetchMyCards(user.uid); 
+        renderAlbum(collected);
+      } catch(err) {
+        console.error("이미지 접근 실패:", err);
+        showToast('기프트콘에 접근할 수 없어요 😢');
+      }
     }
 
     function confirmSubmitModal() {
@@ -979,6 +1003,13 @@
       }
     }
 
+    async function getGiftUrl(g) {
+      if (g?.giftconPath) {
+        const giftRef = ref(storage, g.giftconPath);
+        return await getDownloadURL(giftRef);
+      }
+    }
+
     function buildGiftHistoryAccordion(items) {
       giftHistoryAccordion.innerHTML = '';
       if (!items.length) {
@@ -988,10 +1019,10 @@
       giftHistoryEmpty.style.display = 'none';
 
       items.forEach((g, idx) => {
-        const when = normalizeDate(g?.winnerAt);
-        const whenStr = when ? formatDate(when) : '날짜 미상';
+        const when     = normalizeDate(g?.winnerAt);
+        const whenStr  = when ? formatDate(when) : '날짜 미상';
         const collapseId = `giftCollapse${idx}`;
-        const headerId = `giftHeader${idx}`;
+        const headerId   = `giftHeader${idx}`;
 
         const item = document.createElement('div');
         item.className = 'accordion-item';
@@ -1005,10 +1036,46 @@
           <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headerId}"
               data-bs-parent="#giftHistoryAccordion">
             <div class="accordion-body">
-              <img src="${g?.url || ''}" alt="gift ${whenStr}" class="gift-image"/>          
+              <div class="gift-loading d-none" id="spinner-wrap-${idx}">
+                <div class="spinner-border spinner-big text-secondary" role="status" aria-label="로딩중"></div>
+              </div>
+
+              <img 
+                id="giftImg-${idx}"
+                class="gift-image d-none"
+                alt="gift ${whenStr}"
+                data-loaded="false"
+              />
             </div>
           </div>`;
         giftHistoryAccordion.appendChild(item);
+
+        // 펼칠 때 로딩 시작 → 끝나면 이미지 표시
+        const collapseEl = item.querySelector(`#${collapseId}`);
+        const imgEl      = item.querySelector(`#giftImg-${idx}`);
+        const spinner    = item.querySelector(`#spinner-wrap-${idx}`);
+
+        collapseEl.addEventListener('show.bs.collapse', async () => {
+          if (imgEl.dataset.loaded === 'true') return;
+
+          spinner.classList.remove('d-none');        // ✅ 중앙 스피너 ON
+          try {
+            const url = await getGiftUrl(g);         // (이 함수는 이전 답변 그대로)
+            imgEl.onload = () => {
+              spinner.classList.add('d-none');       // ✅ 스피너 OFF
+              imgEl.classList.remove('d-none');      // ✅ 이미지 표시
+            };
+            imgEl.onerror = () => {
+              spinner.classList.add('d-none');
+              showToast('이미지를 불러오지 못했어… 😢');
+            };
+            imgEl.src = url;
+            imgEl.dataset.loaded = 'true';
+          } catch(e){
+            spinner.classList.add('d-none');
+            showToast('이미지 접근 실패');
+          }
+        });
       });
     }
 
@@ -1037,7 +1104,7 @@
         const when = normalizeDate(items[0]?.winnerAt);
         if (when) {
           const diffDays = moment().diff(moment(when), 'days'); // 오늘=0, 어제=1 …
-          if (diffDays >= 0 && diffDays <= 3) {
+          if (diffDays >= 0 && diffDays <= 1) {
             setTimeout(() => launchFireworks(1600), 200);
           }
         }
