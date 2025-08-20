@@ -1,0 +1,33 @@
+<!-- Global Yes/No Modal -->
+<div class="modal fade" id="yesNoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" id="yesNoModalDialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="yesNoModalTitle">확인</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+      </div>
+      <div class="modal-body" id="yesNoModalBody">내용</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" id="yesNoModalNo">No</button>
+        <button type="button" class="btn btn-primary" id="yesNoModalYes">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 토스트 -->
+<div class="toast-container">
+  <div id="liveToast" class="toast align-items-center dark-bg" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto" id="toastTitle">알림</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="toastMessage">메시지 내용</div>
+  </div>
+</div>
+<!-- 풀스크린 로더 -->
+<div id="fullScreenLoader" class="d-none">
+  <div class="loader-content">
+    <div class="emoji-large">🐱‍💻</div>
+    <p class="loader-text">처리 중이냥~ 기다려줘냥~</p>
+  </div>
+</div>

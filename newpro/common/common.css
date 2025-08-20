@@ -149,3 +149,8 @@ body {
 .toast.dark-bg .btn-close {
   filter: invert(1);
 }
+
+.emoji-large {
+  font-size: 4rem; /* 원하는 크기로 조정 */
+  line-height: 1;
+}

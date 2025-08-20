@@ -110,8 +110,8 @@
     </div>
   </div>
 
-  <!-- Toast -->
-  <div id="toast-container"></div>
+  <!-- Common HTML -->
+  <div id="common-html"></div>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -120,7 +120,7 @@
 
   <!-- Firebase (ESM) -->
   <script type="module">    
-    import { showToast } from './common/common.js'
+    import { showLoader, showToast } from './common/common.js'
     import { auth, storage } from './common/firebase-init.js';
     import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
     import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';
@@ -178,7 +178,7 @@
       } else {
         guardView.classList.remove('d-none');
         app.classList.add('d-none');
-        toast('관리자만 사용할 수 있어!');
+        showToast('관리자만 사용할 수 있어!');
       }
     });
 
@@ -194,8 +194,8 @@
     fileInput.addEventListener('change', () => { const f = fileInput.files?.[0]; if (f) handleFile(f); });
 
     function handleFile(file){
-      if (!file.type.startsWith('image/')) { toast('이미지 파일만 가능해!'); return; }
-      if (file.size > 10 * 1024 * 1024) { toast('파일이 너무 커 (최대 10MB)!'); return; }
+      if (!file.type.startsWith('image/')) { showToast('이미지 파일만 가능해!'); return; }
+      if (file.size > 10 * 1024 * 1024) { showToast('파일이 너무 커 (최대 10MB)!'); return; }
 
       selectedFile = file;
       metaName.textContent = file.name;
@@ -240,17 +240,17 @@
     copyPathBtn.addEventListener('click', async () => {
       const txt = resultPath.textContent.trim();
       if (!txt || txt === '—') return;
-      try { await navigator.clipboard.writeText(txt); toast('경로를 복사했어!'); } catch {}
+      try { await navigator.clipboard.writeText(txt); showToast('경로를 복사했어!'); } catch {}
     });
 
     // ===== 규칙: eventId = YYYYMMDD-HHmmss, Storage: giftcons/{eventId}/{fileName}, Firestore 기록은 Callable에서 처리 =====
     uploadBtn.addEventListener('click', onUpload);
 
     async function onUpload(){
-      if (!selectedFile) { toast('이미지를 먼저 선택해줘!'); return; }
+      if (!selectedFile) { showToast('이미지를 먼저 선택해줘!'); return; }
       const user = auth.currentUser;
-      if (!user) { toast('로그인부터 해줘!'); return; }
-      if (user.uid !== ADMIN_UID) { toast('관리자만 사용할 수 있어!'); return; }
+      if (!user) { showToast('로그인부터 해줘!'); return; }
+      if (user.uid !== ADMIN_UID) { showToast('관리자만 사용할 수 있어!'); return; }
 
       try {
         showLoader(true);
@@ -269,9 +269,9 @@
         copyPathBtn.disabled = false;
 
         confetti({ particleCount: 80, spread: 70, origin: { y: .6 } });
-        toast('업로드 & 기록 완료! (트랜잭션 처리) ✨');
+        showToast('업로드 & 기록 완료! ✨');
       } catch(e){
-        console.error(e); toast(e?.message || '업로드/기록 실패 ㅠㅠ');
+        console.error(e); showToast(e?.message || '업로드/기록 실패 ㅠㅠ');
       } finally { showLoader(false); }
     }
 
