@@ -252,7 +252,7 @@
       if (!selectedFile) { showToast('이미지를 먼저 선택해줘!'); return; }
       const user = auth.currentUser;
       if (!user) { showToast('로그인부터 해줘!'); return; }
-      if (admin) { showToast('관리자만 사용할 수 있어!'); return; }
+      if (!admin) { showToast('관리자만 사용할 수 있어!'); return; }
 
       try {
         showLoader(true);
