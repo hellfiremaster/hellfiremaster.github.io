@@ -19,15 +19,6 @@
   <link rel="stylesheet" href="./common/common.css" />
 
   <style>
-    /* ===== 페이지 전용 최소 스타일만 남겼어! ===== */
-    body { background: linear-gradient(180deg, #f6f8fc 0%, #eef2f8 100%); }
-
-    .hero-section { text-align:center; padding: 32px 12px 16px; }
-    .hero-title { font-family: 'Jua', cursive; font-size: 2rem; margin: 0; }
-    .hero-subtitle { color:#667085; margin-top: .25rem; }
-
-    .glass-card { background: rgba(255,255,255,.72); border:1px solid #e9eef6; border-radius: 16px; box-shadow: 0 8px 24px rgba(16,24,40,.06); }
-
     /* 업로드 드롭존 */
     .dropzone { position: relative; border: 2px dashed #cfd8e3; border-radius: 14px; padding: 18px; background:#fafcff; transition: .2s ease; text-align:center; }
     .dropzone.dragover { background: #f0f7ff; border-color:#99bce8; }
@@ -106,8 +97,6 @@
           <span class="me-1">확인</span><i class="bi bi-upload"></i>
         </button>
       </div>
-      
-      <div class="small text-muted mt-2">※ 업로드하면 Storage 경로를 <b>Callable<\/b>로 Firestore에 기록할게! 화면에 <code>eventId<\/code>와 경로도 함께 보여줄게.</div>
     </div>
   </div>
 
