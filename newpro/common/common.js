@@ -36,12 +36,29 @@ function bindAuthUI() {
       if (signupBtn) signupBtn.classList.add('d-none');
       if (userDropdown) userDropdown.classList.remove('d-none');
 
+      const idTokenResult = await user.getIdTokenResult()
+      const claims = idTokenResult.claims;
+      let admin = claims.admin ?? false;
+
+      if(admin) {
+        const dropdownMenu = document.querySelector('#userDropdown .dropdown-menu');
+        const termsLi = dropdownMenu?.querySelector('a[href="terms.html"]')?.closest('li');
+      
+        // 중복 삽입 방지용 id 체크
+        if (dropdownMenu && termsLi && !dropdownMenu.querySelector('#giftAddItem')) {
+          termsLi.insertAdjacentHTML('afterend', `
+            <li><a class="dropdown-item" id="giftAddItem" href="giftcon.html">🎁 기프트콘 추가</a></li>
+          `);
+        }
+      }
       let nickname = '익명', score = 0;
+
       const u = await fetchUserDoc(user.uid);
       if (u) { nickname = u.nickname || nickname; score = u.score || 0; }
       const r = getRankByScore(score);
       if (userDropBtn) userDropBtn.innerText = `${nickname} ${r.icon}`;
       saveFcmToken();
+
     } else {
       if (loginBtn)  loginBtn.classList.remove('d-none');
       if (signupBtn) signupBtn.classList.remove('d-none');
@@ -53,7 +70,8 @@ function bindAuthUI() {
     logoutBtn.addEventListener('click', async () => {
       try {
         await signOut(auth);
-        alert('안녕히 가세요. ^^');
+        alert('안녕히 가세요. ^^');        
+        location.reload();
       } catch (err) {
         showToast(err.message, '로그아웃 실패');
       }
@@ -133,6 +151,7 @@ function bindModals() {
         await signInWithEmailAndPassword(auth, email, pw);
         showToast('로그인 성공!', '로그인');
         bootstrap.Modal.getInstance(document.getElementById('loginModal'))?.hide();
+        location.reload();
       } catch (err) {
         showToast(err.message, '로그인 실패');
       }

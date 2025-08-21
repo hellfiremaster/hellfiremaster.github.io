@@ -540,8 +540,7 @@
 
     const awardPoints = httpsCallable(functions, 'awardPoints');
     const requestDisasterPoint = httpsCallable(functions, 'requestDisasterPoint');
-
-    const ADMIN_UID = 'dCgOsOVWCZhSQBwU38NHogTE0dE2';
+    let admin = null;
 
     /********************************
      * 전역 사용자 캐시 및 함수
@@ -994,10 +993,15 @@
     }
 
     onAuthStateChanged(auth, async (user) => {
+      admin = false;
       if (user) {
         const userData = await fetchUserNicknameAndScore(user.uid);
         currentNickname = userData.nickname;
         currentScore = userData.score;
+
+        const idTokenResult = await user.getIdTokenResult()
+        const claims = idTokenResult.claims;
+        admin = claims.admin ?? false;
 
         // maybeAskDisasterAid(user);
       } else {
@@ -1148,7 +1152,7 @@
         return;
       }
       const postData = postDoc.data();
-      if (user.uid !== ADMIN_UID && postData.uid !== user.uid) {
+      if (!admin && postData.uid !== user.uid) {
         showToast('본인 글만 삭제할 수 있습니다.', '오류');
         return;
       }
@@ -1222,7 +1226,7 @@
           showToast('존재하지 않는 댓글입니다.', '오류');
           return;
         }
-        if (user.uid !== ADMIN_UID && commentSnap.data().uid !== user.uid) {
+        if (!admin && commentSnap.data().uid !== user.uid) {
           showToast('본인 댓글만 삭제할 수 있습니다.', '오류');
           return;
         }
@@ -1285,7 +1289,7 @@
         const dateStr = formatDateTime(comment.createdAt);
 
         const currentUser = auth.currentUser;
-        const canDelete = currentUser && (currentUser.uid === comment.uid || currentUser.uid === ADMIN_UID);
+        const canDelete = currentUser && (currentUser.uid === comment.uid || admin);
         // 최상위 댓글(indent가 0인 경우)에만 답글 버튼과 폼을 노출
         const replyButtonHtml = (indent === 0) 
           ? `<button class="btn btn-sm btn-link" id="replyBtn-${postId}-${comment.commentId}">답글</button>`
@@ -1596,7 +1600,6 @@
         }
       } catch (_) {}
       const currentUser = auth.currentUser;
-      const isAdmin = currentUser && currentUser.uid === ADMIN_UID;
       const isAuthor = currentUser && currentUser.uid === data.uid;
       const likeCount = data.likes ? data.likes.length : 0;
       const dislikeCount = data.dislikes ? data.dislikes.length : 0;
@@ -1607,7 +1610,7 @@
           <span>${title}</span>
           <div class="action-buttons">
             ${isAuthor ? `<button class="btn btn-sm btn-warning me-2" id="editBtn-${postId}">수정</button>` : ''}
-            ${isAuthor || isAdmin ? `<button class="btn btn-sm btn-danger me-2" id="deleteBtn-${postId}">삭제</button>` : ''}
+            ${isAuthor || admin ? `<button class="btn btn-sm btn-danger me-2" id="deleteBtn-${postId}">삭제</button>` : ''}
             ${currentUser ? `<button class="btn btn-sm magic-btn" id="magicBtn-${postId}">💫</button>` : ''}
           </div>
         </div>
@@ -1653,7 +1656,7 @@
           else showToast('글 정보를 불러오지 못했습니다.', '오류');
         });
       }
-      if(isAuthor || isAdmin) {
+      if(isAuthor || admin) {
         const deleteBtn = card.querySelector(`#deleteBtn-${postId}`);
         deleteBtn.addEventListener('click', async () => {
           const postSnap = await getDoc(doc(db, 'posts', postId));

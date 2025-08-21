@@ -126,9 +126,6 @@
     import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';
     import { ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js';
 
-    // ===== 관리자 UID 고정 체크 =====
-    const ADMIN_UID = 'dCgOsOVWCZhSQBwU38NHogTE0dE2';
-
     // ------- UI helpers (공통이 없을 때 대비) -------
     const guardView = document.getElementById('guardView');
     const app = document.getElementById('app');
@@ -157,12 +154,14 @@
     const functions = getFunctions();
     const registerGiftcon = httpsCallable(functions, 'registerGiftcon');
 
+    let admin;
     let selectedFile = null;
     let imgDim = null;
 
     // ------ 권한 체크 (ADMIN_UID만 허용) ------
     onAuthStateChanged(auth, async (user) => {
-      if (!user) {
+      admin = false;
+      if (!user) {        
         guardView.classList.remove('d-none');
         app.classList.add('d-none');
         whoami.textContent = '로그인 필요';
@@ -170,9 +169,11 @@
       }
 
       whoami.textContent = user.email || user.uid;
-      const isAdmin = user.uid === ADMIN_UID;
 
-      if (isAdmin) {
+      const idTokenResult = await user.getIdTokenResult()
+      const claims = idTokenResult.claims;
+      admin = claims.admin ?? false;
+      if (admin) {
         guardView.classList.add('d-none');
         app.classList.remove('d-none');
       } else {
@@ -250,7 +251,7 @@
       if (!selectedFile) { showToast('이미지를 먼저 선택해줘!'); return; }
       const user = auth.currentUser;
       if (!user) { showToast('로그인부터 해줘!'); return; }
-      if (user.uid !== ADMIN_UID) { showToast('관리자만 사용할 수 있어!'); return; }
+      if (admin) { showToast('관리자만 사용할 수 있어!'); return; }
 
       try {
         showLoader(true);
