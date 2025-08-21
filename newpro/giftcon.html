@@ -19,23 +19,75 @@
   <link rel="stylesheet" href="./common/common.css" />
 
   <style>
-    /* 업로드 드롭존 */
-    .dropzone { position: relative; border: 2px dashed #cfd8e3; border-radius: 14px; padding: 18px; background:#fafcff; transition: .2s ease; text-align:center; }
-    .dropzone.dragover { background: #f0f7ff; border-color:#99bce8; }
-    .dropzone input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+    /* 드롭존 */
+    .dropzone{
+      position:relative; text-align:center;
+      border:2px dashed #cfd8e3; border-radius:14px; padding:18px;
+      background:linear-gradient(180deg,#ffffffaa,#f7fbffcc);
+      transition:.2s ease;
+    }
+    .dropzone.dragover{ background:#f0f7ff; border-color:#99bce8; }
+    .dropzone input[type="file"]{ position:absolute; inset:0; opacity:0; cursor:pointer; }
 
-    .preview-wrap { display:flex; gap:16px; flex-wrap:wrap; align-items: stretch; }
-    .preview-img { flex: 1 1 280px; display:flex; align-items:center; justify-content:center; background:#0b1220; border-radius:12px; min-height: 220px; }
-    .preview-img img { max-width: 100%; max-height: 60vh; border-radius: 10px; object-fit: contain; }
+    /* 프리뷰+메타 영역: flex → grid 로 변경 (폭 문제 해결) */
+    .preview-wrap{
+      display:grid; gap:16px; align-items:stretch;
+      grid-template-columns: 1fr; /* 기본은 1열(모바일) */
+    }
+    @media (min-width: 768px){
+      .preview-wrap{
+        /* 왼쪽 크게, 오른쪽 적당히 — 좁아지지 않게 minmax */
+        grid-template-columns: minmax(480px, 1fr) minmax(260px, 360px);
+      }
+    }
+    @media (min-width: 1200px){
+      .preview-wrap{
+        grid-template-columns: minmax(640px, 1fr) minmax(280px, 400px);
+      }
+    }
 
-    .meta { flex: 1 1 260px; background:#f8fafc; border:1px solid #e9eef6; border-radius:12px; padding:14px; }
-    .meta .row + .row { margin-top:8px; }
-    .meta .key { color:#6b7280; width:95px; }
+    /* 프리뷰 박스 (이미지 없을 때도 예쁘게 — CSS-only 빈상태) */
+    .preview-img{
+      position:relative; display:grid; place-items:center;
+      min-height:320px; border-radius:12px; overflow:hidden;
+      border:1px dashed #d6e0ef;
+      background:linear-gradient(180deg,#f8fbff,#f2f6ff);
+      transition:border-color .2s ease, background .2s ease;
+    }
+    .preview-img:hover{ border-color:#9db7e8; }
 
-    .btn-big { padding: .9rem 1.1rem; font-weight:700; border-radius:12px; }
+    .preview-img img{
+      max-width:100%; max-height:60vh; object-fit:contain; border-radius:10px;
+    }
+
+    /* 이미지 없을 때 문구 보여주기 (JS 없이 자동) */
+    .preview-img:not(:has(img[src^="data:"], img[src^="blob:"], img[src^="http"], img[src^="/"]))::before{
+      content:"여기에 기프트콘 이미지를 올려줘 ✨\aPNG/JPG 권장 · 최대 10MB";
+      white-space:pre-line; text-align:center; color:#667085; line-height:1.4;
+      font-size:.95rem; padding:18px 24px; border-radius:10px;
+      background:rgba(255,255,255,.85);
+      box-shadow:0 6px 20px rgba(16,24,40,.08);
+    }
+    .preview-img:not(:has(img[src^="data:"], img[src^="blob:"], img[src^="http"], img[src^="/"])) img{ display:none; }
+
+    /* 이미지가 들어오면 자동으로 다크 배경으로 전환 */
+    .preview-img:has(img[src^="data:"], img[src^="blob:"], img[src^="http"], img[src^="/"]){
+      border-style:solid; background:#0b1220;
+    }
+
+    /* 메타 패널 */
+    .meta{
+      background:#f8fafc; border:1px solid #e9eef6; border-radius:12px; padding:14px;
+    }
+    .meta .row + .row{ margin-top:8px; }
+    .meta .key{ color:#6b7280; width:95px; }
+    #resultPath{ word-break:break-all; }
+
+    /* 버튼 */
+    .btn-big{ padding:.9rem 1.1rem; font-weight:700; border-radius:12px; }
 
     /* 권한 제한 뷰 */
-    .guard { text-align:center; padding:48px 16px; color:#475467; }
+    .guard{ text-align:center; padding:48px 16px; color:#475467; }
   </style>
 </head>
 <body>
