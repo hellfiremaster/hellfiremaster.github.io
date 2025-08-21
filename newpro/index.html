@@ -993,18 +993,18 @@
     }
 
     onAuthStateChanged(auth, async (user) => {
-      admin = false;
       if (user) {
         const userData = await fetchUserNicknameAndScore(user.uid);
         currentNickname = userData.nickname;
         currentScore = userData.score;
-
+        
         const idTokenResult = await user.getIdTokenResult()
         const claims = idTokenResult.claims;
         admin = claims.admin ?? false;
-
+        
         // maybeAskDisasterAid(user);
       } else {
+        admin = false;
         currentNickname = null;
         currentScore = 0;
       }

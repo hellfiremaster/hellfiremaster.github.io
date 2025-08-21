@@ -3,6 +3,8 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 import { doc, setDoc, getDoc, collection, query, where, getDocs, limit, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
 import { getMessaging, getToken } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js';
 
+let admin = null;
+
 // ---- 유틸: 점수→랭크 이모지(간단판) ----
 export function getRankByScore(score=0) {
   if (score >= 50000) return { name: '이터널', icon: '🌌' };
@@ -38,7 +40,7 @@ function bindAuthUI() {
 
       const idTokenResult = await user.getIdTokenResult()
       const claims = idTokenResult.claims;
-      let admin = claims.admin ?? false;
+      admin = claims.admin ?? false;
 
       if(admin) {
         const dropdownMenu = document.querySelector('#userDropdown .dropdown-menu');
@@ -60,6 +62,7 @@ function bindAuthUI() {
       saveFcmToken();
 
     } else {
+      admin = false;
       if (loginBtn)  loginBtn.classList.remove('d-none');
       if (signupBtn) signupBtn.classList.remove('d-none');
       if (userDropdown) userDropdown.classList.add('d-none');
@@ -100,7 +103,7 @@ function saveFcmToken() {
               fcmToken: currentToken,
               updatedAt: serverTimestamp()
             }, { merge: true });
-            // console.log('FCM 토큰 저장 완료💕', currentToken);
+            console.log('FCM 토큰 저장 완료💕', currentToken);
           }
         } catch (err) {
           console.error('FCM 토큰 가져오기 실패💦', err);

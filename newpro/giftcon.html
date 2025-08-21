@@ -58,6 +58,7 @@
   <div class="container pb-5">
     <div id="guardView" class="glass-card p-4 guard d-none">
       <div class="mb-2">이 페이지는 <b>관리자 전용</b>입니다.</div>
+      <button onclick="test()">Test</button>
       <div class="small text-muted mb-3">관리자 권한이 있는 계정으로 로그인해주세요.</div>
     </div>
 
@@ -105,7 +106,7 @@
           <span class="me-1">확인</span><i class="bi bi-upload"></i>
         </button>
       </div>
-
+      
       <div class="small text-muted mt-2">※ 업로드하면 Storage 경로를 <b>Callable<\/b>로 Firestore에 기록할게! 화면에 <code>eventId<\/code>와 경로도 함께 보여줄게.</div>
     </div>
   </div>
@@ -160,8 +161,8 @@
 
     // ------ 권한 체크 (ADMIN_UID만 허용) ------
     onAuthStateChanged(auth, async (user) => {
-      admin = false;
       if (!user) {        
+        admin = false;
         guardView.classList.remove('d-none');
         app.classList.add('d-none');
         whoami.textContent = '로그인 필요';
