@@ -1246,7 +1246,7 @@
     const scoreDisplay = document.getElementById('scoreDisplay');
 
     let currentScore = null;
-    let drawPoint = 5;
+    let drawPoint = null;
 
     function setScoreUI(score) {
       currentScore = score;
@@ -1302,8 +1302,7 @@
 
     async function openProbModal(){
       try{
-        const raw = await fetchDistributionOnce();
-        const probs = getCompiledProbs(raw);
+        const probs = getCompiledProbs(distribution);
         renderProbContent(probs);
         probModal.show();
       }catch(e){
@@ -1311,13 +1310,11 @@
       }
     }
 
-    // Firestore에서 1회만 가져오기
-    async function fetchDistributionOnce(){
-      if (distribution) return distribution;
+    async function initCardConfig(){
       const snap = await getDoc(doc(db, 'config', 'card'));   // config/card 문서
-      const data = snap.exists() ? snap.data() : null;
-      distribution = (data?.distribution) || {};
-      return distribution;
+      const data = snap.data();
+      distribution = data.distribution;
+      drawPoint = data.drawPoint;
     }
 
     // 확률표 캐시/컴파일
@@ -1431,8 +1428,12 @@
       `;
     }
 
-    // 바로 실행
-    initEventInfo();
+    function init() {
+      initEventInfo();
+      initCardConfig();
+    }
+
+    init();
 
   </script>
 </body>
