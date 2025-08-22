@@ -126,6 +126,15 @@
       <div class="preview-wrap mb-3">
         <div class="preview-img"><img id="previewImg" alt="preview" /></div>
         <div class="meta">
+          <!-- [추가] 기프트콘 명 (선택) -->
+          <div class="row align-items-center mb-2">
+            <div class="col-auto key">기프트콘 명</div>
+            <div class="col">
+              <input type="text" class="form-control form-control-sm" id="giftNameInput"
+                     placeholder="예: 스타벅스 아메리카노" />
+            </div>
+          </div>
+      
           <div class="row"><div class="col-auto key">파일명</div><div class="col" id="metaName">—</div></div>
           <div class="row"><div class="col-auto key">용량</div><div class="col" id="metaSize">—</div></div>
           <div class="row"><div class="col-auto key">크기</div><div class="col" id="metaDim">—</div></div>
@@ -181,6 +190,7 @@
     const metaSize = document.getElementById('metaSize');
     const metaDim  = document.getElementById('metaDim');
     const metaType = document.getElementById('metaType');
+    const giftNameInput = document.getElementById('giftNameInput');
     const metaEventId = document.getElementById('metaEventId');
     const metaDoc = document.getElementById('metaDoc');
     const metaResultDoc = document.getElementById('metaResultDoc');
@@ -270,8 +280,10 @@
 
     resetBtn.addEventListener('click', resetAll);
     cancelBtn.addEventListener('click', resetAll);
+
     function resetAll(){
       selectedFile = null; imgDim = null; fileInput.value = '';
+      giftNameInput.value = '';
       previewImg.src = '';
       metaName.textContent = '—'; metaSize.textContent = '—'; metaDim.textContent = '—'; metaType.textContent = '—';
       metaEventId.textContent = '—'; metaDoc.textContent = '—'; metaResultDoc.textContent = '—';
@@ -297,10 +309,13 @@
       try {
         showLoader(true);
 
+        const raw = giftNameInput?.value?.trim();
+        const giftName = raw ? raw : null;
+
         const eventId = generateEventId();
         const { fullPath } = await uploadToStorage(selectedFile, eventId, user.uid);
 
-        const res = await registerGiftcon({ eventId, giftconPath: fullPath });
+        const res = await registerGiftcon({ eventId, giftconPath: fullPath, giftName });
         const finalEventId = (res && res.data && res.data.eventId) ? res.data.eventId : eventId;
 
         // UI 반영
