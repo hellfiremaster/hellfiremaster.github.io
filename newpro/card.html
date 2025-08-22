@@ -519,37 +519,112 @@
       #probModal .table tbody td{ padding:.8rem .6rem; }
     }
 
-    /* 황금 광채 펄스 */
-    .album-card.glow{
-      /* 기본 은은한 노란빛 */
-      box-shadow:
-        0 0 0 1px rgba(255, 243, 179, .45),
-        0 0 12px rgba(255, 214, 102, .45),
-        0 0 28px rgba(255, 191, 0, .28);
-      animation: goldenPulse 2.2s ease-in-out infinite;
+    /* ===== album-card (고정 크기 + 붉은 오로라) ===== */
+    /* 카드 기본(크기 고정) */
+    .album-card{
+      position: relative;
+      width: 160px;          /* ▶ 고정 가로 */
+      height: 220px;         /* ▶ 고정 세로 */
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f0f3f8;
+      border: 1px solid #e5eaf2;
+      margin: 0 auto;        /* 그리드 셀 중앙 정렬 */
     }
 
-    /* 펄스 애니메이션: 숨 쉬듯 약↔강 */
-    @keyframes goldenPulse{
-      0%, 100%{
+    /* 이미지는 카드에 꽉, 비율 자르기 */
+    .album-card img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* 좌상단 라벨 */
+    .album-card .label{
+      position: absolute;
+      left: 8px; top: 8px;
+      background: rgba(0,0,0,.6);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: .9rem;
+      z-index: 3;
+    }
+
+    /* 잠금 상태(흐림+그레이) */
+    .album-card.locked::before{
+      content:"🔒";
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      font-size: 1.6rem;
+      background: rgba(0,0,0,.35);
+      color:#fff;
+      z-index:2;
+    }
+    .album-card.locked img{
+      filter: blur(6px) grayscale(100%);
+      transform: scale(1.05);
+    }
+
+    /* ---- 모든 카드 오로라 (완성 시 aura-red 클래스 추가) ---- */
+    .album-card.aura-red{
+      /* 카드 자체는 크기 고정: transform 애니 사용 안 함 */
+      box-shadow:
+        0 0 12px rgba(255, 60, 60, .40),
+        0 0 28px rgba(255, 40, 40, .30),
+        0 0 56px rgba(255, 30, 30, .20);
+      animation: auraGlow 2.0s ease-in-out infinite;
+    }
+
+    /* 오로라 시트(회전 없음, 농도만 숨쉬기) */
+    .album-card.aura-red::before{
+      content:"";
+      position:absolute;
+      inset:-16px;                /* ▶ 기존보다 더 크고 진하게 감싸기 */
+      border-radius: inherit;
+      pointer-events:none;
+      z-index:1;                  /* 이미지 위, 라벨 아래 */
+      background:
+        radial-gradient(ellipse at 50% 80%,
+          rgba(255, 80, 80, .88) 0%,
+          rgba(255, 60, 60, .58) 36%,
+          rgba(255, 40, 40, .32) 66%,
+          rgba(255, 40, 40, 0)   86%);
+      mix-blend-mode: screen;
+      filter: blur(6px) saturate(1.1);
+      opacity: .40;
+      animation: auraBreath 2.0s ease-in-out infinite;
+    }
+
+    /* 오로라 밝기 농도 펌핑(카드 크기 변화 없음) */
+    @keyframes auraGlow{
+      0%,100%{
         box-shadow:
-          0 0 0 1px rgba(255, 243, 179, .45),
-          0 0 12px rgba(255, 214, 102, .45),
-          0 0 28px rgba(255, 191, 0, .28);
-        filter: brightness(1) saturate(1);
+          0 0 10px rgba(255, 60, 60, .34),
+          0 0 22px rgba(255, 40, 40, .26),
+          0 0 44px rgba(255, 30, 30, .18);
+        filter: brightness(1) saturate(1.05);
       }
       50%{
         box-shadow:
-          0 0 0 1px rgba(255, 250, 200, .75),
-          0 0 20px rgba(255, 220, 120, .70),
-          0 0 46px rgba(255, 200,   0, .55);
-        filter: brightness(1.06) saturate(1.06);
+          0 0 16px rgba(255, 70, 70, .60),
+          0 0 34px rgba(255, 50, 50, .46),
+          0 0 70px rgba(255, 40, 40, .32);
+        filter: brightness(1.08) saturate(1.22);
       }
     }
 
-    /* 움직임 민감한 친구들 배려 */
+    /* 오로라 시트의 농도 숨쉬기 */
+    @keyframes auraBreath{
+      0%,100%{ opacity:.52; filter: blur(6px) saturate(1.05); }
+      50%    { opacity:.58; filter: blur(4px) saturate(1.25); }
+    }
+
+    /* 모션 민감 친구 배려 */
     @media (prefers-reduced-motion: reduce){
-      .album-card.glow{ animation: none; }
+      .album-card.aura-red{ animation: none !important; }
+      .album-card.aura-red::before{ animation: none !important; }
     }
 
     /* 기프트 이미지 로딩용: 중앙 정렬 + 적당한 높이 */
@@ -875,7 +950,7 @@
 
         const classes = ['album-card'];
         if (!isOwned) classes.push('locked');
-        if (isComplete) classes.push('glow');   // ✨ 여기 한 줄!
+        if (isComplete) classes.push('aura-red');
 
         div.className = classes.join(' ');
         div.innerHTML = `<span class="label">${card.name}</span><img src="${card.file}" alt="${card.name}">`;
