@@ -2,6 +2,7 @@ import { auth, db, functions, storage, analytics, app } from './firebase-init.js
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
 import { doc, setDoc, getDoc, collection, query, where, getDocs, limit, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
 import { getMessaging, getToken } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js';
+import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';    
 
 let admin = null;
 
@@ -66,6 +67,22 @@ function bindAuthUI() {
       if (loginBtn)  loginBtn.classList.remove('d-none');
       if (signupBtn) signupBtn.classList.remove('d-none');
       if (userDropdown) userDropdown.classList.add('d-none');
+
+      const params = new URLSearchParams(location.search);
+      const refFromUrl = params.get('referrer');
+      if (refFromUrl) {
+        const refInput = document.getElementById('referrer');
+        if (refInput) {
+          refInput.value = refFromUrl;
+          refInput.readOnly = true;                 // 수정 금지
+          refInput.setAttribute('aria-readonly', 'true');
+          refInput.classList.add('bg-light');       // 살짝 비활성화 느낌(선택)
+        }
+        const modalEl = document.getElementById('signupModal');
+        if (modalEl) {
+          bootstrap.Modal.getOrCreateInstance(modalEl).show();
+        }
+      }      
     }
   });
 
@@ -124,19 +141,31 @@ function bindModals() {
       e.preventDefault();
       const email = document.getElementById('signupEmail').value.trim();
       const pw    = document.getElementById('signupPassword').value.trim();
-      const nick  = document.getElementById('signupNickname').value.trim();
-      if (!email || !pw || !nick) {
+      const nickname  = document.getElementById('signupNickname').value.trim();
+      const referrerNickname = document.getElementById('referrer').value.trim();
+      if (!email || !pw || !nickname) {
         return showToast('모든 항목을 입력하세요.', '회원가입 실패');
       }
+      if (/\s/.test(nickname)) {
+        document.getElementById('signupNickname').focus();
+        return showToast('닉네임에 공백이 들어가면 안 돼! 공백을 제거하고 다시 시도해줘 💡', '회원가입 실패');
+      }
       // 닉네임 중복 체크
-      const snap = await getDocs(query(collection(db,'users'), where('nickname','==', nick), limit(1)));
+      const snap = await getDocs(query(collection(db,'users'), where('nickname','==', nickname), limit(1)));
       if (!snap.empty) return showToast('이미 사용 중인 닉네임이에요.', '회원가입 실패');
 
       try {
         const cred = await createUserWithEmailAndPassword(auth, email, pw);
-        await setDoc(doc(db,'users', cred.user.uid), { nickname: nick, score: 0, createdAt: serverTimestamp() });
+        await setDoc(doc(db,'users', cred.user.uid), { nickname, score: 0, createdAt: serverTimestamp() });
+        if(referrerNickname) {
+          await setDoc(doc(db,'users_private', cred.user.uid), { referrerNickname });
+        }
         showToast('회원가입 성공!', '회원가입');
         bootstrap.Modal.getInstance(document.getElementById('signupModal'))?.hide();
+        if(referrerNickname) {
+          const applyReferrer = httpsCallable(functions, 'applyReferrer');
+          applyReferrer({ referrerNickname });
+        }
       } catch (err) {
         showToast(err.message, '회원가입 실패');
       }
@@ -232,7 +261,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('loginModal')?.addEventListener('shown.bs.modal', () => {
       document.getElementById('loginEmail')?.focus();
     });
-
   } catch (err) {
     // 페이지에 해당 컨테이너가 없어도 괜찮아~ 조용히 넘어가자!
     // console.error(err); // 혹시 디버깅이 필요하면 이 줄을 활성화해!

@@ -12,10 +12,10 @@
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="index.html">🧭 모험의기록</a>
+          <a class="nav-link" href="index.html" onclick="this.href += window.location.search">🧭 모험의기록</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="card.html">🃏 카드앨범</a>
+          <a class="nav-link" href="card.html" onclick="this.href += window.location.search">🃏 카드앨범</a>
         </li>
       </ul>
 
@@ -69,6 +69,10 @@
           <div class="mb-3">
             <label for="signupNickname" class="form-label">닉네임</label>
             <input type="text" class="form-control" id="signupNickname" required />
+          </div>
+          <div class="mb-3">
+            <label for="referrer" class="form-label">추천인 닉네임(선택)</label>
+            <input type="text" class="form-control" id="referrer" />
           </div>
           <small class="text-muted">
             진행 시 <a href="terms.html" target="_blank">이용약관</a>에 동의하는 것으로 간주됩니다.
