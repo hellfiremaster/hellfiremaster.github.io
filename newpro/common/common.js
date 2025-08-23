@@ -62,6 +62,35 @@ function bindAuthUI() {
       if (userDropBtn) userDropBtn.innerText = `${nickname} ${r.icon}`;
       saveFcmToken();
 
+      const copyBtn = document.getElementById('copyReferralLinkBtn');
+      if (copyBtn) {
+        const clone = copyBtn.cloneNode(true);
+        copyBtn.parentNode.replaceChild(clone, copyBtn);
+
+        const buildReferralUrl = () => {
+          // index.html 기준으로 referrer 파라미터만 붙인 공유 링크 생성
+          const url = new URL('index.html', window.location.href);
+          url.searchParams.set('referrer', nickname);
+          return url.toString();
+        };
+      
+        clone.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const link = buildReferralUrl();
+          try {
+            await navigator.clipboard.writeText(link);
+            showToast(
+              '초대 링크를 복사했어요! 친구에게 붙여넣기 해줘 💖<br/>' +
+              '<small class="text-light">✨ 본인을 추천인으로 가입하면 <span class="fw-bold">500포인트</span> 보너스!</small>',
+              '추천링크 복사'
+            );
+          } catch (err) {
+            // Clipboard API가 막힌 환경 폴백
+            window.prompt('아래 링크를 복사해줘', link);
+          }
+        }, { once: true });
+      }
+
     } else {
       admin = false;
       if (loginBtn)  loginBtn.classList.remove('d-none');
