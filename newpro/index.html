@@ -530,7 +530,7 @@
     /********************************
      * Firebase 초기화 및 모듈 임포트
      ********************************/
-    import { showToast, showYesNoModal, requireLogin, getRankByScore, showLoader } from './common/common.js';
+    import { showToast, showOkModal, requireLogin, getRankByScore, showLoader } from './common/common.js';
     import { app, auth, db, functions, storage, analytics } from './common/firebase-init.js';
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";    
     import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';    
@@ -974,17 +974,19 @@
         const disSnap = await getDoc(disRef);
         if (disSnap.exists()) return;
 
-        const ok = await showYesNoModal({
+        const ok = await showOkModal({
           title: '재앙지원금 도착!',
           message: '재앙지원금 <strong>500포인트</strong>가 도착했슙니다. 훠훠. 받으시겠습니까?',
-          yesText: '네',
-          noText: '아니오',
-          size: 'md'
+          okText: '확인',
         });
+        console.log('ok', ok);
+        if(!ok) {
+          return;
+        }
 
         try {
-          await requestDisasterPoint(ok);            // true/false 그대로 전달
-          if (ok) showToast('받기 완료! 500점이 쓩~', '재앙지원금');
+          await requestDisasterPoint();            // true/false 그대로 전달
+          showToast('받기 완료! 500점이 쓩~', '재앙지원금');
         } catch (e) {
           showToast(e.message, '오류');
         }
@@ -1003,7 +1005,7 @@
         const claims = idTokenResult.claims;
         admin = claims.admin ?? false;
         
-        // maybeAskDisasterAid(user);
+        maybeAskDisasterAid(user);
       } else {
         admin = false;
         currentNickname = null;

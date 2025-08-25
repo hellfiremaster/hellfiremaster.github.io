@@ -305,6 +305,53 @@ export function showToast(message, title = '알림', duration = 5000) {
   new bootstrap.Toast(toastEl, { delay: duration }).show();
 }
 
+export function showOkModal({
+  title = '알림',
+  message = '',
+  okText = 'OK',
+  size = 'md',        // 'sm' | 'md' | 'lg'
+  backdrop = 'static',
+  keyboard = false
+} = {}) {
+  const el     = document.getElementById('okModal');
+  const dialog = document.getElementById('okModalDialog');
+  const titleEl= document.getElementById('okModalTitle');
+  const bodyEl = document.getElementById('okModalBody');
+  const okBtn  = document.getElementById('okModalOk');
+
+  // 사이즈 적용
+  dialog.className = 'modal-dialog modal-dialog-centered';
+  if (size === 'sm') dialog.classList.add('modal-sm');
+  if (size === 'lg') dialog.classList.add('modal-lg');
+
+  // 내용/버튼 텍스트
+  titleEl.textContent = title;
+  bodyEl.innerHTML = message;
+  okBtn.textContent = okText;
+
+  // 이전 핸들러 정리(클론으로 교체)
+  const okClone = okBtn.cloneNode(true);
+  okBtn.parentNode.replaceChild(okClone, okBtn);
+
+  const modal = bootstrap.Modal.getOrCreateInstance(el, { backdrop, keyboard });
+
+  return new Promise((resolve) => {
+    let done = false;
+    const finish = (val) => {
+      if (done) return;
+      done = true;
+      resolve(val);
+      modal.hide();
+    };
+
+    okClone.addEventListener('click', () => finish(true), { once: true });
+    // X/백드롭/ESC로 닫히면 false
+    el.addEventListener('hidden.bs.modal', () => finish(false), { once: true });
+
+    modal.show();
+  });
+}
+
 // 전역 Yes/No 모달 호출기
 export function showYesNoModal({
   title = '확인',
