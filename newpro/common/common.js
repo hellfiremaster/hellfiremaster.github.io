@@ -149,7 +149,7 @@ function saveFcmToken() {
               fcmToken: currentToken,
               updatedAt: serverTimestamp()
             }, { merge: true });
-            console.log('FCM 토큰 저장 완료💕', currentToken);
+            // console.log('FCM 토큰 저장 완료💕', currentToken);
           }
         } catch (err) {
           console.error('FCM 토큰 가져오기 실패💦', err);
