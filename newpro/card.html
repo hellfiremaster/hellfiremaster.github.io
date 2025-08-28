@@ -670,7 +670,7 @@
 
   <!-- Gift History Modal -->
   <div class="modal fade" id="giftHistoryModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-md-down">
       <div class="modal-content" style="border-radius:16px; overflow:hidden;">
         <div class="modal-header border-0 pb-0">
           <h5 class="modal-title">기프트 내역</h5>
@@ -705,7 +705,7 @@
           <!-- 정보 카드 -->
           <div class="p-3 rounded" style="background:#f8fafc; border:1px solid #e9eef6">
             <h6 class="mb-2">🎁 상품명</h6>
-            <div class="fs-5 fw-bold">뉴프로 모험가 기프트</div>
+            <div class="fs-5 fw-bold" id="giftName">뉴프로 모험가 기프트</div>
             <div class="small text-muted">모은 날짜: <span id="giftDate">-</span></div>
             <img id="giftImg" alt="gift" class="gift-image mt-3" />
             <!-- <div class="small text-danger mt-3">
@@ -826,6 +826,7 @@
       try {
         const url = await getDownloadURL(giftconRef);
         const strDate = moment(res.data.winnerAt).format('YYYY-MM-DD');
+        document.getElementById('giftName').textContent = res.data.giftName;
         document.getElementById('giftDate').textContent = strDate;
         const img = document.getElementById('giftImg');
         img.src = url;
