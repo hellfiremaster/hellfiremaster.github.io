@@ -48,11 +48,11 @@ function bindAuthUI() {
         const termsLi = dropdownMenu?.querySelector('a[href="terms.html"]')?.closest('li');
       
         // 중복 삽입 방지용 id 체크
-        if (dropdownMenu && termsLi && !dropdownMenu.querySelector('#giftAddItem')) {
-          termsLi.insertAdjacentHTML('afterend', `
-            <li><a class="dropdown-item" id="giftAddItem" href="giftcon.html">🎁 기프트콘 추가</a></li>
-          `);
-        }
+        // if (dropdownMenu && termsLi && !dropdownMenu.querySelector('#giftAddItem')) {
+        //   termsLi.insertAdjacentHTML('afterend', `
+        //     <li><a class="dropdown-item" id="giftAddItem" href="giftcon.html">🎁 기프트콘 추가</a></li>
+        //   `);
+        // }
       }
       let nickname = '익명', score = 0;
 

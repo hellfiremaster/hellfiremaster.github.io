@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#2a4065">
-  <title>뉴프로 — 기프트콘 추가</title>
+  <title>뉴프로 — 시크릿 산타</title>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,7 +62,7 @@
 
     /* 이미지 없을 때 문구 보여주기 (JS 없이 자동) */
     .preview-img:not(:has(img[src^="data:"], img[src^="blob:"], img[src^="http"], img[src^="/"]))::before{
-      content:"기프트콘 미리보기✨";
+      content:"시크릿 선물 미리보기✨";
       white-space:pre-line; text-align:center; color:#667085; line-height:1.4;
       font-size:.95rem; padding:18px 24px; border-radius:10px;
       background:rgba(255,255,255,.85);
@@ -95,7 +95,8 @@
   <div id="menu-container"></div>
 
   <section class="hero-section">
-    <h1 class="hero-title">기프트콘 등록</h1>
+    <h1 class="hero-title">시크릿 산타</h1>
+    <p class="hero-subtitle">시크릿 산타가 되어 깜짝 선물을 등록해줘! ✨<br>등록된 선물은 카드 앨범을 전부 모은 뉴프로 친구에게 몰래~ 짠! 하고 전달된답니다💝</p>
   </section>
 
   <div class="container pb-5">
@@ -106,9 +107,9 @@
 
     <div id="app" class="glass-card p-3 p-md-4 d-none">
       <div class="d-flex align-items-center gap-2 mb-3">
-        <span class="badge text-bg-secondary">Admin</span>
-        <h5 class="mb-0">기프트콘 이미지 업로드</h5>
-        <div class="ms-auto small text-muted" id="whoami">—</div>
+        <span class="badge text-bg-secondary">🎅 산타</span>
+        <h5 class="mb-0">선물 이미지 업로드</h5>
+        <!-- <div class="ms-auto small text-muted" id="whoami">—</div> -->
       </div>
 
       <!-- 1) 파일 선택 영역 -->
@@ -126,9 +127,8 @@
       <div class="preview-wrap mb-3">
         <div class="preview-img"><img id="previewImg" alt="preview" /></div>
         <div class="meta">
-          <!-- [추가] 기프트콘 명 (선택) -->
           <div class="row align-items-center mb-2">
-            <div class="col-auto key">기프트콘 명</div>
+            <div class="col-auto key">선물이름</div>
             <div class="col">
               <input type="text" class="form-control form-control-sm" id="giftNameInput"
                      placeholder="예: 스타벅스 아메리카노" />
@@ -139,12 +139,12 @@
           <div class="row"><div class="col-auto key">용량</div><div class="col" id="metaSize">—</div></div>
           <div class="row"><div class="col-auto key">크기</div><div class="col" id="metaDim">—</div></div>
           <div class="row"><div class="col-auto key">MIME</div><div class="col" id="metaType">—</div></div>
-          <div class="row"><div class="col-auto key">eventId</div><div class="col" id="metaEventId">—</div></div>
-          <div class="row"><div class="col-auto key">문서(루트)</div><div class="col" id="metaDoc">—</div></div>
-          <div class="row"><div class="col-auto key">문서(results)</div><div class="col" id="metaResultDoc">—</div></div>
-          <div class="row"><div class="col-auto key">결과 경로</div><div class="col"><code id="resultPath">—</code></div></div>
+          <div class="row d-none"><div class="col-auto key">eventId</div><div class="col" id="metaEventId">—</div></div>
+          <div class="row d-none"><div class="col-auto key">문서(루트)</div><div class="col" id="metaDoc">—</div></div>
+          <div class="row d-none"><div class="col-auto key">문서(results)</div><div class="col" id="metaResultDoc">—</div></div>
+          <div class="row d-none"><div class="col-auto key">결과 경로</div><div class="col"><code id="resultPath">—</code></div></div>
           <div class="mt-2 d-flex gap-2">
-            <button class="btn btn-light btn-sm" id="copyPathBtn" disabled>경로 복사</button>
+            <button class="btn btn-light btn-sm d-none" id="copyPathBtn" disabled>경로 복사</button>
             <button class="btn btn-outline-danger btn-sm" id="resetBtn">초기화</button>
           </div>
         </div>
@@ -179,7 +179,6 @@
     // ------- UI helpers (공통이 없을 때 대비) -------
     const guardView = document.getElementById('guardView');
     const app = document.getElementById('app');
-    const whoami = document.getElementById('whoami');
 
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('fileInput');
@@ -205,25 +204,23 @@
     const functions = getFunctions();
     const registerGiftcon = httpsCallable(functions, 'registerGiftcon');
 
-    let admin;
+    let admin = true;
     let selectedFile = null;
     let imgDim = null;
 
     // ------ 권한 체크 (ADMIN_UID만 허용) ------
     onAuthStateChanged(auth, async (user) => {
-      if (!user) {        
-        admin = false;
-        guardView.classList.remove('d-none');
-        app.classList.add('d-none');
-        whoami.textContent = '로그인 필요';
-        return;
-      }
+      // if (!user) {        
+      //   admin = false;
+      //   guardView.classList.remove('d-none');
+      //   app.classList.add('d-none');
+      //   return;
+      // }
 
-      whoami.textContent = user.email || user.uid;
-
-      const idTokenResult = await user.getIdTokenResult()
-      const claims = idTokenResult.claims;
-      admin = claims.admin ?? false;
+      // const idTokenResult = await user.getIdTokenResult()
+      // const claims = idTokenResult.claims;
+      // admin = claims.admin ?? false;
+      admin = true;
       if (admin) {
         guardView.classList.add('d-none');
         app.classList.remove('d-none');
@@ -305,12 +302,16 @@
       const user = auth.currentUser;
       if (!user) { showToast('로그인부터 해줘!'); return; }
       if (!admin) { showToast('관리자만 사용할 수 있어!'); return; }
+      const raw = giftNameInput?.value?.trim();
+      if(!raw) {
+        showToast('선물이름을 입력하세요!');
+        return;
+      }
 
       try {
         showLoader(true);
 
-        const raw = giftNameInput?.value?.trim();
-        const giftName = raw ? raw : null;
+        const giftName = raw ? raw : null;        
 
         const eventId = generateEventId();
         const { fullPath } = await uploadToStorage(selectedFile, eventId, user.uid);
@@ -351,7 +352,7 @@
       const storageRef = ref(storage, fullPath);
       const meta = { contentType: file.type || 'image/png', customMetadata: {
         uploadedBy: uid,
-        source: 'admin-ui',
+        source: 'secret-gift-ui',
         width: String(imgDim?.w || ''),
         height: String(imgDim?.h || ''),
         eventId
