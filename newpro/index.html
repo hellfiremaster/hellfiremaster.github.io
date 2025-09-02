@@ -34,6 +34,12 @@
       margin-bottom: 0.5rem;
       color: #000;
     }
+    [data-bs-theme="dark"] .comment-item {
+      background-color: rgba(255, 255, 255, 0.08);
+      color: #e9ecef;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    
     .post-subtitle {
       display: flex;
       justify-content: space-between;
@@ -297,6 +303,34 @@
     font-weight: bold;
   }
 
+  [data-bs-theme="dark"] .quiz-card {
+    background: rgba(2, 6, 23, 0.66);         /* 더 어두운 바탕 (#020617 계열) */
+    border-color: rgba(76, 175, 80, 0.55);    /* 그린 테두리 살짝 낮춤 */
+    color: #e5e7eb;                           /* 본문 글자 밝게 */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.35);   /* 그림자도 다크에 맞춰 */
+  }
+  [data-bs-theme="dark"] .quiz-card .card-title {
+    color: #86efac;                           /* 연한 그린으로 가독성 ↑ */
+  }
+  [data-bs-theme="dark"] .quiz-question {
+    color: #f1f5f9;                           /* 문제 텍스트 또렷하게 */
+  }
+  [data-bs-theme="dark"] .quiz-result {
+    color: #c7d2fe;                           /* 결과 문구 살짝 포인트(연한 인디고) */
+  }
+  /* 선택지 버튼 외곽선 대비 강화(부트스트랩 outline-primary 유지) */
+  [data-bs-theme="dark"] .quiz-card .btn-outline-primary {
+    border-color: #86b7fe;
+    color: #cfe3ff;
+  }
+  [data-bs-theme="dark"] .quiz-card .btn-outline-primary:hover {
+    background: rgba(134,183,254,.12);
+  }
+  [data-bs-theme="dark"] .bg-info {
+    background-color: #0ea5e9 !important; /* Tailwind sky-500 느낌 */
+    color: #e0f2fe !important;           /* 연한 하늘색 글자 */
+  }
+
   @media (max-width: 767.98px) { /* Bootstrap의 md 기준 */
     .mobile-sm-btn {
       font-size: 0.875rem; /* sm 크기 */
@@ -306,12 +340,6 @@
   
   .auto-height {
     field-sizing: content
-  }
-
-  [data-bs-theme="dark"] .comment-item {
-    background-color: rgba(255, 255, 255, 0.08);
-    color: #e9ecef;
-    border: 1px solid rgba(255, 255, 255, 0.12);
   }
   </style>
 </head>
