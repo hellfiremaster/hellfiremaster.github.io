@@ -29,6 +29,18 @@
     .dropzone.dragover{ background:#f0f7ff; border-color:#99bce8; }
     .dropzone input[type="file"]{ position:absolute; inset:0; opacity:0; cursor:pointer; }
 
+    [data-bs-theme="dark"] .dropzone{
+      background: linear-gradient(180deg, rgba(15,23,42,.92), rgba(2,6,23,.92)); /* 어두운 배경 */
+      border-color: rgba(255,255,255,.16);
+    }
+    [data-bs-theme="dark"] .dropzone.dragover{
+      background: rgba(30,41,59,.95);
+      border-color:#86b7fe; /* 드래그 시 강조 */
+    }
+    [data-bs-theme="dark"] .dropzone .fw-semibold{ color:#e5e7eb; }  /* 제목 텍스트 */
+    [data-bs-theme="dark"] .dropzone .text-muted{ color:#cbd5e1 !important; } /* 보조 텍스트 */
+    [data-bs-theme="dark"] .dropzone .bi{ color:#cbd5e1 !important; } /* 아이콘 */
+
     /* 프리뷰+메타 영역: flex → grid 로 변경 (폭 문제 해결) */
     .preview-wrap{
       display:grid; gap:16px; align-items:stretch;
@@ -88,6 +100,12 @@
 
     /* 권한 제한 뷰 */
     .guard{ text-align:center; padding:48px 16px; color:#475467; }
+
+    [data-bs-theme="dark"] .meta{
+      background: rgba(15,23,42,0.6);      /* #0f172a 계열 반투명 */
+      color: #e5e7eb;
+      border-color: rgba(255,255,255,0.14);
+    }
   </style>
 </head>
 <body>

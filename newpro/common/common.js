@@ -413,3 +413,14 @@ export function showLoader(showing) {
     document.getElementById('fullScreenLoader').classList.add('d-none');
   }
 }
+
+// light-dark 적용
+const themeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+function applyTheme() {
+  document.documentElement.setAttribute(
+    'data-bs-theme',
+    themeQuery.matches ? 'dark' : 'light'
+  );
+}
+applyTheme();
+themeQuery.addEventListener('change', applyTheme);

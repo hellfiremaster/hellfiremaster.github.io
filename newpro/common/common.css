@@ -150,7 +150,62 @@ body {
   filter: invert(1);
 }
 
+[data-bs-theme="dark"] .toastui-editor-contents, [data-bs-theme="dark"] .toastui-editor-contents p { 
+  color: #e9ecef;                 /* 본문 글자색 */
+}
+[data-bs-theme="dark"] .toastui-editor-contents h1,
+[data-bs-theme="dark"] .toastui-editor-contents h2,
+[data-bs-theme="dark"] .toastui-editor-contents h3,
+[data-bs-theme="dark"] .toastui-editor-contents h4,
+[data-bs-theme="dark"] .toastui-editor-contents h5,
+[data-bs-theme="dark"] .toastui-editor-contents h6 {
+  color: #f1f5f9;                 /* 제목 색 */
+}
+[data-bs-theme="dark"] .toastui-editor-contents a {
+  color: #86b7fe;                 /* 링크 색 */
+}
+[data-bs-theme="dark"] .toastui-editor-contents code {
+  background: rgba(255,255,255,0.08);
+  color: #f8fafc;                 /* 인라인 코드 */
+}
+[data-bs-theme="dark"] .toastui-editor-contents pre {
+  background-color: #0f172a;      /* 코드블록 배경 */
+  color: #e5e7eb;                 /* 코드블록 글자 */
+  border: 1px solid rgba(255,255,255,0.12);
+}
+[data-bs-theme="dark"] .toastui-editor-contents blockquote {
+  background: rgba(255,255,255,0.05);
+  border-left: 4px solid rgba(255,255,255,0.2);
+  color: #e9ecef;
+}
+[data-bs-theme="dark"] .toastui-editor-contents hr {
+  border-color: rgba(255,255,255,0.12);
+}
+[data-bs-theme="dark"] .toastui-editor-contents table {
+  background: transparent;        /* 표 배경 투명 */
+}
+[data-bs-theme="dark"] .toastui-editor-contents th,
+[data-bs-theme="dark"] .toastui-editor-contents td {
+  border-color: rgba(255,255,255,0.15);
+  color: #e5e7eb;                 /* 표 글자색 */
+}
+
 .emoji-large {
   font-size: 4rem; /* 원하는 크기로 조정 */
   line-height: 1;
+}
+
+[data-bs-theme="dark"] .glass-card {
+  background: rgba(255, 255, 255, 0.08);   /* 밝던 카드 배경 → 살짝 어두운 유리 느낌 */
+  color: #e9ecef;                          /* 글자색 밝게 */
+}
+
+[data-bs-theme="dark"] .modal-content {
+  background-color: #0f172a !important;    /* 모달 흰 배경 → 어두운 배경 */
+  color: #e5e7eb !important;               /* 모달 글자색 밝게 */
+}
+
+/* 퀴즈 카드가 글자색을 강제로 어둡게 두고 있어 다크에서만 밝게 바꿔줘요 */
+[data-bs-theme="dark"] .quiz-card {
+  color: #e9ecef;
 }
