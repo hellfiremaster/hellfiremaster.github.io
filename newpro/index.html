@@ -269,10 +269,33 @@
       margin: 0;             /* 문단 사이 여백도 넉넉하게 */
     }
 
-    /* .toastui-editor-contents :not(table) {
-      box-sizing: content-box;
-      line-height: 1.1;
-    } */
+    [data-bs-theme="dark"] .toastui-editor-contents code {
+      background: rgba(255,255,255,0.08);
+      color: #f8fafc;                 /* 인라인 코드 */
+    }
+    [data-bs-theme="dark"] .toastui-editor-contents pre {
+      background-color: #0f172a;      /* 코드블록 배경 */
+      color: #e5e7eb;                 /* 코드블록 글자 */
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    /* 🩹 리스트 가독성 패치: 다크에서 <ul><li> 글자/마커 색 밝게 */
+    [data-bs-theme="dark"] .toastui-editor-contents ul,
+    [data-bs-theme="dark"] .toastui-editor-contents ol,
+    [data-bs-theme="dark"] .toastui-editor-contents li {
+      color: #e9ecef !important;
+    }
+    [data-bs-theme="dark"] .toastui-editor-contents ul > li::marker,
+    [data-bs-theme="dark"] .toastui-editor-contents ol > li::marker {
+      color: #cbd5e1 !important; /* 불릿/숫자도 보이게 */
+    }
+
+    /* 표/인용문 등 이어지는 기존 다크 스타일 */
+    [data-bs-theme="dark"] .toastui-editor-contents blockquote {
+      background: rgba(255,255,255,0.05);
+      border-left: 4px solid rgba(255,255,255,0.2);
+      color: #e9ecef;
+    }
 
   /* 퀴즈 카드 전용 스타일 */
   .quiz-card {
