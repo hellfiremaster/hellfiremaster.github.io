@@ -47,12 +47,12 @@ function bindAuthUI() {
         const dropdownMenu = document.querySelector('#userDropdown .dropdown-menu');
         const termsLi = dropdownMenu?.querySelector('a[href="terms.html"]')?.closest('li');
       
-        // 중복 삽입 방지용 id 체크
-        if (dropdownMenu && termsLi && !dropdownMenu.querySelector('#resetPassword')) {
-          termsLi.insertAdjacentHTML('afterend', `
-            <li><a class="dropdown-item" id="resetPassword" href="reset-password.html">🔒 비밀번호 초기화</a></li>
-          `);
-        }
+        // 관리자 메뉴 추가(중복 삽입 방지용 id 체크)
+        // if (dropdownMenu && termsLi && !dropdownMenu.querySelector('#resetPassword')) {
+        //   termsLi.insertAdjacentHTML('afterend', `
+        //     <li><a class="dropdown-item" id="resetPassword" href="reset-password.html">🔒 비밀번호 초기화</a></li>
+        //   `);
+        // }
       }
       let nickname = '익명', score = 0;
 
