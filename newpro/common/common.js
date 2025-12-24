@@ -424,3 +424,26 @@ function applyTheme() {
 }
 applyTheme();
 themeQuery.addEventListener('change', applyTheme);
+
+// 🎄 크리스마스 시즌 체크 및 CSS 로드 (common.js 안이나 script 태그 안에 넣어줘)
+function checkChristmasEvent() {
+  const today = new Date();
+  const month = today.getMonth() + 1; // 월 (0부터 시작해서 +1 해줘야 함)
+  const day = today.getDate();        // 일
+
+  // 이벤트 기간 설정: 12월 20일 ~ 12월 26일 (원하는 대로 수정 가능!)
+  const isEventPeriod = (month === 12 && day >= 20 && day <= 31);
+
+  // 테스트할 때는 강제로 true로 바꿔서 확인해봐! 
+  // const isEventPeriod = true; 
+
+  if (isEventPeriod) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = './common/christmas.css'; // ★ 저장한 파일 경로 정확하게!
+    document.head.appendChild(link);
+  }
+}
+
+// 페이지 로드되면 실행!
+checkChristmasEvent();
