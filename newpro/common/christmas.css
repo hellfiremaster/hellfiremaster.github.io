@@ -4,10 +4,7 @@
 
 /* 1. 배경: 기존보다 조금 더 화사하고 신비로운 '겨울 오로라' 느낌 */
 body {
-  /* 너무 어둡지 않은 네이비 + 보랏빛 그라데이션 */
-  background: linear-gradient(135deg, #203a43, #2c5364, #2c3e50) !important;
-  /* 만약 좀 더 붉은/따뜻한 느낌을 원하면 아래 주석을 풀어서 써봐! */
-  /* background: linear-gradient(135deg, #1f1c2c, #928dab) !important; */
+  background: linear-gradient(135deg, #1f1c2c, #928dab) !important;
   
   position: relative;
   overflow-x: hidden;
