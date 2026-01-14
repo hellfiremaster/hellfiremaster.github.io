@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프로페셔널 클론 스탬프 툴</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            overflow: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .sidebar {
+            background-color: #1e1e1e;
+            border-right: 1px solid #333;
+        }
+        .canvas-container {
+            background-image: 
+                linear-gradient(45deg, #1a1a1a 25%, transparent 25%), 
+                linear-gradient(-45deg, #1a1a1a 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #1a1a1a 75%), 
+                linear-gradient(-45deg, transparent 75%, #1a1a1a 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            cursor: crosshair;
+        }
+        input[type="range"] {
+            accent-color: #3b82f6;
+        }
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            image-rendering: pixelated;
+        }
+        .brush-preview {
+            border: 1px solid #555;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .instruction-badge {
+            background: #2563eb;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="h-14 border-b border-zinc-800 flex items-center justify-between px-6 bg-[#1a1a1a] z-10">
+        <div class="flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+            <h1 class="text-lg font-bold tracking-tight">CloneRemover <span class="text-zinc-500 font-normal">v1.0</span></h1>
+        </div>
+        <div class="flex gap-2">
+            <button id="undoBtn" class="px-4 py-1.5 rounded bg-zinc-800 hover:bg-zinc-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-sm">Undo</button>
+            <button id="downloadBtn" class="px-4 py-1.5 rounded bg-blue-600 hover:bg-blue-500 transition-colors text-sm font-medium">Download</button>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="sidebar w-72 flex flex-col p-6 space-y-8 overflow-y-auto">
+            
+            <!-- Upload Section -->
+            <section>
+                <label class="block text-xs font-semibold uppercase text-zinc-500 mb-3 tracking-wider">Image File</label>
+                <div class="relative group">
+                    <input type="file" id="imageLoader" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                    <div class="border-2 border-dashed border-zinc-700 group-hover:border-blue-500 p-4 rounded-lg text-center transition-colors">
+                        <p class="text-sm text-zinc-400">Click to Upload</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Brush Settings -->
+            <section class="space-y-6">
+                <label class="block text-xs font-semibold uppercase text-zinc-500 tracking-wider">Brush Settings</label>
+                
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span>Size</span>
+                            <span id="sizeVal" class="text-blue-400">30px</span>
+                        </div>
+                        <input type="range" id="brushSize" min="1" max="100" value="30" class="w-full">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span>Opacity</span>
+                            <span id="opacityVal" class="text-blue-400">100%</span>
+                        </div>
+                        <input type="range" id="brushOpacity" min="1" max="100" value="100" class="w-full">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span>Hardness</span>
+                            <span id="hardnessVal" class="text-blue-400">50%</span>
+                        </div>
+                        <input type="range" id="brushHardness" min="0" max="100" value="50" class="w-full">
+                    </div>
+                </div>
+
+                <div class="brush-preview w-full aspect-square rounded-lg relative overflow-hidden">
+                    <div id="brushIndicator" class="rounded-full border border-white/50 bg-white/20"></div>
+                    <span class="absolute bottom-2 left-2 text-[10px] text-zinc-500 uppercase">Brush Preview</span>
+                </div>
+            </section>
+
+            <!-- Instructions -->
+            <section class="mt-auto pt-6 border-t border-zinc-800">
+                <label class="block text-xs font-semibold uppercase text-zinc-500 mb-4 tracking-wider">Quick Guide</label>
+                <ul class="text-xs space-y-3 text-zinc-400 leading-relaxed">
+                    <li class="flex gap-2">
+                        <span class="instruction-badge">Alt + Click</span>
+                        <span>Set cloning source</span>
+                    </li>
+                    <li class="flex gap-2">
+                        <span class="instruction-badge">Click + Drag</span>
+                        <span>Paint to clone pixels</span>
+                    </li>
+                    <li class="flex gap-2">
+                        <span class="instruction-badge">Undo</span>
+                        <span>Ctrl + Z to revert</span>
+                    </li>
+                </ul>
+            </section>
+        </aside>
+
+        <!-- Canvas Area -->
+        <main class="flex-1 canvas-container flex items-center justify-center p-8 overflow-hidden relative">
+            <div id="welcomeScreen" class="text-center space-y-4 max-w-md">
+                <div class="w-20 h-20 bg-zinc-800 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                </div>
+                <h2 class="text-xl font-medium text-zinc-300">Start Editing</h2>
+                <p class="text-zinc-500 text-sm">Upload an image to start removing watermarks using the professional clone stamp tool.</p>
+            </div>
+            <canvas id="canvas" class="hidden"></canvas>
+            
+            <!-- Custom UI cursor for brush -->
+            <div id="customCursor" class="pointer-events-none fixed border border-white mix-blend-difference rounded-full hidden z-50"></div>
+        </main>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const imageLoader = document.getElementById('imageLoader');
+        const undoBtn = document.getElementById('undoBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const brushSizeInput = document.getElementById('brushSize');
+        const brushOpacityInput = document.getElementById('brushOpacity');
+        const brushHardnessInput = document.getElementById('brushHardness');
+        const customCursor = document.getElementById('customCursor');
+        const brushIndicator = document.getElementById('brushIndicator');
+        
+        // Value Displays
+        const sizeVal = document.getElementById('sizeVal');
+        const opacityVal = document.getElementById('opacityVal');
+        const hardnessVal = document.getElementById('hardnessVal');
+
+        let originalImage = null;
+        let sourcePoint = null;
+        let isDrawing = false;
+        let history = [];
+        const maxHistory = 15;
+
+        // Brush State
+        let settings = {
+            size: 30,
+            opacity: 1,
+            hardness: 0.5
+        };
+
+        // --- Initialization ---
+
+        function init() {
+            window.addEventListener('keydown', handleKeyDown);
+            window.addEventListener('keyup', handleKeyUp);
+            
+            canvas.addEventListener('mousedown', startCloning);
+            window.addEventListener('mousemove', handleMouseMove);
+            window.addEventListener('mouseup', stopCloning);
+
+            imageLoader.addEventListener('change', handleImageUpload);
+            
+            brushSizeInput.addEventListener('input', updateBrushSettings);
+            brushOpacityInput.addEventListener('input', updateBrushSettings);
+            brushHardnessInput.addEventListener('input', updateBrushSettings);
+            
+            undoBtn.addEventListener('click', undo);
+            downloadBtn.addEventListener('click', downloadImage);
+
+            updateBrushUI();
+        }
+
+        function handleImageUpload(e) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    originalImage = img;
+                    setupCanvas(img);
+                    document.getElementById('welcomeScreen').classList.add('hidden');
+                    canvas.classList.remove('hidden');
+                    saveToHistory();
+                }
+                img.src = event.target.result;
+            }
+            if (e.target.files[0]) {
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        }
+
+        function setupCanvas(img) {
+            const maxWidth = window.innerWidth - 400;
+            const maxHeight = window.innerHeight - 150;
+            let width = img.width;
+            let height = img.height;
+
+            const ratio = Math.min(maxWidth / width, maxHeight / height);
+            
+            // Note: We keep the canvas internal resolution high for quality
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Adjust CSS display size to fit screen
+            canvas.style.width = (width * ratio) + "px";
+            canvas.style.height = (height * ratio) + "px";
+
+            ctx.drawImage(img, 0, 0);
+        }
+
+        // --- Tool Logic ---
+
+        function handleMouseMove(e) {
+            if (!originalImage) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+
+            // Update Custom Cursor
+            if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                customCursor.style.display = 'block';
+                const cursorSize = settings.size / scaleX;
+                customCursor.style.width = cursorSize + 'px';
+                customCursor.style.height = cursorSize + 'px';
+                customCursor.style.left = (e.clientX - cursorSize/2) + 'px';
+                customCursor.style.top = (e.clientY - cursorSize/2) + 'px';
+            } else {
+                customCursor.style.display = 'none';
+            }
+
+            if (isDrawing && sourcePoint) {
+                clonePixels(x, y);
+            }
+        }
+
+        function startCloning(e) {
+            if (!originalImage) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+
+            if (e.altKey) {
+                // Set Source Point
+                sourcePoint = { x, y };
+                // Flash effect for feedback
+                showStatusMessage(`Source set at ${Math.round(x)}, ${Math.round(y)}`);
+                return;
+            }
+
+            if (!sourcePoint) {
+                showStatusMessage("Alt+Click to set source first!");
+                return;
+            }
+
+            isDrawing = true;
+            // Record offset between source and current click
+            settings.offsetX = sourcePoint.x - x;
+            settings.offsetY = sourcePoint.y - y;
+            
+            clonePixels(x, y);
+        }
+
+        function stopCloning() {
+            if (isDrawing) {
+                isDrawing = false;
+                saveToHistory();
+            }
+        }
+
+        function clonePixels(targetX, targetY) {
+            const sx = targetX + settings.offsetX;
+            const sy = targetY + settings.offsetY;
+            
+            const radius = settings.size / 2;
+            
+            // Create a temporary canvas for the brush stroke to handle opacity/hardness
+            const brushCanvas = document.createElement('canvas');
+            brushCanvas.width = settings.size;
+            brushCanvas.height = settings.size;
+            const bCtx = brushCanvas.getContext('2d');
+
+            // 1. Get pixels from source
+            // We need to sample from the CURRENT state of the canvas (to allow iterative cloning)
+            bCtx.drawImage(canvas, sx - radius, sy - radius, settings.size, settings.size, 0, 0, settings.size, settings.size);
+
+            // 2. Apply circular mask with feathering (hardness)
+            bCtx.globalCompositeOperation = 'destination-in';
+            
+            const gradient = bCtx.createRadialGradient(radius, radius, 0, radius, radius, radius);
+            const hardStop = settings.hardness;
+            gradient.addColorStop(0, 'rgba(0,0,0,1)');
+            gradient.addColorStop(hardStop, 'rgba(0,0,0,1)');
+            gradient.addColorStop(1, 'rgba(0,0,0,0)');
+            
+            bCtx.fillStyle = gradient;
+            bCtx.beginPath();
+            bCtx.arc(radius, radius, radius, 0, Math.PI * 2);
+            bCtx.fill();
+
+            // 3. Draw onto main canvas
+            ctx.save();
+            ctx.globalAlpha = settings.opacity;
+            ctx.drawImage(brushCanvas, targetX - radius, targetY - radius);
+            ctx.restore();
+        }
+
+        // --- History Management ---
+
+        function saveToHistory() {
+            history.push(canvas.toDataURL());
+            if (history.length > maxHistory) history.shift();
+            updateUndoState();
+        }
+
+        function undo() {
+            if (history.length <= 1) return;
+            
+            history.pop(); // Remove current
+            const lastState = history[history.length - 1];
+            
+            const img = new Image();
+            img.onload = function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+            }
+            img.src = lastState;
+            updateUndoState();
+        }
+
+        function updateUndoState() {
+            undoBtn.disabled = history.length <= 1;
+        }
+
+        // --- UI & Helpers ---
+
+        function updateBrushSettings() {
+            settings.size = parseInt(brushSizeInput.value);
+            settings.opacity = parseInt(brushOpacityInput.value) / 100;
+            settings.hardness = parseInt(brushHardnessInput.value) / 100;
+
+            sizeVal.innerText = settings.size + 'px';
+            opacityVal.innerText = brushOpacityInput.value + '%';
+            hardnessVal.innerText = brushHardnessInput.value + '%';
+
+            updateBrushUI();
+        }
+
+        function updateBrushUI() {
+            const previewSize = settings.size;
+            brushIndicator.style.width = previewSize + 'px';
+            brushIndicator.style.height = previewSize + 'px';
+            brushIndicator.style.opacity = settings.opacity;
+            
+            // Visualize hardness in preview
+            const blur = (1 - settings.hardness) * (previewSize / 4);
+            brushIndicator.style.filter = `blur(${blur}px)`;
+        }
+
+        function handleKeyDown(e) {
+            if (e.key === 'Alt') {
+                document.body.style.cursor = 'crosshair';
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+                e.preventDefault();
+                undo();
+            }
+        }
+
+        function handleKeyUp(e) {
+            if (e.key === 'Alt') {
+                document.body.style.cursor = 'default';
+            }
+        }
+
+        function downloadImage() {
+            if (!originalImage) return;
+            const link = document.createElement('a');
+            link.download = 'edited-image.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function showStatusMessage(msg) {
+            // Simple overlay message
+            const status = document.createElement('div');
+            status.className = 'fixed bottom-10 left-1/2 -translate-x-1/2 px-6 py-2 bg-blue-600 text-white rounded-full text-sm font-medium z-[100] shadow-xl transition-opacity';
+            status.innerText = msg;
+            document.body.appendChild(status);
+            setTimeout(() => {
+                status.style.opacity = '0';
+                setTimeout(() => status.remove(), 500);
+            }, 2000);
+        }
+
+        init();
+    </script>
+</body>
+</html>
