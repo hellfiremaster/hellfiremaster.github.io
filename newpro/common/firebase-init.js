@@ -20,7 +20,8 @@ const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 try {
   initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider('6LcKb8QqAAAAAKReI1hvkatzxiNvquuoryudyXi4'),
-    isTokenAutoRefreshEnabled: true
+    // 보안 잠시 해제. TODO: 나중에 사용자 많아지면 다시 true로 변경
+    isTokenAutoRefreshEnabled: false
   });
 } catch { /* 이미 초기화됐다면 조용히 패스 */ }
 
