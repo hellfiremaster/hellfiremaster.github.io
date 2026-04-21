@@ -5,6 +5,7 @@ import { getMessaging, getToken } from 'https://www.gstatic.com/firebasejs/11.2.
 import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';    
 
 let admin = null;
+let authInitalized = false;
 
 // ---- 유틸: 점수→랭크 이모지(간단판) ----
 export function getRankByScore(score=0) {
@@ -113,6 +114,8 @@ function bindAuthUI() {
         }
       }      
     }
+
+    authInitalized = true;
   });
 
   if (logoutBtn) {
@@ -236,6 +239,11 @@ function bindModals() {
 
 // 로그인 요구 헬퍼 (다른 페이지에서도 씀)
 export function requireLogin() {
+  if(!authInitalized) {
+    showToast('인증 상태를 확인하는 중이에요. 잠시만 기다려주세요.', '잠시만요');
+    return;
+  }
+
   showToast('로그인이 필요합니다.', '반가워요.');
   const el = document.getElementById('signupModal');
   bootstrap.Modal.getOrCreateInstance(el).show();
