@@ -1388,9 +1388,11 @@
     }
 
     // ---- 이벤트 안내 ----
+    const ACTIVE_EVENT_PREVIEW_LIMIT = 10;
     const eventInfoText = document.getElementById('eventInfoText');
     let eventActive = null;
     let activeEventGiftNames = [];
+    let activeEventHasMore = false;
 
     function formatKST(ts) {
       return moment(ts.toDate()).format('YYYY.MM.DD');
@@ -1407,7 +1409,7 @@
       return arr;
     }
 
-    function renderEventInfo(giftNames) {
+    function renderEventInfo(giftNames, hasMore = false) {
       if (!eventInfoText) return;
 
       if (!giftNames.length) {
@@ -1415,9 +1417,10 @@
         return;
       }
 
+      const countLabel = hasMore ? `${giftNames.length}종+` : `${giftNames.length}종`;
       const chips = giftNames.map((name) => `<span class="event-chip">${name}</span>`).join('');
       eventInfoText.innerHTML = `
-        <div class="event-promo-title">지금 도전 가능한 선물 ${giftNames.length}종! 행운을 잡아보자!</div>
+        <div class="event-promo-title">지금 도전 가능한 선물 ${countLabel}! 행운을 잡아보자!</div>
         <div class="event-promo">
           <div class="event-promo-chips">${chips}</div>
         </div>
@@ -1428,30 +1431,35 @@
       const q = query(
         collection(db, 'card_events'),
         where('winnerUid', '==', null),
-        limit(3)
+        limit(ACTIVE_EVENT_PREVIEW_LIMIT + 1)
       );
       const snap = await getDocs(q);
 
       if (snap.empty) {
-        return [];
+        return { giftNames: [], hasMore: false };
       }
 
-      const giftNames = [];
+      const allGiftNames = [];
       snap.forEach((d) => {
         const data = d.data();
         if (data?.giftName) {
-          giftNames.push(data.giftName);
+          allGiftNames.push(data.giftName);
         }
       });
 
-      return shuffleArray(giftNames);
+      const shuffled = shuffleArray(allGiftNames);
+      const hasMore = shuffled.length > ACTIVE_EVENT_PREVIEW_LIMIT;
+      const giftNames = shuffled.slice(0, ACTIVE_EVENT_PREVIEW_LIMIT);
+      return { giftNames, hasMore };
     }
 
     // 초기 표시
     async function initEventInfo() {
-      activeEventGiftNames = await findActiveEventClient();
+      const eventInfo = await findActiveEventClient();
+      activeEventGiftNames = eventInfo.giftNames;
+      activeEventHasMore = eventInfo.hasMore;
       eventActive = activeEventGiftNames.length > 0;
-      renderEventInfo(activeEventGiftNames);
+      renderEventInfo(activeEventGiftNames, activeEventHasMore);
     }
 
     /* ------------------ Points UI helpers (NEW) ------------------ */
