@@ -644,7 +644,7 @@
       <button id="showProbBtn" class="btn btn-link btn-sm text-muted p-0 ms-auto" type="button" title="뽑기 확률 안내" aria-label="뽑기 확률 안내">
         <i class="bi bi-info-circle" style="font-size:1rem;"></i>
       </button>
-      <!-- <small id="eventInfoText" class="text-muted d-block mt-3"></small> -->
+      <small id="eventInfoText" class="text-muted d-block mt-3"></small>
     </div>
 
     <!-- Album -->
@@ -785,7 +785,7 @@
     import { showToast, showYesNoModal, requireLogin, showLoader } from './common/common.js';
     import { auth, db, functions, storage, analytics } from './common/firebase-init.js';
     import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
-    import { doc, getDoc, setDoc, getDocs, collection, query, where, orderBy, limit, Timestamp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
+    import { doc, getDoc, setDoc, getDocs, collection, query, where, orderBy, limit } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
     import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';
     import { ref, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js';
 
@@ -1330,27 +1330,69 @@
     }
 
     // ---- 이벤트 안내 ----
-    // const eventInfoText = document.getElementById('eventInfoText');
+    const eventInfoText = document.getElementById('eventInfoText');
     let eventActive = null;
+    let activeEventGiftNames = [];
 
     function formatKST(ts) {
       return moment(ts.toDate()).format('YYYY.MM.DD');
     }
 
+    function shuffleArray(items) {
+      const arr = [...items];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+      }
+      return arr;
+    }
+
+    function renderEventInfo(giftNames) {
+      if (!eventInfoText) return;
+
+      if (!giftNames.length) {
+        eventInfoText.innerHTML = '지금은 선물 준비 중이야. 곧 다시 열릴 테니 포인트 모으며 기다려줘!';
+        return;
+      }
+
+      const chips = giftNames.map((name) => `<span class="badge rounded-pill text-bg-warning me-1 mb-1">${name}</span>`).join('');
+      eventInfoText.innerHTML = `
+        <span class="fw-semibold d-block mb-1">지금 도전 가능한 선물 ${giftNames.length}종!</span>
+        <span class="d-inline-block mb-1">${chips}</span>
+        <span class="d-block">지금 뽑고 행운을 잡아보자!</span>
+      `;
+    }
+
     async function findActiveEventClient() {
-      const nowTs = Timestamp.now();
       const q = query(
         collection(db, 'card_events'),
         where('winnerUid', '==', null),
-        limit(1)
+        limit(3)
       );
       const snap = await getDocs(q);
-      return !snap.empty;
+
+      if (snap.empty) {
+        return [];
+      }
+
+      const giftNames = [];
+      snap.forEach((d) => {
+        const data = d.data();
+        if (data?.giftName) {
+          giftNames.push(data.giftName);
+        }
+      });
+
+      return shuffleArray(giftNames);
     }
 
     // 초기 표시
     async function initEventInfo() {
-      eventActive = await findActiveEventClient();
+      activeEventGiftNames = await findActiveEventClient();
+      eventActive = activeEventGiftNames.length > 0;
+      renderEventInfo(activeEventGiftNames);
     }
 
     /* ------------------ Points UI helpers (NEW) ------------------ */
