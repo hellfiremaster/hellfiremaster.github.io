@@ -73,6 +73,64 @@
       border: 1px solid rgba(42, 64, 101, .25);
     }
 
+    /* 이벤트 안내 프로모 박스 */
+    #eventInfoText {
+      display: block;
+    }
+
+    .event-promo {
+      margin-top: .25rem;
+      padding: .7rem .85rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 193, 7, .45);
+      background: linear-gradient(135deg, #fff8e1, #ffe9a8 55%, #ffd97a);
+      box-shadow: 0 8px 20px rgba(255, 193, 7, .22);
+      display: inline-flex;
+      max-width: 100%;
+    }
+
+    .event-promo-title {
+      margin-bottom: .35rem;
+      font-weight: 800;
+      color: #7c4a03;
+      line-height: 1.3;
+      letter-spacing: .1px;
+    }
+
+    .event-promo-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .event-chip {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: .2rem .6rem;
+      border: 1px solid rgba(124, 74, 3, .22);
+      background: rgba(255, 255, 255, .78);
+      color: #7c4a03;
+      font-size: .83rem;
+      font-weight: 700;
+    }
+
+    [data-bs-theme="dark"] .event-promo {
+      border-color: rgba(251, 191, 36, .45);
+      background: linear-gradient(135deg, rgba(120, 53, 15, .95), rgba(146, 64, 14, .95));
+      box-shadow: 0 8px 18px rgba(251, 191, 36, .2);
+    }
+
+    [data-bs-theme="dark"] .event-promo-title,
+    [data-bs-theme="dark"] .event-chip {
+      color: #fde68a;
+    }
+
+    [data-bs-theme="dark"] .event-chip {
+      border-color: rgba(251, 191, 36, .35);
+      background: rgba(0, 0, 0, .2);
+    }
+
     [data-bs-theme="dark"] .badge-soft {
       background: rgba(255,255,255,.08);       /* 어둡지만 부드러운 배경 */
       color: #e5e7eb;                          /* 밝은 글씨 */
@@ -1353,15 +1411,16 @@
       if (!eventInfoText) return;
 
       if (!giftNames.length) {
-        eventInfoText.innerHTML = '지금은 선물 준비 중이야. 곧 다시 열릴 테니 포인트 모으며 기다려줘!';
+        eventInfoText.innerHTML = '<span class="event-promo-title d-block">지금은 선물 준비 중이야. 곧 다시 열릴 테니 포인트 모으며 기다려줘!</span>';
         return;
       }
 
-      const chips = giftNames.map((name) => `<span class="badge rounded-pill text-bg-warning me-1 mb-1">${name}</span>`).join('');
+      const chips = giftNames.map((name) => `<span class="event-chip">${name}</span>`).join('');
       eventInfoText.innerHTML = `
-        <span class="fw-semibold d-block mb-1">지금 도전 가능한 선물 ${giftNames.length}종!</span>
-        <span class="d-inline-block mb-1">${chips}</span>
-        <span class="d-block">지금 뽑고 행운을 잡아보자!</span>
+        <div class="event-promo-title">지금 도전 가능한 선물 ${giftNames.length}종! 행운을 잡아보자!</div>
+        <div class="event-promo">
+          <div class="event-promo-chips">${chips}</div>
+        </div>
       `;
     }
 
