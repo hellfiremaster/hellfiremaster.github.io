@@ -578,6 +578,25 @@
       height:3rem;
       border-width:.35rem;
     }
+
+    .gift-image-wrap {
+      position: relative;
+    }
+
+    .gift-delete-btn {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      z-index: 4;
+      background: rgba(255, 255, 255, .92);
+    }
+
+    @media (max-width: 991.98px) {
+      .gift-delete-btn {
+        right: 8px;
+        bottom: 8px;
+      }
+    }
   </style>
 </head>
 
@@ -768,7 +787,7 @@
     import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
     import { doc, getDoc, setDoc, getDocs, collection, query, where, orderBy, limit, Timestamp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
     import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';
-    import { ref, getDownloadURL } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js';
+    import { ref, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js';
 
     const drawCard = httpsCallable(functions, 'drawCard'); 
     const addWinner  = httpsCallable(functions, 'addWinner');
@@ -942,6 +961,38 @@
       }
     }
 
+    function isSameGiftItem(a, b) {
+      return a.giftconPath === b.giftconPath;
+    }
+
+    async function deleteGiftHistoryItem(uid, targetGift) {
+      const userPrivateRef = doc(db, 'users_private', uid);
+      const userPrivateDoc = await getDoc(userPrivateRef);
+      if (!userPrivateDoc.exists()) return false;
+
+      const data = userPrivateDoc.data() || {};
+      const gifts = Array.isArray(data.gifts) ? [...data.gifts] : [];
+      if (!gifts.length) return false;
+
+      let removeIdx = gifts.findIndex((g) => isSameGiftItem(g, targetGift));
+
+      if (removeIdx < 0) return false;
+
+      const giftPath = targetGift.giftconPath;
+      try {
+        await deleteObject(ref(storage, giftPath));
+      } catch (e) {
+        // 이미 삭제된 파일은 무시하고 계속 진행
+        if (e?.code !== 'storage/object-not-found') {
+          throw e;
+        }
+      }
+
+      gifts.splice(removeIdx, 1);
+      await setDoc(userPrivateRef, { gifts }, { merge: true });
+      return true;
+    }
+
     async function getGiftUrl(g) {
       if (g?.giftconPath) {
         const giftRef = ref(storage, g.giftconPath);
@@ -975,16 +1026,20 @@
           <div id="${collapseId}" class="accordion-collapse collapse" aria-labelledby="${headerId}"
               data-bs-parent="#giftHistoryAccordion">
             <div class="accordion-body">
-              <div class="gift-loading d-none" id="spinner-wrap-${idx}">
-                <div class="spinner-border spinner-big text-secondary" role="status" aria-label="로딩중"></div>
-              </div>
+              <div class="gift-image-wrap">
+                <div class="gift-loading d-none" id="spinner-wrap-${idx}">
+                  <div class="spinner-border spinner-big text-secondary" role="status" aria-label="로딩중"></div>
+                </div>
 
-              <img 
-                id="giftImg-${idx}"
-                class="gift-image d-none"
-                alt="gift ${whenStr}"
-                data-loaded="false"
-              />
+                <img 
+                  id="giftImg-${idx}"
+                  class="gift-image d-none"
+                  alt="gift ${whenStr}"
+                  data-loaded="false"
+                />
+
+                <button type="button" class="btn btn-outline-light btn-sm gift-delete-btn" id="giftDeleteBtn-${idx}">🗑️</button>
+              </div>
             </div>
           </div>`;
         giftHistoryAccordion.appendChild(item);
@@ -993,6 +1048,49 @@
         const collapseEl = item.querySelector(`#${collapseId}`);
         const imgEl      = item.querySelector(`#giftImg-${idx}`);
         const spinner    = item.querySelector(`#spinner-wrap-${idx}`);
+        const deleteBtn  = item.querySelector(`#giftDeleteBtn-${idx}`);
+
+        deleteBtn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+
+          const ok = await showYesNoModal({
+            title: '기프트 삭제',
+            message: '이 기프트 내역을 삭제할까요?',
+            yesText: '삭제',
+            noText: '취소'
+          });
+          if (!ok) return;
+
+          const user = auth.currentUser;
+          if (!user) {
+            requireLogin();
+            return;
+          }
+
+          deleteBtn.disabled = true;
+          try {
+            const deleted = await deleteGiftHistoryItem(user.uid, g);
+            if (!deleted) {
+              showToast('삭제할 기프트를 찾지 못했어요.');
+              return;
+            }
+
+            const nextItems = await fetchGiftHistory(user.uid);
+            buildGiftHistoryAccordion(nextItems);
+            if (nextItems.length) {
+              const firstCollapseEl = document.getElementById('giftCollapse0');
+              if (firstCollapseEl) {
+                new bootstrap.Collapse(firstCollapseEl, { toggle: true });
+              }
+            }
+            showToast('기프트 내역을 삭제했어요.');
+          } catch (err) {
+            console.error('gift delete failed', err);
+            showToast('삭제하지 못했어요. 잠시 후 다시 시도해줘.');
+          } finally {
+            deleteBtn.disabled = false;
+          }
+        });
 
         collapseEl.addEventListener('show.bs.collapse', async () => {
           if (imgEl.dataset.loaded === 'true') return;
