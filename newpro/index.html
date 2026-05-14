@@ -87,6 +87,60 @@
       white-space: pre-wrap;
       word-break: break-all;
     }
+    .gift-event-banner {
+      display: block;
+      font-family: 'Jua';
+      background: linear-gradient(135deg, #fff7db, #ffe59a 58%, #ffd166);
+      border: 1px solid #f6c453;
+      border-radius: 0.6rem;
+      padding: 0.62rem 0.85rem;
+      margin-bottom: 0.75rem;
+      color: #7a4a00;
+      box-shadow: 0 4px 12px rgba(246, 196, 83, 0.25);
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease;
+      text-decoration: none;
+    }
+    .gift-event-banner p {
+      margin: 0;
+      line-height: 1.25;
+    }
+    .gift-banner-title {
+      margin: 0 0 0.35rem 0;
+      line-height: 1.2;
+      font-weight: 700;
+      color: inherit;
+    }
+    .gift-chip-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .gift-chip {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.12rem 0.52rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: rgba(122, 74, 0, 0.16);
+      border: 1px solid rgba(122, 74, 0, 0.34);
+      color: #663c00;
+    }
+    .gift-event-banner:hover {
+      transform: translateY(-1px);
+    }
+    [data-bs-theme="dark"] .gift-event-banner {
+      background: linear-gradient(135deg, #5a3a07, #7a4b0e 58%, #8d5a11);
+      border-color: rgba(251, 191, 36, 0.5);
+      color: #fde68a;
+      box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2);
+    }
+    [data-bs-theme="dark"] .gift-chip {
+      background: rgba(251, 191, 36, 0.18);
+      border-color: rgba(251, 191, 36, 0.48);
+      color: #fef3c7;
+    }
     .video-responsive {
       position: relative;
       width: 560px;
@@ -1016,6 +1070,33 @@
     /********************************
      * 공지사항 로드
      ********************************/
+    const ACTIVE_EVENT_PREVIEW_LIMIT = 3;
+
+    async function fetchActiveGiftSummary() {
+      const q = query(
+        collection(db, 'card_events'),
+        where('winnerUid', '==', null),
+        limit(ACTIVE_EVENT_PREVIEW_LIMIT + 1)
+      );
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        return { giftNames: [], hasMore: false };
+      }
+
+      const allGiftNames = [];
+      for (const eventDoc of snap.docs) {
+        const eventData = eventDoc.data();
+        if (eventData?.giftName) {
+          allGiftNames.push(eventData.giftName);
+        }
+      }
+
+      const hasMore = allGiftNames.length > ACTIVE_EVENT_PREVIEW_LIMIT;
+      const shuffledGiftNames = shuffleArray([...allGiftNames]);
+      const giftNames = shuffledGiftNames.slice(0, ACTIVE_EVENT_PREVIEW_LIMIT);
+      return { giftNames, hasMore };
+    }
+
     async function fetchActiveNotices() {
       const now = new Date();
       const q = query(
@@ -1027,6 +1108,21 @@
       let celebrating = false;
       const snapshot = await getDocs(q);
       noticeContainer.innerHTML = '';
+
+      const giftSummary = await fetchActiveGiftSummary();
+      if (giftSummary.giftNames.length) {
+        const giftCountLabel = giftSummary.hasMore ? `${giftSummary.giftNames.length}종+` : `${giftSummary.giftNames.length}종`;
+        const chipsHtml = giftSummary.giftNames.map((name) => `<span class="gift-chip">${name}</span>`).join('');
+        const giftBannerEl = document.createElement('a');
+        giftBannerEl.href = './card.html';
+        giftBannerEl.classList.add('gift-event-banner');
+        giftBannerEl.innerHTML = `
+          <div class="gift-banner-title">🎁 지금 도전 가능한 선물 ${giftCountLabel} · 카드 뽑으러 가기</div>
+          <div class="gift-chip-wrap">${chipsHtml}</div>
+        `;
+        noticeContainer.appendChild(giftBannerEl);
+      }
+
       for (const docSnap of snapshot.docs) {
         const data = docSnap.data();
         const bannerEl = document.createElement('div');
