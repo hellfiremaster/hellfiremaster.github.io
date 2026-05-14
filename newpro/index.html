@@ -1154,6 +1154,10 @@
         showToast('내용을 입력하세요.', '오류');
         return;
       }
+      if(currentNickname === null) {
+        showToast('사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.', '잠만');
+        return;
+      }
       try {
         // 게시글 생성 (트랜잭션 없이 바로 등록)
         const newPostRef = doc(collection(db, 'posts'));
@@ -1256,6 +1260,10 @@
       const sanitizedContent = DOMPurify.sanitize(content, { ALLOWED_TAGS: [] });
       if (!sanitizedContent.trim()) {
         showToast('댓글 내용을 입력하세요.', '오류');
+        return;
+      }
+      if(currentNickname === null) {
+        showToast('사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.', '잠만');
         return;
       }
       try {
