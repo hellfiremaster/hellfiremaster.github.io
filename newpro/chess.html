@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="뉴프로 체스 페이지" />
+  <meta name="theme-color" content="#2a4065" />
+  <title>뉴프로 체스</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Comic+Neue:wght@400;700&family=Poor+Story&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cm-chessboard@8/assets/chessboard.css" />
+
+  <!-- 공통 스타일 -->
+  <link rel="stylesheet" href="./common/common.css" />
+
+  <style>
+    .chess-layout {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 992px) {
+      .chess-layout {
+        grid-template-columns: minmax(420px, 1fr) minmax(300px, 380px);
+      }
+    }
+
+    .board-wrap {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px;
+      background: #ffffff;
+    }
+
+    #board {
+      width: min(100%, 680px);
+      margin: 0 auto;
+    }
+
+    .right-panel {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .panel-box {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .kv {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .kv .k {
+      color: #667085;
+      font-size: .92rem;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      padding: 2px 10px;
+      font-size: .8rem;
+      color: #334155;
+    }
+
+    .chat-log {
+      height: 400px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      scrollbar-gutter: stable;
+    }
+
+    .msg {
+      border-radius: 10px;
+      padding: 4px 8px;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .msg .meta {
+      color: #64748b;
+      font-size: .78rem;
+      margin-bottom: 1px;
+    }
+
+    .move-log {
+      height: 130px;
+      overflow: auto;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 8px;
+      margin: 0;
+      background: #ffffff;
+      font-size: .9rem;
+    }
+
+    .move-log li + li {
+      margin-top: 4px;
+    }
+
+    [data-bs-theme="dark"] .board-wrap,
+    [data-bs-theme="dark"] .panel-box,
+    [data-bs-theme="dark"] .chat-log,
+    [data-bs-theme="dark"] .move-log,
+    [data-bs-theme="dark"] .status-chip {
+      background: rgba(15, 23, 42, 0.85);
+      border-color: rgba(255, 255, 255, 0.14);
+      color: #e5e7eb;
+    }
+
+    [data-bs-theme="dark"] .msg {
+      background: rgba(30, 41, 59, 0.75);
+      border-color: rgba(255, 255, 255, 0.14);
+      color: #e5e7eb;
+    }
+
+    [data-bs-theme="dark"] .msg .meta,
+    [data-bs-theme="dark"] .kv .k {
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar (공통) -->
+  <div id="menu-container"></div>
+
+  <section class="hero-section">
+    <h1 class="hero-title">체스</h1>
+    <!-- <p class="hero-subtitle">cm-chessboard 기반 프론트 MVP · 룰 검증은 아직 서버 연동 전 단계</p> -->
+  </section>
+
+  <div class="container pb-5">
+    <div class="glass-card p-3 p-md-4 chess-layout">
+      <div class="board-wrap">
+        <div id="board"></div>
+        <div class="d-flex flex-wrap gap-2 mt-3 justify-content-center">
+          <button id="flipBtn" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-repeat"></i> 보드 뒤집기</button>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="panel-box">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <strong>매칭/게임</strong>
+            <span id="roomStatus" class="status-chip">미연결</span>
+          </div>
+          <div class="kv"><span class="k">내 닉네임</span><span id="myNickname">-</span></div>
+          <div class="kv"><span class="k">상대 닉네임</span><span id="opponentNickname">-</span></div>
+          <div class="kv"><span class="k">내 남은시간</span><span id="myClockText">--:--</span></div>
+          <div class="kv"><span class="k">상대 남은시간</span><span id="opponentClockText">--:--</span></div>
+          <span id="roomIdText" class="d-none">-</span>
+          <div class="input-group input-group-sm mt-2">
+            <label class="input-group-text" for="timeControlSelect">속도</label>
+            <select id="timeControlSelect" class="form-select">
+              <option value="blitz_3_2">Blitz 3+2</option>
+              <option value="rapid_10_0" selected>Rapid 10+0</option>
+              <option value="rapid_15_10">Rapid 15+10</option>
+            </select>
+            <button id="requestMatchBtn" class="btn btn-warning">빠른매칭</button>
+            <button id="cancelMatchBtn" class="btn btn-outline-secondary">취소</button>
+          </div>
+          <div class="d-flex gap-2 mt-2">
+            <button id="resignBtn" class="btn btn-outline-danger btn-sm">기권</button>
+          </div>
+        </div>
+
+        <div class="panel-box">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <strong>채팅</strong>
+            <span id="chatCount" class="small text-muted">0</span>
+          </div>
+          <div id="chatLog" class="chat-log"></div>
+          <div class="input-group input-group-sm mt-2">
+            <input id="chatInput" type="text" class="form-control" maxlength="300" placeholder="매칭 후 채팅 가능" disabled />
+            <button id="sendChatBtn" class="btn btn-success" disabled>전송</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Common HTML -->
+  <div id="common-html"></div>
+
+  <div class="modal fade" id="gameResultModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header">
+          <h5 id="gameResultTitle" class="modal-title">게임 종료</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="gameResultBody" class="mb-0 text-secondary">결과를 불러오는 중...</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script type="module">
+    import { Chessboard, COLOR, FEN, INPUT_EVENT_TYPE } from 'https://cdn.jsdelivr.net/npm/cm-chessboard@8/src/Chessboard.js';
+    import { Chess } from 'https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm';
+    import { auth, db, functions } from './common/firebase-init.js';
+    import { showToast, requireLogin } from './common/common.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
+    import { httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';
+    import {
+      doc,
+      getDoc,
+      getDocs,
+      onSnapshot,
+      collection,
+      query,
+      orderBy,
+      limit,
+      where
+    } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
+
+    const boardEl = document.getElementById('board');
+    const myNicknameEl = document.getElementById('myNickname');
+    const opponentNicknameEl = document.getElementById('opponentNickname');
+    const myClockTextEl = document.getElementById('myClockText');
+    const opponentClockTextEl = document.getElementById('opponentClockText');
+    const roomStatusEl = document.getElementById('roomStatus');
+    const roomIdTextEl = document.getElementById('roomIdText');
+    const timeControlSelect = document.getElementById('timeControlSelect');
+    const requestMatchBtn = document.getElementById('requestMatchBtn');
+    const cancelMatchBtn = document.getElementById('cancelMatchBtn');
+    const resignBtn = document.getElementById('resignBtn');
+    const flipBtn = document.getElementById('flipBtn');
+    const chatLogEl = document.getElementById('chatLog');
+    const chatCountEl = document.getElementById('chatCount');
+    const chatInput = document.getElementById('chatInput');
+    const sendChatBtn = document.getElementById('sendChatBtn');
+    const gameResultModalEl = document.getElementById('gameResultModal');
+    const gameResultTitleEl = document.getElementById('gameResultTitle');
+    const gameResultBodyEl = document.getElementById('gameResultBody');
+
+    let board;
+    let chess;
+    let myUid = null;
+    let myNickname = '게스트';
+    let mySide = 'free';
+    let currentRoomId = '';
+    let currentRoomVersion = 0;
+    let latestRoomData = null;
+    let unsubRoom = null;
+    let unsubChat = null;
+    let clockTicker = null;
+    let isSubmittingMove = false;
+    let isMatching = false;
+    let pendingMove = null;
+    let lastRenderedFen = '';
+    let gameResultModal = null;
+    let lastShownResultKey = '';
+
+    const submitChessMoveCallable = httpsCallable(functions, 'submitChessMove');
+    const sendChessChatCallable = httpsCallable(functions, 'sendChessChat');
+    const requestChessMatchCallable = httpsCallable(functions, 'requestChessMatch');
+    const cancelChessMatchCallable = httpsCallable(functions, 'cancelChessMatch');
+    const resignChessGameCallable = httpsCallable(functions, 'resignChessGame');
+
+    initBoard();
+    bindAuth();
+    bindUI();
+    setChatEnabled(false);
+
+    function initBoard() {
+      chess = new Chess();
+      gameResultModal = new bootstrap.Modal(gameResultModalEl);
+
+      board = new Chessboard(boardEl, {
+        position: FEN.start,
+        assetsUrl: 'https://cdn.jsdelivr.net/npm/cm-chessboard@8/assets/',
+        style: {
+          cssClass: 'default',
+          showCoordinates: true,          
+          animationDuration: 220
+        }
+      });
+
+      board.enableMoveInput(handleBoardInput);
+      syncBoardWithGame(false);
+    }
+
+    function handleBoardInput(event) {
+      if (!chess) {
+        return false;
+      }
+
+      switch (event.type) {
+        case INPUT_EVENT_TYPE.moveInputStarted: {
+          const piece = board.getPiece(event.squareFrom);
+          if (!piece) {
+            return false;
+          }
+          const pieceColor = piece[0] === 'w' ? 'white' : 'black';
+          const turnColor = chess.turn() === 'w' ? 'white' : 'black';
+
+          if (currentRoomId && mySide === 'spectator') {
+            return false;
+          }
+          if (
+            currentRoomId
+            && (
+              !latestRoomData
+              || latestRoomData.status !== 'playing'
+              || !latestRoomData.whiteUid
+              || !latestRoomData.blackUid
+            )
+          ) {
+            return false;
+          }
+          if (currentRoomId && isSubmittingMove) {
+            return false;
+          }
+          if (currentRoomId && (mySide === 'white' || mySide === 'black') && pieceColor !== mySide) {
+            return false;
+          }
+
+          if (pieceColor !== turnColor) {
+            return false;
+          }
+
+          // 시작 시점에서 합법 수가 하나도 없으면 드래그 시작 자체를 막는다.
+          const legalFromSquare = chess.moves({ square: event.squareFrom, verbose: true });
+          return legalFromSquare.length > 0;
+        }
+        case INPUT_EVENT_TYPE.validateMoveInput: {
+          // invalid move를 예외로 처리하지 않고, 목적지 합법성만 먼저 확인해서 로그 스팸을 막는다.
+          const legalMoves = chess.moves({ square: event.squareFrom, verbose: true });
+          const candidate = legalMoves.find((m) => m.to === event.squareTo);
+          if (!candidate) {
+            syncBoardWithGame(false);
+            return false;
+          }
+
+          if (currentRoomId) {
+            const optimisticMove = chess.move({
+              from: event.squareFrom,
+              to: event.squareTo,
+              promotion: candidate.promotion || 'q'
+            });
+            if (!optimisticMove) {
+              syncBoardWithGame(false);
+              return false;
+            }
+
+            pendingMove = {
+              expectedVersion: currentRoomVersion,
+              san: optimisticMove.san
+            };
+
+            syncBoardWithGame(true);
+            submitMoveToServer(event.squareFrom, event.squareTo, candidate.promotion || 'q');
+            return true;
+          }
+
+          const move = chess.move({
+            from: event.squareFrom,
+            to: event.squareTo,
+            promotion: 'q'
+          });
+          if (!move) {
+            syncBoardWithGame(false);
+            return false;
+          }
+
+          syncBoardWithGame(true);
+          return true;
+        }
+        case INPUT_EVENT_TYPE.moveInputCanceled:
+        case INPUT_EVENT_TYPE.moveInputFinished:
+          // 입력이 취소/종료되면 로컬 게임 상태 기준으로 보드를 맞춰준다.
+          syncBoardWithGame(false);
+          return undefined;
+        default:
+          return undefined;
+      }
+    }
+
+    function syncBoardWithGame(animated = false) {
+      if (!board || !chess) {
+        return;
+      }
+      const nextFen = chess.fen();
+      if (nextFen === lastRenderedFen) {
+        return;
+      }
+      lastRenderedFen = nextFen;
+      board.setPosition(nextFen, animated);
+    }
+
+    function bindAuth() {
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          myUid = null;
+          myNickname = '게스트';
+          myNicknameEl.textContent = `${myNickname} (로그인 필요)`;
+          myClockTextEl.textContent = '--:--';
+          opponentClockTextEl.textContent = '--:--';
+          return;
+        }
+        myUid = user.uid;
+        const userSnap = await getDoc(doc(db, 'users', user.uid));
+        myNickname = userSnap.exists() ? (userSnap.data().nickname || '익명') : '익명';
+        myNicknameEl.textContent = myNickname;
+
+        autoResumeOngoingRoom(user.uid);
+      });
+    }
+
+    function bindUI() {
+      flipBtn.addEventListener('click', async () => {
+        const now = board.getOrientation();
+        const next = now === COLOR.white ? COLOR.black : COLOR.white;
+        await board.setOrientation(next, true);
+      });
+
+      requestMatchBtn.addEventListener('click', requestMatch);
+      cancelMatchBtn.addEventListener('click', cancelMatch);
+      resignBtn.addEventListener('click', resignGame);
+      updateMatchActionButtons();
+
+      // roomStatusEl.style.cursor = 'pointer';
+      // roomStatusEl.title = '클릭 시 roomId 콘솔 출력';
+      roomStatusEl.addEventListener('click', () => {
+        console.log('[chess] roomId:', currentRoomId || '(none)');
+      });
+
+      chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sendChat();
+        }
+      });
+
+      sendChatBtn.addEventListener('click', sendChat);
+    }
+
+    function connectRoom(roomId) {
+      cleanupRoomListeners();
+      currentRoomId = roomId;
+      localStorage.setItem('newpro_chess_last_room_id', roomId);
+      roomIdTextEl.textContent = roomId || '-';
+      currentRoomVersion = 0;
+      latestRoomData = null;
+      mySide = 'spectator';
+      roomStatusEl.textContent = '매칭중...';
+      updateMatchActionButtons();
+      startClockTicker();
+
+      const roomRef = doc(db, 'chess_rooms', roomId);
+      unsubRoom = onSnapshot(roomRef, (snap) => {
+        if (!snap.exists()) {
+          opponentNicknameEl.textContent = '-';
+          roomStatusEl.textContent = '미연결';
+          latestRoomData = null;
+          renderClocks();
+          return;
+        }
+        const data = snap.data();
+        latestRoomData = data;
+        updateMatchActionButtons();
+        currentRoomVersion = Number.isInteger(data.version) ? data.version : 0;
+        setChatEnabled(data.status === 'playing');
+        const whiteNickname = data.whiteNickname || '-';
+        const blackNickname = data.blackNickname || '-';
+        const myColor = data.whiteUid === myUid ? 'white' : (data.blackUid === myUid ? 'black' : 'spectator');
+        mySide = myColor;
+
+        if (myColor === 'white') {
+          opponentNicknameEl.textContent = blackNickname;
+          board.setOrientation(COLOR.white, true);
+        } else if (myColor === 'black') {
+          opponentNicknameEl.textContent = whiteNickname;
+          board.setOrientation(COLOR.black, true);
+        } else {
+          opponentNicknameEl.textContent = `${whiteNickname} vs ${blackNickname}`;
+        }
+
+        if (data.fen) {
+          try {
+            const version = Number.isInteger(data.version) ? data.version : 0;
+            const shouldIgnoreStaleSnapshot = pendingMove && version <= pendingMove.expectedVersion;
+            if (!shouldIgnoreStaleSnapshot) {
+              const localFen = chess.fen();
+              if (data.fen !== localFen) {
+                chess.load(data.fen);
+                syncBoardWithGame(true);
+              }
+            }
+            if (pendingMove && version >= pendingMove.expectedVersion + 1) {
+              pendingMove = null;
+            }
+          } catch (e) {
+            console.error(e);
+            showToast('유효하지 않은 FEN이야. 서버 상태를 확인해줘.');
+          }
+        }
+
+        renderClocks();
+
+        maybeShowGameResultModal(data);
+
+        const hasBothPlayers = Boolean(data.whiteUid && data.blackUid);
+        if (data.status === 'playing') {
+          roomStatusEl.textContent = '게임중';
+        } else if (data.status === 'finished') {
+          roomStatusEl.textContent = '게임종료';
+        } else if (data.status === 'waiting' || !hasBothPlayers) {
+          roomStatusEl.textContent = '매칭중...';
+        } else {
+          roomStatusEl.textContent = '연결됨';
+        }
+      }, (err) => {
+        console.error(err);
+        roomStatusEl.textContent = '연결 실패';
+        showToast('룸 스트림 연결에 실패했어. 권한/문서 경로를 확인해줘.');
+      });
+
+      const chatRef = collection(db, 'chess_rooms', roomId, 'chat');
+      const chatQ = query(chatRef, orderBy('createdAt', 'asc'), limit(100));
+      unsubChat = onSnapshot(chatQ, (snap) => {
+        chatLogEl.innerHTML = '';
+        let count = 0;
+        snap.forEach((d) => {
+          count += 1;
+          const msg = d.data();
+          const row = document.createElement('div');
+          row.className = 'msg';
+
+          const meta = document.createElement('div');
+          meta.className = 'meta';
+          meta.textContent = msg.nicknameSnapshot || '익명';
+
+          const body = document.createElement('div');
+          body.textContent = msg.text || '';
+
+          row.append(meta, body);
+          chatLogEl.appendChild(row);
+        });
+        chatCountEl.textContent = `${count}`;
+        chatLogEl.scrollTop = chatLogEl.scrollHeight;
+      }, (err) => {
+        console.error(err);
+        showToast('채팅 스트림 연결 실패. 권한 설정을 확인해줘.');
+      });
+    }
+
+    function cleanupRoomListeners() {
+      mySide = 'free';
+      currentRoomVersion = 0;
+      latestRoomData = null;
+      isSubmittingMove = false;
+      pendingMove = null;
+      lastRenderedFen = '';
+      lastShownResultKey = '';
+      currentRoomId = '';
+      roomIdTextEl.textContent = '-';
+      roomStatusEl.textContent = '미연결';
+      setChatEnabled(false);
+      updateMatchActionButtons();
+      if (unsubRoom) {
+        unsubRoom();
+        unsubRoom = null;
+      }
+      if (unsubChat) {
+        unsubChat();
+        unsubChat = null;
+      }
+      if (clockTicker) {
+        clearInterval(clockTicker);
+        clockTicker = null;
+      }
+      myClockTextEl.textContent = '--:--';
+      opponentClockTextEl.textContent = '--:--';
+    }
+
+    function maybeShowGameResultModal(roomData) {
+      if (!roomData || roomData.status !== 'finished' || !roomData.result) {
+        return;
+      }
+
+      const endedAtMs = toMillis(roomData.endedAt) || 0;
+      const resultCode = roomData.result.resultCode || '';
+      const winnerUid = roomData.result.winnerUid || '';
+      const resultKey = `${currentRoomId}|${resultCode}|${winnerUid}|${endedAtMs}`;
+      if (resultKey === lastShownResultKey) {
+        return;
+      }
+      lastShownResultKey = resultKey;
+
+      const iAmPlayer = roomData.whiteUid === myUid || roomData.blackUid === myUid;
+      const iAmWinner = winnerUid && winnerUid === myUid;
+
+      let title = '게임 종료';
+      if (!winnerUid) {
+        title = '무승부입니다';
+      } else if (iAmWinner) {
+        title = '승리했습니다!';
+      } else if (iAmPlayer) {
+        title = '패배했습니다';
+      }
+
+      gameResultTitleEl.textContent = title;
+      gameResultBodyEl.textContent = buildResultDescription(resultCode, roomData.result.scoreText || '');
+      gameResultModal.show();
+    }
+
+    function buildResultDescription(resultCode, scoreText) {
+      const score = scoreText ? ` (${scoreText})` : '';
+      switch (resultCode) {
+        case 'resign':
+          return `기권으로 게임이 종료되었습니다${score}`;
+        case 'checkmate':
+          return `체크메이트로 게임이 종료되었습니다${score}`;
+        case 'timeout':
+          return `시간 초과로 게임이 종료되었습니다${score}`;
+        case 'stalemate':
+          return `스테일메이트로 무승부입니다${score}`;
+        case 'insufficient-material':
+          return `기물 부족으로 무승부입니다${score}`;
+        case 'threefold-repetition':
+          return `동형 반복으로 무승부입니다${score}`;
+        case 'draw':
+          return `무승부로 게임이 종료되었습니다${score}`;
+        default:
+          return `게임이 종료되었습니다${score}`;
+      }
+    }
+
+    function setChatEnabled(enabled) {
+      chatInput.disabled = !enabled;
+      sendChatBtn.disabled = !enabled;
+      chatInput.placeholder = enabled ? '메시지 입력' : '매칭 후 채팅 가능';
+    }
+
+    function setMatchingLoading(loading) {
+      isMatching = loading;
+      requestMatchBtn.disabled = loading;
+      timeControlSelect.disabled = loading;
+      cancelMatchBtn.disabled = loading;
+      requestMatchBtn.innerHTML = loading
+        ? '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>매칭중...'
+        : '빠른매칭';
+      if (loading) {
+        roomStatusEl.textContent = '매칭중...';
+      }
+      updateMatchActionButtons();
+    }
+
+    function updateMatchActionButtons() {
+      const inPlayingGame = Boolean(
+        latestRoomData
+        && latestRoomData.status === 'playing'
+        && myUid
+        && (latestRoomData.whiteUid === myUid || latestRoomData.blackUid === myUid)
+      );
+
+      const canCancelWaiting = Boolean(
+        latestRoomData
+        && latestRoomData.status === 'waiting'
+        && myUid
+        && (latestRoomData.whiteUid === myUid || latestRoomData.blackUid === myUid)
+      );
+
+      if (inPlayingGame) {
+        cancelMatchBtn.classList.add('d-none');
+        requestMatchBtn.classList.remove('d-none');
+        requestMatchBtn.disabled = true;
+        requestMatchBtn.textContent = '게임중';
+        return;
+      }
+
+      if (canCancelWaiting) {
+        requestMatchBtn.classList.add('d-none');
+        cancelMatchBtn.classList.remove('d-none');
+      } else {
+        cancelMatchBtn.classList.add('d-none');
+        requestMatchBtn.classList.remove('d-none');
+        requestMatchBtn.disabled = isMatching;
+        requestMatchBtn.innerHTML = isMatching
+          ? '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>매칭중...'
+          : '빠른매칭';
+      }
+    }
+
+    async function autoResumeOngoingRoom(uid) {
+      if (!uid || currentRoomId) {
+        return;
+      }
+
+      const cachedRoomId = localStorage.getItem('newpro_chess_last_room_id') || '';
+      if (cachedRoomId) {
+        const snap = await getDoc(doc(db, 'chess_rooms', cachedRoomId));
+        if (snap.exists()) {
+          const data = snap.data() || {};
+          const mine = data.whiteUid === uid || data.blackUid === uid;
+          const ongoing = data.status === 'playing' || data.status === 'waiting';
+          if (mine && ongoing) {
+            connectRoom(cachedRoomId);
+            return;
+          }
+        }
+      }
+
+      const candidates = await Promise.all([
+        findMyOngoingRoom(uid, 'whiteUid', 'playing'),
+        findMyOngoingRoom(uid, 'blackUid', 'playing'),
+        findMyOngoingRoom(uid, 'whiteUid', 'waiting'),
+        findMyOngoingRoom(uid, 'blackUid', 'waiting')
+      ]);
+
+      const roomId = candidates.find((v) => Boolean(v));
+      if (roomId) {
+        connectRoom(roomId);
+      }
+    }
+
+    async function findMyOngoingRoom(uid, sideField, status) {
+      const q = query(
+        collection(db, 'chess_rooms'),
+        where(sideField, '==', uid),
+        where('status', '==', status),
+        limit(1)
+      );
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        return '';
+      }
+      return snap.docs[0].id;
+    }
+
+    function startClockTicker() {
+      if (clockTicker) {
+        clearInterval(clockTicker);
+      }
+      clockTicker = setInterval(() => {
+        renderClocks();
+      }, 250);
+    }
+
+    function renderClocks() {
+      if (!latestRoomData || !currentRoomId) {
+        myClockTextEl.textContent = '--:--';
+        opponentClockTextEl.textContent = '--:--';
+        return;
+      }
+
+      const clock = latestRoomData.clock || {};
+      let whiteMs = Number.isFinite(clock.whiteMs) ? clock.whiteMs : null;
+      let blackMs = Number.isFinite(clock.blackMs) ? clock.blackMs : null;
+      const tickingColor = clock.tickingColor;
+      const status = latestRoomData.status;
+      const lastTickAtMs = toMillis(clock.lastTickAt);
+
+      if (whiteMs === null || blackMs === null) {
+        myClockTextEl.textContent = '--:--';
+        opponentClockTextEl.textContent = '--:--';
+        return;
+      }
+
+      if (status === 'playing' && (tickingColor === 'w' || tickingColor === 'b') && lastTickAtMs !== null) {
+        const elapsed = Math.max(0, Date.now() - lastTickAtMs);
+        if (tickingColor === 'w') {
+          whiteMs = Math.max(0, whiteMs - elapsed);
+        } else {
+          blackMs = Math.max(0, blackMs - elapsed);
+        }
+      }
+
+      if (mySide === 'white') {
+        myClockTextEl.textContent = formatClock(whiteMs);
+        opponentClockTextEl.textContent = formatClock(blackMs);
+        return;
+      }
+      if (mySide === 'black') {
+        myClockTextEl.textContent = formatClock(blackMs);
+        opponentClockTextEl.textContent = formatClock(whiteMs);
+        return;
+      }
+
+      myClockTextEl.textContent = '--:--';
+      opponentClockTextEl.textContent = '--:--';
+    }
+
+    function toMillis(value) {
+      if (!value) {
+        return null;
+      }
+      if (typeof value.toMillis === 'function') {
+        return value.toMillis();
+      }
+      if (typeof value === 'number') {
+        return value;
+      }
+      return null;
+    }
+
+    function formatClock(ms) {
+      const safeMs = Math.max(0, Number(ms) || 0);
+      const totalSec = Math.floor(safeMs / 1000);
+      const hour = Math.floor(totalSec / 3600);
+      const min = Math.floor((totalSec % 3600) / 60);
+      const sec = totalSec % 60;
+
+      if (hour > 0) {
+        return `${hour}:${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+      }
+      return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+    }
+
+    async function sendChat() {
+      const text = chatInput.value.trim();
+      if (!text) {
+        return;
+      }
+      if (!currentRoomId) {
+        showToast('먼저 Room 연결부터 해줘!');
+        return;
+      }
+      if (!auth.currentUser) {
+        requireLogin();
+        return;
+      }
+
+      try {
+        await sendChessChatCallable({
+          roomId: currentRoomId,
+          text
+        });
+        chatInput.value = '';
+      } catch (err) {
+        console.error(err);
+        showToast(err?.message || '채팅 전송 실패. 잠시 후 다시 시도해줘.');
+      }
+    }
+
+    async function submitMoveToServer(from, to, promotion = 'q') {
+      if (!currentRoomId || isSubmittingMove) {
+        return;
+      }
+      if (!auth.currentUser) {
+        requireLogin();
+        return;
+      }
+
+      isSubmittingMove = true;
+      try {
+        await submitChessMoveCallable({
+          roomId: currentRoomId,
+          from,
+          to,
+          promotion,
+          expectedVersion: currentRoomVersion
+        });
+      } catch (err) {
+        console.error(err);
+        pendingMove = null;
+        if (latestRoomData?.fen) {
+          try {
+            chess.load(latestRoomData.fen);
+            syncBoardWithGame(true);
+          } catch (loadErr) {
+            console.error(loadErr);
+          }
+        }
+        showToast(err?.message || '수 전송 실패. 보드 상태를 다시 확인해줘.');
+      } finally {
+        isSubmittingMove = false;
+      }
+    }
+
+    async function requestMatch() {
+      if (!auth.currentUser) {
+        requireLogin();
+        return;
+      }
+      if (isMatching) {
+        return;
+      }
+
+      const timeControl = timeControlSelect.value || 'rapid_10_0';
+      setMatchingLoading(true);
+
+      try {
+        const res = await requestChessMatchCallable({ timeControl });
+        const roomId = res?.data?.roomId || '';
+
+        if (roomId) {
+          setMatchingLoading(false);
+          connectRoom(roomId);
+          return;
+        }
+
+        roomStatusEl.textContent = '매칭 실패';
+        showToast('방 매칭에 실패했어. 잠시 후 다시 시도해줘.');
+      } catch (err) {
+        console.error(err);
+        roomStatusEl.textContent = '매칭 실패';
+        showToast(err?.message || '매칭 요청 실패. 잠시 후 다시 시도해줘.');
+      } finally {
+        setMatchingLoading(false);
+      }
+    }
+
+    async function cancelMatch() {
+      if (!auth.currentUser) {
+        requireLogin();
+        return;
+      }
+      if (!currentRoomId) {
+        return;
+      }
+
+      try {
+        const res = await cancelChessMatchCallable({ roomId: currentRoomId });
+        if (res?.data?.cancelled) {
+          cleanupRoomListeners();
+          return;
+        }
+        showToast('이미 매칭이 진행 중이어서 취소할 수 없어.');
+      } catch (err) {
+        console.error(err);
+        showToast(err?.message || '매칭 취소 실패. 잠시 후 다시 시도해줘.');
+      }
+    }
+
+    async function resignGame() {
+      if (!currentRoomId) {
+        showToast('연결된 룸이 없어서 기권할 수 없어.');
+        return;
+      }
+      if (!auth.currentUser) {
+        requireLogin();
+        return;
+      }
+
+      try {
+        await resignChessGameCallable({ roomId: currentRoomId });
+        showToast('기권 처리됐어.');
+      } catch (err) {
+        console.error(err);
+        showToast(err?.message || '기권 처리 실패. 잠시 후 다시 시도해줘.');
+      }
+    }
+  </script>
+</body>
+</html>
