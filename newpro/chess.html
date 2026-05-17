@@ -127,6 +127,33 @@
       margin-top: 4px;
     }
 
+    .callable-indicator {
+      position: fixed;
+      top: 72px;
+      right: 12px;
+      z-index: 1080;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.92);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: .82rem;
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.25);
+    }
+
+    .callable-indicator.d-none {
+      display: none !important;
+    }
+
+    .callable-indicator .spinner-border {
+      width: .9rem;
+      height: .9rem;
+      border-width: .15em;
+    }
+
     [data-bs-theme="dark"] .board-wrap,
     [data-bs-theme="dark"] .panel-box,
     [data-bs-theme="dark"] .chat-log,
@@ -211,6 +238,11 @@
   <!-- Common HTML -->
   <div id="common-html"></div>
 
+  <div id="callableIndicator" class="callable-indicator d-none" role="status" aria-live="polite" aria-atomic="true">
+    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+    <span id="callableIndicatorText">서버 처리 중...</span>
+  </div>
+
   <div class="modal fade" id="gameResultModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow">
@@ -239,6 +271,7 @@
     import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
     import { httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';
     import {
+      addDoc,
       doc,
       getDoc,
       getDocs,
@@ -247,7 +280,8 @@
       query,
       orderBy,
       limit,
-      where
+      where,
+      serverTimestamp
     } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
 
     const boardEl = document.getElementById('board');
@@ -269,6 +303,8 @@
     const gameResultModalEl = document.getElementById('gameResultModal');
     const gameResultTitleEl = document.getElementById('gameResultTitle');
     const gameResultBodyEl = document.getElementById('gameResultBody');
+    const callableIndicatorEl = document.getElementById('callableIndicator');
+    const callableIndicatorTextEl = document.getElementById('callableIndicatorText');
 
     let board;
     let chess;
@@ -287,9 +323,13 @@
     let lastRenderedFen = '';
     let gameResultModal = null;
     let lastShownResultKey = '';
+    let timeoutCheckInFlight = false;
+    let lastTimeoutCheckAt = 0;
+    let callableLoadingCount = 0;
+    let callableIndicatorTimer = null;
 
     const submitChessMoveCallable = httpsCallable(functions, 'submitChessMove');
-    const sendChessChatCallable = httpsCallable(functions, 'sendChessChat');
+    const checkChessTimeoutCallable = httpsCallable(functions, 'checkChessTimeout');
     const requestChessMatchCallable = httpsCallable(functions, 'requestChessMatch');
     const cancelChessMatchCallable = httpsCallable(functions, 'cancelChessMatch');
     const resignChessGameCallable = httpsCallable(functions, 'resignChessGame');
@@ -590,6 +630,8 @@
       pendingMove = null;
       lastRenderedFen = '';
       lastShownResultKey = '';
+      timeoutCheckInFlight = false;
+      lastTimeoutCheckAt = 0;
       currentRoomId = '';
       roomIdTextEl.textContent = '-';
       roomStatusEl.textContent = '미연결';
@@ -668,6 +710,39 @@
       chatInput.disabled = !enabled;
       sendChatBtn.disabled = !enabled;
       chatInput.placeholder = enabled ? '메시지 입력' : '매칭 후 채팅 가능';
+    }
+
+    function beginCallableLoading(label = '서버 처리 중...') {
+      callableLoadingCount += 1;
+      if (callableIndicatorTextEl) {
+        callableIndicatorTextEl.textContent = label;
+      }
+      if (callableIndicatorTimer) {
+        return;
+      }
+      callableIndicatorTimer = setTimeout(() => {
+        callableIndicatorTimer = null;
+        if (callableLoadingCount > 0 && callableIndicatorEl) {
+          callableIndicatorEl.classList.remove('d-none');
+        }
+      }, 180);
+    }
+
+    function endCallableLoading() {
+      callableLoadingCount = Math.max(0, callableLoadingCount - 1);
+      if (callableLoadingCount > 0) {
+        return;
+      }
+      if (callableIndicatorTimer) {
+        clearTimeout(callableIndicatorTimer);
+        callableIndicatorTimer = null;
+      }
+      if (callableIndicatorEl) {
+        callableIndicatorEl.classList.add('d-none');
+      }
+      if (callableIndicatorTextEl) {
+        callableIndicatorTextEl.textContent = '서버 처리 중...';
+      }
     }
 
     function setMatchingLoading(loading) {
@@ -804,6 +879,8 @@
         }
       }
 
+      void maybeRequestTimeoutCheck({ whiteMs, blackMs, tickingColor, status });
+
       if (mySide === 'white') {
         myClockTextEl.textContent = formatClock(whiteMs);
         opponentClockTextEl.textContent = formatClock(blackMs);
@@ -845,6 +922,46 @@
       return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
     }
 
+    async function maybeRequestTimeoutCheck({ whiteMs, blackMs, tickingColor, status }) {
+      if (status !== 'playing' || !currentRoomId || !auth.currentUser) {
+        return;
+      }
+
+      const isPlayer = latestRoomData && (latestRoomData.whiteUid === myUid || latestRoomData.blackUid === myUid);
+      if (!isPlayer) {
+        return;
+      }
+
+      const shouldCheck =
+        (tickingColor === 'w' && whiteMs <= 0)
+        || (tickingColor === 'b' && blackMs <= 0)
+        || whiteMs <= 0
+        || blackMs <= 0;
+
+      if (!shouldCheck || timeoutCheckInFlight) {
+        return;
+      }
+
+      const now = Date.now();
+      if (now - lastTimeoutCheckAt < 2000) {
+        return;
+      }
+
+      lastTimeoutCheckAt = now;
+      timeoutCheckInFlight = true;
+      try {
+        await checkChessTimeoutCallable({
+          roomId: currentRoomId,
+          expectedVersion: currentRoomVersion
+        });
+      } catch (err) {
+        // 버전 경합(aborted)은 정상 경로라 토스트 없이 로그만 남긴다.
+        console.warn('[chess] timeout check failed', err?.message || err);
+      } finally {
+        timeoutCheckInFlight = false;
+      }
+    }
+
     async function sendChat() {
       const text = chatInput.value.trim();
       if (!text) {
@@ -859,10 +976,25 @@
         return;
       }
 
+      if (!latestRoomData || latestRoomData.status !== 'playing') {
+        showToast('게임 중인 플레이어만 채팅할 수 있어.');
+        return;
+      }
+
+      const isPlayer = latestRoomData.whiteUid === myUid || latestRoomData.blackUid === myUid;
+      if (!isPlayer) {
+        showToast('플레이어만 채팅할 수 있어.');
+        return;
+      }
+
       try {
-        await sendChessChatCallable({
-          roomId: currentRoomId,
-          text
+        await addDoc(collection(db, 'chess_rooms', currentRoomId, 'chat'), {
+          uid: myUid,
+          nicknameSnapshot: myNickname || '익명',
+          roleSnapshot: 'player',
+          text,
+          type: 'text',
+          createdAt: serverTimestamp()
         });
         chatInput.value = '';
       } catch (err) {
@@ -948,6 +1080,7 @@
         return;
       }
 
+      beginCallableLoading('매칭 취소 중...');
       try {
         const res = await cancelChessMatchCallable({ roomId: currentRoomId });
         if (res?.data?.cancelled) {
@@ -958,6 +1091,8 @@
       } catch (err) {
         console.error(err);
         showToast(err?.message || '매칭 취소 실패. 잠시 후 다시 시도해줘.');
+      } finally {
+        endCallableLoading();
       }
     }
 
@@ -971,12 +1106,15 @@
         return;
       }
 
+      beginCallableLoading('기권 처리 중...');
       try {
         await resignChessGameCallable({ roomId: currentRoomId });
         showToast('기권 처리됐어.');
       } catch (err) {
         console.error(err);
         showToast(err?.message || '기권 처리 실패. 잠시 후 다시 시도해줘.');
+      } finally {
+        endCallableLoading();
       }
     }
   </script>
