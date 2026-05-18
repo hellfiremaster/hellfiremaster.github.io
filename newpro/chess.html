@@ -1100,7 +1100,14 @@
       );
 
       if (inFinishedGame) {
-        requestMatchBtn.classList.add('d-none');
+        const rematch = latestRoomData?.rematch || null;
+        const hasPendingRematch = Boolean(rematch && rematch.status === 'pending');
+
+        requestMatchBtn.classList.toggle('d-none', hasPendingRematch);
+        requestMatchBtn.disabled = isMatching;
+        requestMatchBtn.innerHTML = isMatching
+          ? '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>'
+          : '빠른매칭';
         cancelMatchBtn.classList.add('d-none');
         resignBtn.classList.add('d-none');
         return;
