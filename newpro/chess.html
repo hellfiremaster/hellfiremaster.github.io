@@ -638,7 +638,7 @@
         }
         updateMatchActionButtons();
         currentRoomVersion = snapshotVersion;
-        setChatEnabled(data.status === 'playing');
+        setChatEnabled(canUseChatInRoom(data));
         const whiteNickname = data.whiteNickname || '-';
         const blackNickname = data.blackNickname || '-';
         const myColor = data.whiteUid === myUid ? 'white' : (data.blackUid === myUid ? 'black' : 'spectator');
@@ -823,6 +823,16 @@
       chatInput.disabled = !enabled;
       sendChatBtn.disabled = !enabled;
       chatInput.placeholder = enabled ? '메시지 입력' : '매칭 후 채팅 가능';
+    }
+
+    function canUseChatInRoom(roomData) {
+      if (!roomData || !myUid) {
+        return false;
+      }
+
+      const isPlayer = roomData.whiteUid === myUid || roomData.blackUid === myUid;
+      const chatAllowedStatus = roomData.status === 'playing' || roomData.status === 'finished';
+      return isPlayer && chatAllowedStatus;
     }
 
     function beginCallableLoading(label = '서버 처리 중...') {
@@ -1091,13 +1101,7 @@
         return;
       }
 
-      if (!latestRoomData || latestRoomData.status !== 'playing') {
-        showToast('게임 중인 플레이어만 채팅할 수 있어.');
-        return;
-      }
-
-      const isPlayer = latestRoomData.whiteUid === myUid || latestRoomData.blackUid === myUid;
-      if (!isPlayer) {
+      if (!latestRoomData || !canUseChatInRoom(latestRoomData)) {
         showToast('플레이어만 채팅할 수 있어.');
         return;
       }
