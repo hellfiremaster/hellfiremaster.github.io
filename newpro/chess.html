@@ -332,6 +332,9 @@
     let lastTimeoutCheckAt = 0;
     let callableLoadingCount = 0;
     let callableIndicatorTimer = null;
+    let audioCtx = null;
+    let hasSeenRoomSnapshot = false;
+    let lastPlayedMoveVersion = 0;
 
     const submitChessMoveCallable = httpsCallable(functions, 'submitChessMove');
     const checkChessTimeoutCallable = httpsCallable(functions, 'checkChessTimeout');
@@ -360,6 +363,84 @@
 
       board.enableMoveInput(handleBoardInput);
       syncBoardWithGame(false);
+      bindAudioPrimer();
+    }
+
+    function bindAudioPrimer() {
+      const prime = () => {
+        ensureAudioContext();
+      };
+      window.addEventListener('pointerdown', prime, { once: true, passive: true });
+      window.addEventListener('keydown', prime, { once: true });
+    }
+
+    function ensureAudioContext() {
+      if (!audioCtx) {
+        const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextCtor) {
+          return null;
+        }
+        audioCtx = new AudioContextCtor();
+      }
+
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+      return audioCtx;
+    }
+
+    function playTone({ freq, duration, type = 'sine', gain = 0.04, delay = 0 }) {
+      const ctx = ensureAudioContext();
+      if (!ctx) {
+        return;
+      }
+
+      const now = ctx.currentTime + delay;
+      const osc = ctx.createOscillator();
+      const amp = ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+
+      amp.gain.setValueAtTime(0.0001, now);
+      amp.gain.exponentialRampToValueAtTime(gain, now + 0.01);
+      amp.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      osc.connect(amp);
+      amp.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + duration + 0.02);
+    }
+
+    function playMoveSoundFromSan(san = '') {
+      const isMate = san.includes('#');
+      const isCheck = san.includes('+');
+      const isCapture = san.includes('x');
+
+      if (isMate) {
+        playGameOverSound();
+        return;
+      }
+
+      if (isCheck) {
+        playTone({ freq: 880, duration: 0.07, type: 'triangle', gain: 0.045 });
+        playTone({ freq: 1175, duration: 0.08, type: 'triangle', gain: 0.045, delay: 0.09 });
+        return;
+      }
+
+      if (isCapture) {
+        playTone({ freq: 320, duration: 0.08, type: 'square', gain: 0.045 });
+        playTone({ freq: 220, duration: 0.1, type: 'square', gain: 0.04, delay: 0.08 });
+        return;
+      }
+
+      playTone({ freq: 620, duration: 0.06, type: 'triangle', gain: 0.04 });
+    }
+
+    function playGameOverSound() {
+      playTone({ freq: 520, duration: 0.09, type: 'sawtooth', gain: 0.045 });
+      playTone({ freq: 390, duration: 0.1, type: 'sawtooth', gain: 0.04, delay: 0.1 });
+      playTone({ freq: 260, duration: 0.13, type: 'sawtooth', gain: 0.04, delay: 0.21 });
     }
 
     function handleBoardInput(event) {
@@ -520,6 +601,8 @@
     function connectRoom(roomId) {
       cleanupRoomListeners();
       currentRoomId = roomId;
+      hasSeenRoomSnapshot = false;
+      lastPlayedMoveVersion = 0;
       localStorage.setItem('newpro_chess_last_room_id', roomId);
       roomIdTextEl.textContent = roomId || '-';
       currentRoomVersion = 0;
@@ -539,12 +622,13 @@
           return;
         }
         const data = snap.data();
+        const snapshotVersion = Number.isInteger(data.version) ? data.version : 0;
         latestRoomData = data;
         if (isMatching) {
           setMatchingLoading(false);
         }
         updateMatchActionButtons();
-        currentRoomVersion = Number.isInteger(data.version) ? data.version : 0;
+        currentRoomVersion = snapshotVersion;
         setChatEnabled(data.status === 'playing');
         const whiteNickname = data.whiteNickname || '-';
         const blackNickname = data.blackNickname || '-';
@@ -579,6 +663,14 @@
             console.error(e);
             showToast('유효하지 않은 FEN이야. 서버 상태를 확인해줘.');
           }
+        }
+
+        if (!hasSeenRoomSnapshot) {
+          hasSeenRoomSnapshot = true;
+          lastPlayedMoveVersion = snapshotVersion;
+        } else if (snapshotVersion > lastPlayedMoveVersion && data.lastMove?.san) {
+          playMoveSoundFromSan(data.lastMove.san);
+          lastPlayedMoveVersion = snapshotVersion;
         }
 
         renderClocks();
@@ -692,6 +784,7 @@
 
       gameResultTitleEl.textContent = title;
       gameResultBodyEl.textContent = buildResultDescription(resultCode, roomData.result.scoreText || '');
+      playGameOverSound();
       gameResultModal.show();
     }
 
