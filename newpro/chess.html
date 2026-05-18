@@ -270,7 +270,9 @@
           <p id="gameResultBody" class="mb-0 text-secondary">결과를 불러오는 중...</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+          <button id="gameResultNoBtn" type="button" class="btn btn-outline-secondary d-none" data-bs-dismiss="modal">No</button>
+          <button id="gameResultYesBtn" type="button" class="btn btn-primary d-none">Yes</button>
+          <button id="gameResultOkBtn" type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
         </div>
       </div>
     </div>
@@ -319,6 +321,9 @@
     const gameResultModalEl = document.getElementById('gameResultModal');
     const gameResultTitleEl = document.getElementById('gameResultTitle');
     const gameResultBodyEl = document.getElementById('gameResultBody');
+    const gameResultNoBtn = document.getElementById('gameResultNoBtn');
+    const gameResultYesBtn = document.getElementById('gameResultYesBtn');
+    const gameResultOkBtn = document.getElementById('gameResultOkBtn');
     const callableIndicatorEl = document.getElementById('callableIndicator');
     const callableIndicatorTextEl = document.getElementById('callableIndicatorText');
 
@@ -339,6 +344,9 @@
     let lastRenderedFen = '';
     let gameResultModal = null;
     let lastShownResultKey = '';
+    let gameResultModalAction = '';
+    let lastShownRematchPromptKey = '';
+    let lastRematchDeclinedToastKey = '';
     let timeoutCheckInFlight = false;
     let lastTimeoutCheckAt = 0;
     let callableLoadingCount = 0;
@@ -352,6 +360,9 @@
     const requestChessMatchCallable = httpsCallable(functions, 'requestChessMatch');
     const cancelChessMatchCallable = httpsCallable(functions, 'cancelChessMatch');
     const resignChessGameCallable = httpsCallable(functions, 'resignChessGame');
+    const requestChessRematchCallable = httpsCallable(functions, 'requestChessRematch');
+    const acceptChessRematchCallable = httpsCallable(functions, 'acceptChessRematch');
+    const declineChessRematchCallable = httpsCallable(functions, 'declineChessRematch');
 
     initBoard();
     bindAuth();
@@ -648,6 +659,8 @@
       requestMatchBtn.addEventListener('click', requestMatch);
       cancelMatchBtn.addEventListener('click', cancelMatch);
       resignBtn.addEventListener('click', resignGame);
+      gameResultNoBtn.addEventListener('click', handleGameResultModalNo);
+      gameResultYesBtn.addEventListener('click', handleGameResultModalYes);
       updateMatchActionButtons();
 
       // roomStatusEl.style.cursor = 'pointer';
@@ -744,6 +757,8 @@
         renderClocks();
 
         maybeShowGameResultModal(data);
+        maybeShowRematchAcceptModal(data);
+        maybeShowRematchDeclinedToast(data);
 
         const hasBothPlayers = Boolean(data.whiteUid && data.blackUid);
         if (data.status === 'playing') {
@@ -801,6 +816,8 @@
       pendingMove = null;
       lastRenderedFen = '';
       lastShownResultKey = '';
+      lastShownRematchPromptKey = '';
+      lastRematchDeclinedToastKey = '';
       timeoutCheckInFlight = false;
       lastTimeoutCheckAt = 0;
       currentRoomId = '';
@@ -840,20 +857,153 @@
 
       const iAmPlayer = roomData.whiteUid === myUid || roomData.blackUid === myUid;
       const iAmWinner = winnerUid && winnerUid === myUid;
+      const iAmLoser = Boolean(iAmPlayer && winnerUid && winnerUid !== myUid);
 
       let title = '게임 종료';
       if (!winnerUid) {
         title = '무승부입니다';
       } else if (iAmWinner) {
         title = '승리했습니다!';
-      } else if (iAmPlayer) {
+      } else if (iAmLoser) {
         title = '패배했습니다';
       }
 
-      gameResultTitleEl.textContent = title;
-      gameResultBodyEl.textContent = buildResultDescription(resultCode, roomData.result.scoreText || '');
+      if (iAmLoser) {
+        const rematch = roomData.rematch || null;
+        const alreadyRequested = rematch && rematch.status === 'pending' && rematch.requestedByUid === myUid;
+        if (alreadyRequested) {
+          setGameResultModalView({
+            title,
+            body: '대재국 요청을 보냈습니다. 상대 수락을 기다려주세요.',
+            action: ''
+          });
+        } else {
+          setGameResultModalView({
+            title,
+            body: '패배하였습니다. 대재국 요청 하시겠습니까?',
+            action: 'request-rematch'
+          });
+        }
+      } else {
+        setGameResultModalView({
+          title,
+          body: buildResultDescription(resultCode, roomData.result.scoreText || ''),
+          action: ''
+        });
+      }
+
       playGameOverSound();
       gameResultModal.show();
+    }
+
+    function maybeShowRematchAcceptModal(roomData) {
+      if (!roomData || roomData.status !== 'finished' || !roomData.result || !myUid) {
+        return;
+      }
+      const winnerUid = roomData.result.winnerUid || '';
+      if (!winnerUid || winnerUid !== myUid) {
+        return;
+      }
+
+      const rematch = roomData.rematch || null;
+      if (!rematch || rematch.status !== 'pending' || !rematch.requestedByUid || rematch.requestedByUid === myUid) {
+        return;
+      }
+
+      const requestedAtMs = toMillis(rematch.requestedAt) || 0;
+      const rematchPromptKey = `${currentRoomId}|${rematch.requestedByUid}|${requestedAtMs}|${rematch.status}`;
+      if (rematchPromptKey === lastShownRematchPromptKey) {
+        return;
+      }
+      lastShownRematchPromptKey = rematchPromptKey;
+
+      setGameResultModalView({
+        title: '재게임 요청 도착',
+        body: '상대가 대재국을 요청했습니다. 수락하시겠습니까?',
+        action: 'accept-rematch'
+      });
+      gameResultModal.show();
+    }
+
+    function setGameResultModalView({ title, body, action }) {
+      gameResultTitleEl.textContent = title || '게임 종료';
+      gameResultBodyEl.textContent = body || '';
+      gameResultModalAction = action || '';
+
+      const confirmMode = Boolean(gameResultModalAction);
+      gameResultNoBtn.classList.toggle('d-none', !confirmMode);
+      gameResultYesBtn.classList.toggle('d-none', !confirmMode);
+      gameResultOkBtn.classList.toggle('d-none', confirmMode);
+    }
+
+    async function handleGameResultModalYes() {
+      if (!currentRoomId || !auth.currentUser) {
+        requireLogin();
+        return;
+      }
+
+      if (gameResultModalAction !== 'request-rematch' && gameResultModalAction !== 'accept-rematch') {
+        return;
+      }
+
+      const action = gameResultModalAction;
+      beginCallableLoading(action === 'accept-rematch' ? '재게임 수락 중...' : '재게임 요청 중...');
+      try {
+        if (action === 'request-rematch') {
+          await requestChessRematchCallable({ roomId: currentRoomId });
+          showToast('재게임 요청을 보냈어. 상대 수락을 기다려줘.');
+        } else {
+          await acceptChessRematchCallable({ roomId: currentRoomId });
+          showToast('재게임을 시작했어!');
+        }
+        gameResultModal.hide();
+      } catch (err) {
+        console.error(err);
+        showToast(err?.message || '재게임 처리 실패. 잠시 후 다시 시도해줘.');
+      } finally {
+        endCallableLoading();
+      }
+    }
+
+    async function handleGameResultModalNo() {
+      if (gameResultModalAction !== 'accept-rematch') {
+        return;
+      }
+      if (!currentRoomId || !auth.currentUser) {
+        requireLogin();
+        return;
+      }
+
+      beginCallableLoading('재게임 거절 중...');
+      try {
+        await declineChessRematchCallable({ roomId: currentRoomId });
+        showToast('재게임 요청을 거절했어.');
+      } catch (err) {
+        console.error(err);
+        showToast(err?.message || '재게임 거절 처리 실패. 잠시 후 다시 시도해줘.');
+      } finally {
+        endCallableLoading();
+      }
+    }
+
+    function maybeShowRematchDeclinedToast(roomData) {
+      if (!roomData || roomData.status !== 'finished' || !myUid) {
+        return;
+      }
+
+      const rematch = roomData.rematch || null;
+      if (!rematch || rematch.status !== 'declined' || rematch.requestedByUid !== myUid) {
+        return;
+      }
+
+      const declinedAtMs = toMillis(rematch.declinedAt) || 0;
+      const toastKey = `${currentRoomId}|${rematch.requestedByUid}|${declinedAtMs}|declined`;
+      if (toastKey === lastRematchDeclinedToastKey) {
+        return;
+      }
+
+      lastRematchDeclinedToastKey = toastKey;
+      showToast('대재국 요청을 거절하였습니다.');
     }
 
     function buildResultDescription(resultCode, scoreText) {
@@ -942,6 +1092,20 @@
     }
 
     function updateMatchActionButtons() {
+      const inFinishedGame = Boolean(
+        latestRoomData
+        && latestRoomData.status === 'finished'
+        && myUid
+        && (latestRoomData.whiteUid === myUid || latestRoomData.blackUid === myUid)
+      );
+
+      if (inFinishedGame) {
+        requestMatchBtn.classList.add('d-none');
+        cancelMatchBtn.classList.add('d-none');
+        resignBtn.classList.add('d-none');
+        return;
+      }
+
       const inPlayingGame = Boolean(
         latestRoomData
         && latestRoomData.status === 'playing'
@@ -1303,6 +1467,7 @@
         endCallableLoading();
       }
     }
+
   </script>
 </body>
 </html>
