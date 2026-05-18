@@ -452,6 +452,47 @@
       playTone({ freq: 260, duration: 0.13, type: 'sawtooth', gain: 0.04, delay: 0.21 });
     }
 
+    function selectPromotionPiece(availablePromotions = ['q', 'r', 'b', 'n']) {
+      const normalized = availablePromotions
+        .map((v) => String(v || '').toLowerCase())
+        .filter((v) => ['q', 'r', 'b', 'n'].includes(v));
+      const unique = Array.from(new Set(normalized));
+
+      if (!unique.length) {
+        return 'q';
+      }
+      if (unique.length === 1) {
+        return unique[0];
+      }
+
+      const raw = window.prompt('승격 기물을 선택해줘: q(퀸), r(룩), b(비숍), n(나이트)', 'q');
+      if (raw === null) {
+        return null;
+      }
+
+      const value = raw.trim().toLowerCase();
+      const aliasMap = {
+        q: 'q',
+        queen: 'q',
+        퀸: 'q',
+        r: 'r',
+        rook: 'r',
+        룩: 'r',
+        b: 'b',
+        bishop: 'b',
+        비숍: 'b',
+        n: 'n',
+        knight: 'n',
+        나이트: 'n'
+      };
+
+      const mapped = aliasMap[value] || 'q';
+      if (!unique.includes(mapped)) {
+        return unique[0];
+      }
+      return mapped;
+    }
+
     function handleBoardInput(event) {
       if (!chess) {
         return false;
@@ -498,17 +539,33 @@
         case INPUT_EVENT_TYPE.validateMoveInput: {
           // invalid move를 예외로 처리하지 않고, 목적지 합법성만 먼저 확인해서 로그 스팸을 막는다.
           const legalMoves = chess.moves({ square: event.squareFrom, verbose: true });
-          const candidate = legalMoves.find((m) => m.to === event.squareTo);
-          if (!candidate) {
+          const targetMoves = legalMoves.filter((m) => m.to === event.squareTo);
+          if (!targetMoves.length) {
             syncBoardWithGame(false);
             return false;
           }
+
+          const promotionChoices = targetMoves
+            .map((m) => m.promotion)
+            .filter((v) => Boolean(v));
+          const selectedPromotion = promotionChoices.length
+            ? selectPromotionPiece(promotionChoices)
+            : null;
+          if (promotionChoices.length && !selectedPromotion) {
+            syncBoardWithGame(false);
+            return false;
+          }
+
+          const candidate = selectedPromotion
+            ? targetMoves.find((m) => m.promotion === selectedPromotion) || targetMoves[0]
+            : targetMoves[0];
+          const promotion = candidate.promotion || 'q';
 
           if (currentRoomId) {
             const optimisticMove = chess.move({
               from: event.squareFrom,
               to: event.squareTo,
-              promotion: candidate.promotion || 'q'
+              promotion
             });
             if (!optimisticMove) {
               syncBoardWithGame(false);
@@ -521,14 +578,14 @@
             };
 
             syncBoardWithGame(true);
-            submitMoveToServer(event.squareFrom, event.squareTo, candidate.promotion || 'q');
+            submitMoveToServer(event.squareFrom, event.squareTo, promotion);
             return true;
           }
 
           const move = chess.move({
             from: event.squareFrom,
             to: event.squareTo,
-            promotion: 'q'
+            promotion
           });
           if (!move) {
             syncBoardWithGame(false);
