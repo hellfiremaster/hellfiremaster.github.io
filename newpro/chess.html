@@ -1122,6 +1122,11 @@
         return;
       }
 
+      const confirmed = window.confirm('정말 기권할깝쇼?');
+      if (!confirmed) {
+        return;
+      }
+
       beginCallableLoading('기권 처리 중...');
       try {
         await resignChessGameCallable({ roomId: currentRoomId });
