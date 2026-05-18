@@ -84,7 +84,7 @@
     }
 
     .chat-log {
-      height: 400px;
+      height: 430px;
       overflow-y: scroll;
       overflow-x: hidden;
       border-radius: 10px;
@@ -187,12 +187,12 @@
   <!-- Navbar (공통) -->
   <div id="menu-container"></div>
 
-  <section class="hero-section">
-    <h1 class="hero-title">체스</h1>
+  <!-- <section class="hero-section"> -->
+    <!-- <h1 class="hero-title">체스</h1> -->
     <!-- <p class="hero-subtitle">cm-chessboard 기반 프론트 MVP · 룰 검증은 아직 서버 연동 전 단계</p> -->
-  </section>
+  <!-- </section> -->
 
-  <div class="container pb-5">
+  <div class="container py-5">
     <div class="glass-card p-3 p-md-4 chess-layout">
       <div class="board-wrap">
         <div id="board"></div>
@@ -221,9 +221,7 @@
             </select>
             <button id="requestMatchBtn" class="btn btn-warning">빠른매칭</button>
             <button id="cancelMatchBtn" class="btn btn-outline-secondary">취소</button>
-          </div>
-          <div class="d-flex gap-2 mt-2">
-            <button id="resignBtn" class="btn btn-outline-danger btn-sm">기권</button>
+            <button id="resignBtn" class="btn btn-outline-danger d-none">기권</button>
           </div>
         </div>
 
@@ -542,6 +540,9 @@
         }
         const data = snap.data();
         latestRoomData = data;
+        if (isMatching) {
+          setMatchingLoading(false);
+        }
         updateMatchActionButtons();
         currentRoomVersion = Number.isInteger(data.version) ? data.version : 0;
         setChatEnabled(data.status === 'playing');
@@ -596,6 +597,9 @@
         }
       }, (err) => {
         console.error(err);
+        if (isMatching) {
+          setMatchingLoading(false);
+        }
         roomStatusEl.textContent = '연결 실패';
         showToast('룸 스트림 연결에 실패했어. 권한/문서 경로를 확인해줘.');
       });
@@ -782,17 +786,19 @@
       );
 
       if (inPlayingGame) {
+        requestMatchBtn.classList.add('d-none');
         cancelMatchBtn.classList.add('d-none');
-        requestMatchBtn.classList.remove('d-none');
-        requestMatchBtn.disabled = true;
-        requestMatchBtn.textContent = '게임중';
+        resignBtn.classList.remove('d-none');
+        resignBtn.disabled = false;
         return;
       }
 
       if (canCancelWaiting) {
+        resignBtn.classList.add('d-none');
         requestMatchBtn.classList.add('d-none');
         cancelMatchBtn.classList.remove('d-none');
       } else {
+        resignBtn.classList.add('d-none');
         cancelMatchBtn.classList.add('d-none');
         requestMatchBtn.classList.remove('d-none');
         requestMatchBtn.disabled = isMatching;
@@ -1056,13 +1062,14 @@
 
       const timeControl = timeControlSelect.value || 'rapid_10_0';
       setMatchingLoading(true);
+      let connectedRoom = false;
 
       try {
         const res = await requestChessMatchCallable({ timeControl });
         const roomId = res?.data?.roomId || '';
 
         if (roomId) {
-          setMatchingLoading(false);
+          connectedRoom = true;
           connectRoom(roomId);
           return;
         }
@@ -1074,7 +1081,9 @@
         roomStatusEl.textContent = '매칭 실패';
         showToast(err?.message || '매칭 요청 실패. 잠시 후 다시 시도해줘.');
       } finally {
-        setMatchingLoading(false);
+        if (!connectedRoom) {
+          setMatchingLoading(false);
+        }
       }
     }
 
