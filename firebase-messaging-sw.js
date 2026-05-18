@@ -22,31 +22,32 @@ messaging.onBackgroundMessage(payload => {
 });
 
 self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
+  console.log('notificationclick', event);
+  // event.notification.close();
 
-  const fcmData = event.notification?.data?.FCM_MSG?.data || event.notification?.data || {};
-  const roomId = fcmData.roomId || '';
+  // const fcmData = event.notification?.data?.FCM_MSG?.data || event.notification?.data || {};
+  // const roomId = fcmData.roomId || '';
 
-  const target = new URL('/newpro/chess.html', self.location.origin);
-  if (roomId) {
-    target.searchParams.set('roomId', roomId);
-  }
-  const url = target.toString();
+  // const target = new URL('/newpro/chess.html', self.location.origin);
+  // if (roomId) {
+  //   target.searchParams.set('roomId', roomId);
+  // }
+  // const url = target.toString();
 
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((winList) => {
-      for (const win of winList) {
-        if ('navigate' in win) {
-          return win.navigate(url).then((client) => {
-            const nextClient = client || win;
-            if ('focus' in nextClient) {
-              return nextClient.focus();
-            }
-            return undefined;
-          });
-        }
-      }
-      return clients.openWindow(url);
-    })
-  );
+  // event.waitUntil(
+  //   clients.matchAll({ type: 'window', includeUncontrolled: true }).then((winList) => {
+  //     for (const win of winList) {
+  //       if ('navigate' in win) {
+  //         return win.navigate(url).then((client) => {
+  //           const nextClient = client || win;
+  //           if ('focus' in nextClient) {
+  //             return nextClient.focus();
+  //           }
+  //           return undefined;
+  //         });
+  //       }
+  //     }
+  //     return clients.openWindow(url);
+  //   })
+  // );
 });
