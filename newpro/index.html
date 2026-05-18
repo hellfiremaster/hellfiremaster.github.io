@@ -2460,6 +2460,11 @@
         const messaging = getMessaging(app);
         onMessage(messaging, (payload) => {
           console.log('새 알림 도착✨', payload);
+          if (payload?.data?.type === 'chess_game_started') {
+            showToast('체스 매칭이 성사됐습니다! 체스 메뉴로 이동해주세요.', '체스 알림');
+            return;
+          }
+
           const postId = payload.data?.postId;
           if (postId) {
             fetchComment(postId);

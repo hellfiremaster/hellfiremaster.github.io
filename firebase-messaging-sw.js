@@ -21,22 +21,32 @@ messaging.onBackgroundMessage(payload => {
   // );
 });
 
-// 백그라운드 메시지는 자동으로 노티로 보여준다고 가정
-// 클릭 시 동작 정의
-self.addEventListener('notificationclick', event => {
-    console.log('notificationclick', event);
-//     event.notification.close();
-//     const { postId, commentId } = event.notification.data || {};
-//     const url = `${self.location.origin}/?postId=${postId}&commentId=${commentId}`;
-//     event.waitUntil(
-//       clients.matchAll({ type: 'window', includeUncontrolled: true })
-//         .then(winList => {
-//           // 이미 열린 창 있으면 포커스
-//           for (const win of winList) {
-//             if (win.url === url) return win.focus();
-//           }
-//           // 없으면 새창
-//           return clients.openWindow(url);
-//         })
-//     );
-  });
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  const fcmData = event.notification?.data?.FCM_MSG?.data || event.notification?.data || {};
+  const roomId = fcmData.roomId || '';
+
+  const target = new URL('/newpro/chess.html', self.location.origin);
+  if (roomId) {
+    target.searchParams.set('roomId', roomId);
+  }
+  const url = target.toString();
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((winList) => {
+      for (const win of winList) {
+        if ('navigate' in win) {
+          return win.navigate(url).then((client) => {
+            const nextClient = client || win;
+            if ('focus' in nextClient) {
+              return nextClient.focus();
+            }
+            return undefined;
+          });
+        }
+      }
+      return clients.openWindow(url);
+    })
+  );
+});
