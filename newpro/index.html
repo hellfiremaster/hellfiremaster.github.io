@@ -2147,6 +2147,44 @@
       isLoading = false;
     }
 
+    async function refreshPostsFromFirstPage() {
+      if (isLoading) return;
+      isLoading = true;
+
+      try {
+        const firstPageQuery = query(
+          collection(db, 'posts'),
+          orderBy('createdAt', 'desc'),
+          limit(PAGE_SIZE)
+        );
+        const snapshot = await getDocs(firstPageQuery);
+
+        const fragment = document.createDocumentFragment();
+        let newLastDoc = null;
+
+        for (const docSnap of snapshot.docs) {
+          const item = await createPostItem(docSnap);
+
+          if (Math.random() < 0.25) {
+            const quizCard = createQuizCard();
+            fragment.appendChild(quizCard);
+          }
+
+          fragment.appendChild(item);
+          fetchComment(docSnap.id);
+          newLastDoc = docSnap;
+        }
+
+        Object.values(commentUnsubscribers).forEach(unsub => unsub());
+        commentUnsubscribers = {};
+        postList.innerHTML = '';
+        postList.appendChild(fragment);
+        lastVisible = newLastDoc;
+      } finally {
+        isLoading = false;
+      }
+    }
+
     window.addEventListener('scroll', () => {
       const atBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
       if (!atBottom) {
@@ -2348,8 +2386,9 @@
       try {
         isFiltering = false;
         document.getElementById('filterInput').value = '';
-        clearPostList();
-        await loadMorePosts();
+        filteredPostsArray = [];
+        filteredPage = 0;
+        await refreshPostsFromFirstPage();
       } finally {
         setTimeout(() => {
           refreshPostsIcon.classList.remove('refresh-rotating');
