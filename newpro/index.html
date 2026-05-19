@@ -2188,8 +2188,7 @@
         item.className = 'p-2 border-bottom';
         item.innerHTML = `
           <strong>${rankNum}위</strong> - ${data.nickname || '익명'} : 
-          ${data.score}점 ${rInfo.icon}
-          <div class="small text-muted">${chessRecordText}</div>
+          ${data.score}점 ${rInfo.icon} | <span class="small text-muted">${chessRecordText}</span>
           ${desc}
         `;
         container.appendChild(item);
