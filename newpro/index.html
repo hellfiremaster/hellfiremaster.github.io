@@ -475,7 +475,25 @@
     <!-- 글 목록 카드 -->
     <div class="card glass-card mt-4">
       <div class="card-body px-0 px-md-3">
-        <h4 class="card-title adventure text-center">모험의 기록</h4>
+        <div class="d-flex align-items-center px-2 px-md-0 gap-2">
+          <button
+            class="btn btn-sm btn-outline-secondary invisible"
+            aria-hidden="true"
+            tabindex="-1"
+            disabled
+          >
+            <span>↻</span>
+          </button>
+          <h4 class="card-title adventure mb-0 flex-grow-1 text-center">모험의 기록</h4>
+          <button
+            class="btn btn-sm btn-outline-secondary"
+            id="refreshPostsBtn"
+            aria-label="게시글 새로고침"
+            title="첫 페이지부터 다시 불러오기"
+          >
+            <span id="refreshPostsIcon">↻</span>
+          </button>
+        </div>
         <div id="postList" class="mt-3"><!-- 게시글 목록이 로드됩니다 --></div>
       </div>
     </div>
@@ -907,6 +925,7 @@
     const updatePostBtn = document.getElementById('updatePostBtn');
     const deleteCommentModalEl = document.getElementById('deleteCommentModal');
     const deleteCommentModal = new bootstrap.Modal(deleteCommentModalEl);
+    const refreshPostsBtn = document.getElementById('refreshPostsBtn');
     const deleteCommentPostId = document.getElementById('deleteCommentPostId');
     const deleteCommentId = document.getElementById('deleteCommentId');
     const confirmDeleteCommentBtn = document.getElementById('confirmDeleteCommentBtn');
@@ -2315,6 +2334,28 @@
     const filterModalEl = document.getElementById('filterModal');
     filterModalEl.addEventListener('shown.bs.modal', function () {
       document.getElementById('filterInput').focus();
+    });
+
+    refreshPostsBtn.addEventListener('click', async () => {
+      if (isLoading) {
+        return;
+      }
+
+      const refreshPostsIcon = document.getElementById('refreshPostsIcon');
+      refreshPostsBtn.disabled = true;
+      refreshPostsIcon.classList.add('refresh-rotating');
+
+      try {
+        isFiltering = false;
+        document.getElementById('filterInput').value = '';
+        clearPostList();
+        await loadMorePosts();
+      } finally {
+        setTimeout(() => {
+          refreshPostsIcon.classList.remove('refresh-rotating');
+          refreshPostsBtn.disabled = false;
+        }, 300);
+      }
     });
 
     // Firestore posts 컬렉션 참조
