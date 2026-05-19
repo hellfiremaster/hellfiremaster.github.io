@@ -884,6 +884,12 @@
       return `${year}.${month}.${day}, ${hours}:${minutes}:${seconds} ${ampm}`;
     }
 
+    function getChessRecordText(userData) {
+      const wins = Number.isFinite(userData?.chessWins) ? userData.chessWins : 0;
+      const losses = Number.isFinite(userData?.chessLosses) ? userData.chessLosses : 0;
+      return `♟️ ${wins}승 ${losses}패`;
+    }
+
     /********************************
      * DOM 요소 참조
      ********************************/
@@ -1571,10 +1577,11 @@
               const userData = snap.data();
               const userScore = userData.score || 0;
               const rankInfo = getRankByScore(userScore);
+              const chessRecordText = getChessRecordText(userData);
               rankIconEl.textContent = rankInfo.icon;
               rankIconEl.addEventListener('click', () => {
                 const desc = userData.description ? `${userData.description}` : '소개 정보 없음';
-                showToast(desc, `${userData.nickname} - ${rankInfo.name}(${userScore}점)`, 8000);                
+                showToast(desc, `${userData.nickname} - ${rankInfo.name}(${userScore}점) · ${chessRecordText}`, 8000);                
               });
             }
           });
@@ -1925,8 +1932,9 @@
             const uData = snap.data();
             const s = uData.score || 0;
             const rInfo = getRankByScore(s);
+            const chessRecordText = getChessRecordText(uData);
             const desc = uData.description ? `${uData.description}` : '소개 정보 없음';
-            showToast(desc,  `${authorNickname} - ${rInfo.name}(${s}점)`, 8000);
+            showToast(desc,  `${authorNickname} - ${rInfo.name}(${s}점) · ${chessRecordText}`, 8000);
           } else {
             showToast('유저 정보 없음', '알림');
           }
@@ -2172,6 +2180,7 @@
         const data = docSnap.data();
         const rankNum = (page - 1) * RANKING_PAGE_SIZE + idx + 1;
         const rInfo = getRankByScore(data.score || 0);
+        const chessRecordText = getChessRecordText(data);
         const desc = data.description
           ? `<p class="mb-0 text-muted small">${data.description}</p>`
           : '';
@@ -2180,6 +2189,7 @@
         item.innerHTML = `
           <strong>${rankNum}위</strong> - ${data.nickname || '익명'} : 
           ${data.score}점 ${rInfo.icon}
+          <div class="small text-muted">${chessRecordText}</div>
           ${desc}
         `;
         container.appendChild(item);

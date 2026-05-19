@@ -1007,7 +1007,8 @@
     }
 
     function buildResultDescription(resultCode, scoreText) {
-      const score = scoreText ? ` (${scoreText})` : '';
+      // const score = scoreText ? ` (${scoreText})` : '';
+      const score = '';
       switch (resultCode) {
         case 'resign':
           return `기권으로 게임이 종료되었습니다${score}`;
