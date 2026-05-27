@@ -476,14 +476,10 @@
     <div class="card glass-card mt-4">
       <div class="card-body px-0 px-md-3">
         <div class="d-flex align-items-center px-2 px-md-0 gap-2">
-          <button
-            class="btn btn-sm btn-outline-secondary invisible"
-            aria-hidden="true"
-            tabindex="-1"
-            disabled
-          >
-            <span>↻</span>
-          </button>
+          <div class="btn-group btn-group-sm" role="group" aria-label="게시글 정렬">
+            <button class="btn btn-outline-secondary active" id="sortLatestBtn" type="button">최신</button>
+            <button class="btn btn-outline-secondary" id="sortHotBtn" type="button">핫</button>
+          </div>
           <h4 class="card-title adventure mb-0 flex-grow-1 text-center">모험의 기록</h4>
           <button
             class="btn btn-sm btn-outline-secondary"
@@ -925,6 +921,8 @@
     const updatePostBtn = document.getElementById('updatePostBtn');
     const deleteCommentModalEl = document.getElementById('deleteCommentModal');
     const deleteCommentModal = new bootstrap.Modal(deleteCommentModalEl);
+    const sortLatestBtn = document.getElementById('sortLatestBtn');
+    const sortHotBtn = document.getElementById('sortHotBtn');
     const refreshPostsBtn = document.getElementById('refreshPostsBtn');
     const deleteCommentPostId = document.getElementById('deleteCommentPostId');
     const deleteCommentId = document.getElementById('deleteCommentId');
@@ -1292,7 +1290,8 @@
           dislikes: [],
           likeCount: 0,
           dislikeCount: 0,
-          netScore: 0
+          netScore: 0,
+          hotScore: 0
         });
         // console.log('Awarded points:', res.data.awarded);
         showToast('글이 등록되었습니다.', '글 작성');
@@ -2113,22 +2112,64 @@
     let lastVisible = null;
     let isLoading = false;
     const PAGE_SIZE = 5;
-    async function loadMorePosts() {
-      if (isLoading) return;
-      isLoading = true;
-      let q = query(
-        collection(db, 'posts'),
-        orderBy('createdAt', 'desc'),
-        limit(PAGE_SIZE)
-      );
+    const POST_SORT_LATEST = 'latest';
+    const POST_SORT_HOT = 'hot';
+    let postSortMode = POST_SORT_LATEST;
+
+    function setPostSortButtonState() {
+      sortLatestBtn.classList.toggle('active', postSortMode === POST_SORT_LATEST);
+      sortHotBtn.classList.toggle('active', postSortMode === POST_SORT_HOT);
+    }
+
+    function buildPostsQuery() {
+      if (postSortMode === POST_SORT_HOT) {
+        if (lastVisible) {
+          return query(
+            collection(db, 'posts'),
+            orderBy('hotScore', 'desc'),
+            startAfter(lastVisible),
+            limit(PAGE_SIZE)
+          );
+        }
+        return query(
+          collection(db, 'posts'),
+          orderBy('hotScore', 'desc'),
+          limit(PAGE_SIZE)
+        );
+      }
+
       if (lastVisible) {
-        q = query(
+        return query(
           collection(db, 'posts'),
           orderBy('createdAt', 'desc'),
           startAfter(lastVisible),
           limit(PAGE_SIZE)
         );
       }
+      return query(
+        collection(db, 'posts'),
+        orderBy('createdAt', 'desc'),
+        limit(PAGE_SIZE)
+      );
+    }
+
+    async function switchPostSortMode(nextMode) {
+      if (nextMode === postSortMode) {
+        return;
+      }
+
+      postSortMode = nextMode;
+      setPostSortButtonState();
+      clearPostList();
+      await loadMorePosts();
+    }
+
+    async function loadMorePosts() {
+      if (isLoading) {
+        return;
+      }
+      isLoading = true;
+      const q = buildPostsQuery();
       const snapshot = await getDocs(q);
       if (!snapshot.empty) {
         let newLastDoc = null;
@@ -2151,15 +2192,14 @@
     }
 
     async function refreshPostsFromFirstPage() {
-      if (isLoading) return;
+      if (isLoading) {
+        return;
+      }
       isLoading = true;
 
       try {
-        const firstPageQuery = query(
-          collection(db, 'posts'),
-          orderBy('createdAt', 'desc'),
-          limit(PAGE_SIZE)
-        );
+        lastVisible = null;
+        const firstPageQuery = buildPostsQuery();
         const snapshot = await getDocs(firstPageQuery);
 
         const fragment = document.createDocumentFragment();
@@ -2375,6 +2415,14 @@
     const filterModalEl = document.getElementById('filterModal');
     filterModalEl.addEventListener('shown.bs.modal', function () {
       document.getElementById('filterInput').focus();
+    });
+
+    sortLatestBtn.addEventListener('click', async () => {
+      await switchPostSortMode(POST_SORT_LATEST);
+    });
+
+    sortHotBtn.addEventListener('click', async () => {
+      await switchPostSortMode(POST_SORT_HOT);
     });
 
     refreshPostsBtn.addEventListener('click', async () => {
