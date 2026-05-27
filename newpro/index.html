@@ -421,6 +421,103 @@
     field-sizing: content
   }
 
+  .posts-toolbar {
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+  }
+  .post-sort-toggle {
+    gap: 0.2rem;
+    padding: 0.2rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #f4f7fb, #e9eef7);
+    border: 1px solid rgba(58, 86, 140, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 4px 10px rgba(58, 86, 140, 0.12);
+  }
+  .post-sort-btn {
+    border: none !important;
+    border-radius: 999px !important;
+    min-width: 4.2rem;
+    padding: 0.28rem 0.72rem;
+    color: #4f5f78;
+    font-family: 'Jua';
+    font-size: 0.84rem;
+    letter-spacing: 0.01em;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease, color 0.16s ease;
+  }
+  .post-sort-btn:hover {
+    transform: translateY(-1px);
+    color: #2e456b;
+    background: rgba(255, 255, 255, 0.75);
+  }
+  .post-sort-btn.active {
+    color: #ffffff;
+    background: linear-gradient(135deg, #1967d2, #3f8bff);
+    box-shadow: 0 6px 14px rgba(25, 103, 210, 0.35);
+  }
+  .post-sort-btn .sort-icon {
+    margin-right: 0.25rem;
+    opacity: 0.9;
+    font-size: 0.88rem;
+  }
+  .posts-toolbar-title {
+    font-family: 'Jua';
+    letter-spacing: 0.01em;
+  }
+  .post-refresh-btn {
+    border-radius: 999px;
+    border-color: rgba(58, 86, 140, 0.34);
+    background: rgba(255, 255, 255, 0.7);
+    transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+  }
+  .post-refresh-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.02);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
+  }
+  [data-bs-theme="dark"] .post-sort-toggle {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.88), rgba(51, 65, 85, 0.88));
+    border-color: rgba(148, 163, 184, 0.3);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 4px 10px rgba(0, 0, 0, 0.35);
+  }
+  [data-bs-theme="dark"] .post-sort-btn {
+    color: #cbd5e1;
+  }
+  [data-bs-theme="dark"] .post-sort-btn:hover {
+    background: rgba(148, 163, 184, 0.18);
+    color: #f8fafc;
+  }
+  [data-bs-theme="dark"] .post-sort-btn.active {
+    background: linear-gradient(135deg, #2f6dd3, #5c97ff);
+    color: #f8fafc;
+    box-shadow: 0 6px 14px rgba(92, 151, 255, 0.35);
+  }
+  [data-bs-theme="dark"] .post-refresh-btn {
+    background: rgba(30, 41, 59, 0.72);
+    border-color: rgba(148, 163, 184, 0.45);
+    color: #dbe6f5;
+  }
+
+  @media (max-width: 575.98px) {
+    .posts-toolbar {
+      flex-wrap: wrap;
+      row-gap: 0.48rem;
+    }
+    .post-sort-toggle {
+      order: 1;
+    }
+    .post-refresh-btn {
+      order: 2;
+      margin-left: auto;
+    }
+    .posts-toolbar-title {
+      order: 3;
+      flex: 1 0 100%;
+      text-align: left !important;
+      font-size: 1.04rem;
+      padding-left: 0.12rem;
+    }
+  }
+
   /* 🆕 댓글 새로고침 아이콘 회전 */
   .refresh-rotating {
     display: inline-block;
@@ -475,14 +572,18 @@
     <!-- 글 목록 카드 -->
     <div class="card glass-card mt-4">
       <div class="card-body px-0 px-md-3">
-        <div class="d-flex align-items-center px-2 px-md-0 gap-2">
-          <div class="btn-group btn-group-sm" role="group" aria-label="게시글 정렬">
-            <button class="btn btn-outline-secondary active" id="sortLatestBtn" type="button">최신</button>
-            <button class="btn btn-outline-secondary" id="sortHotBtn" type="button">핫</button>
+        <div class="posts-toolbar d-flex align-items-center px-2 px-md-0 gap-2">
+          <div class="btn-group btn-group-sm post-sort-toggle" role="group" aria-label="게시글 정렬">
+            <button class="btn btn-outline-secondary active post-sort-btn" id="sortLatestBtn" type="button">
+              <span class="sort-icon">🕒</span><span class="sort-label">지금</span>
+            </button>
+            <button class="btn btn-outline-secondary post-sort-btn" id="sortHotBtn" type="button">
+              <span class="sort-icon">🔥</span><span class="sort-label">핫</span>
+            </button>
           </div>
-          <h4 class="card-title adventure mb-0 flex-grow-1 text-center">모험의 기록</h4>
+          <h4 class="card-title adventure posts-toolbar-title mb-0 flex-grow-1 text-center">모험의 기록</h4>
           <button
-            class="btn btn-sm btn-outline-secondary"
+            class="btn btn-sm btn-outline-secondary post-refresh-btn"
             id="refreshPostsBtn"
             aria-label="게시글 새로고침"
             title="첫 페이지부터 다시 불러오기"
