@@ -506,6 +506,14 @@
       return mapped;
     }
 
+    /**
+     * 보드 입력 이벤트 핸들러     
+     * moveInputStarted: 드래그 시작 시점. 드래그 허용 여부를 반환한다.
+     * validateMoveInput: 드래그 종료 시점. 수락 여부를 반환한다.
+     * moveInputCanceled: 드래그가 취소된 시점. 보드를 게임 상태에 맞게 동기화한다.
+     * moveInputFinished: 드래그가 정상적으로 종료된 시점. 보드를 게임 상태에 맞게 동기화한다.
+     * returns: boolean | undefined (true: 허용/수락, false: 거부, undefined: 무시)
+     */
     function handleBoardInput(event) {
       if (!chess) {
         return false;
