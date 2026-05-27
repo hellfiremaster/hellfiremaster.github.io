@@ -1289,7 +1289,10 @@
           content: contentVal,
           createdAt: serverTimestamp(),
           likes: [],
-          dislikes: []
+          dislikes: [],
+          likeCount: 0,
+          dislikeCount: 0,
+          netScore: 0
         });
         // console.log('Awarded points:', res.data.awarded);
         showToast('글이 등록되었습니다.', '글 작성');
