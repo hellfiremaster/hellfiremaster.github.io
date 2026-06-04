@@ -1040,6 +1040,7 @@
     let currentNickname = null;
     let currentScore = 0;
     let commentUnsubscribers = {};
+    let postSaving = false;
 
     /********************************
      * 실시간 글 UI 및 댓글 업데이트, 무한 스크롤
@@ -1359,26 +1360,35 @@
      * 글 작성 (DOMPurify 및 유튜브 임베디드 적용)
      ********************************/
     savePostBtn.addEventListener('click', async () => {
-      const user = auth.currentUser;
-      if (!user) {
-        showToast('로그인이 필요합니다.', '오류');
+      if (postSaving) {
         return;
       }
-      const titleVal = DOMPurify.sanitize(postTitle.value.trim(), { ALLOWED_TAGS: [] });
-      const contentVal = createEditor ? createEditor.getHTML() : '';
-      if (!titleVal) {
-        showToast('제목을 입력하세요.', '오류');
-        return;
-      }
-      if (!contentVal.trim()) {
-        showToast('내용을 입력하세요.', '오류');
-        return;
-      }
-      if(currentNickname === null) {
-        showToast('사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.', '잠만');
-        return;
-      }
+
       try {
+        postSaving = true;
+        savePostBtn.disabled = true;
+
+        const user = auth.currentUser;
+        if (!user) {
+          showToast('로그인이 필요합니다.', '오류');
+          return;
+        }
+
+        const titleVal = DOMPurify.sanitize(postTitle.value.trim(), { ALLOWED_TAGS: [] });
+        const contentVal = createEditor ? createEditor.getHTML() : '';
+        if (!titleVal) {
+          showToast('제목을 입력하세요.', '오류');
+          return;
+        }
+        if (!contentVal.trim()) {
+          showToast('내용을 입력하세요.', '오류');
+          return;
+        }
+        if(currentNickname === null) {
+          showToast('사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.', '잠만');
+          return;
+        }
+
         // 게시글 생성 (트랜잭션 없이 바로 등록)
         const newPostRef = doc(collection(db, 'posts'));
         await setDoc(newPostRef, {
@@ -1404,6 +1414,9 @@
         await awardPointsAndCheckRank({ points: 50 });
       } catch (err) {
         showToast(err.message, '글 작성 실패');
+      } finally {
+        postSaving = false;
+        savePostBtn.disabled = false;
       }
     });
 
