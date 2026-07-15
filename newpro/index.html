@@ -160,6 +160,10 @@
       height: 100% !important;
       border: 0;
     }
+    .comment-item .video-responsive {
+      width: 480px;
+      margin: 0.5rem 0;
+    }
     .magic-btn {
       position: relative;
       overflow: hidden;
@@ -1158,6 +1162,65 @@
       if (!hMatch && !mMatch && !sMatch && /^\d+$/.test(timeStr)) seconds = parseInt(timeStr, 10);
       return seconds;
     }
+
+    function getYouTubeEmbedInfo(url) {
+      const match = String(url).match(
+        /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|live\/))([A-Za-z0-9_-]{11})([^\s<]*)$/i
+      );
+      if (!match) {
+        return null;
+      }
+
+      const queryString = (match[2] || '')
+        .replace(/&amp;/g, '&')
+        .replace(/^[\?&]/, '');
+      const searchParams = new URLSearchParams(queryString);
+      const timeValue = searchParams.get('t');
+
+      return {
+        videoId: match[1],
+        startSeconds: timeValue ? parseTimeParameter(timeValue) : 0
+      };
+    }
+
+    function convertCommentLinks(text) {
+      return text.replace(/https?:\/\/[^\s<]+/g, (url) => {
+        const youtubeInfo = getYouTubeEmbedInfo(url);
+        if (!youtubeInfo) {
+          return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+        }
+
+        return `<a href="${url}"
+                   class="comment-youtube-link"
+                   data-video-id="${youtubeInfo.videoId}"
+                   data-start-seconds="${youtubeInfo.startSeconds}"
+                   title="클릭해서 댓글 안에서 영상 보기">${url}</a>`;
+      });
+    }
+
+    function replaceCommentYouTubeLink(link) {
+      const videoId = link.dataset.videoId;
+      const startSeconds = Number(link.dataset.startSeconds) || 0;
+      const params = new URLSearchParams({ autoplay: '1' });
+      if (startSeconds > 0) {
+        params.set('start', String(startSeconds));
+      }
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'video-responsive';
+
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+      iframe.title = 'YouTube video player';
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.setAttribute('allowfullscreen', '');
+
+      wrapper.appendChild(iframe);
+      link.replaceWith(wrapper);
+    }
+
     function convertYouTubeLinks(text) {
       if (
         /(&lt;iframe|<iframe)/i.test(text) ||
@@ -1168,20 +1231,18 @@
 
       return text.replace(
         /(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|live\/))([A-Za-z0-9_-]{11})([^<\s]*)/g,
-        (match, videoId, params) => {
-          let startParam = '';
-          if (params) {
-            const queryString = params.replace(/&amp;/g, '&').replace(/^[\?&]/, '');
-            const searchParams = new URLSearchParams(queryString);
-            const t = searchParams.get('t');
-            if (t) {
-              const seconds = parseTimeParameter(t);
-              startParam = `?start=${seconds}`;
-            }
+        (match) => {
+          const youtubeInfo = getYouTubeEmbedInfo(match);
+          if (!youtubeInfo) {
+            return match;
           }
+
+          const startParam = youtubeInfo.startSeconds > 0
+            ? `?start=${youtubeInfo.startSeconds}`
+            : '';
           return `<div class="video-responsive">
-                    <iframe width="560" height="315" 
-                            src="https://www.youtube.com/embed/${videoId}${startParam}" 
+                    <iframe width="560" height="315"
+                            src="https://www.youtube.com/embed/${youtubeInfo.videoId}${startParam}"
                             frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                             allowfullscreen>
@@ -1191,10 +1252,6 @@
       );
     }
     
-    function convertLinks(text) {
-      return text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
-    }
-
     /********************************
      * 공지사항 로드
      ********************************/
@@ -1581,7 +1638,7 @@
         if (isOnlyEmoji(safeContent)) {
           finalContent = `<span class="emoji-large">${safeContent}</span>`;
         } else {
-          finalContent = convertLinks(safeContent);
+          finalContent = convertCommentLinks(safeContent);
         }
         const dateStr = formatDateTime(comment.createdAt);
 
@@ -1619,7 +1676,14 @@
           ${replyFormHtml}
         `;
 
-        // --- 추가된 부분: 현재 사용자가 이미 좋아요/싫어요 한 경우 버튼 활성화 처리 --- 
+        div.querySelectorAll('.comment-youtube-link').forEach((link) => {
+          link.addEventListener('click', (event) => {
+            event.preventDefault();
+            replaceCommentYouTubeLink(link);
+          });
+        });
+
+        // --- 추가된 부분: 현재 사용자가 이미 좋아요/싫어요 한 경우 버튼 활성화 처리 ---
         if (auth.currentUser) {
           const userId = auth.currentUser.uid;
           const commentLikeBtn = div.querySelector(`#commentLikeBtn-${postId}-${comment.commentId}`);
