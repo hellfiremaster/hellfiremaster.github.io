@@ -161,8 +161,15 @@
       border: 0;
     }
     .comment-item .video-responsive {
-      width: 480px;
+      width: 720px;
       margin: 0.5rem 0;
+    }
+    @media (max-width: 576px) {
+      .comment-item .video-responsive {
+        width: calc(100vw - 3rem);
+        max-width: none;
+        margin-left: calc(50% - 54vw + 1.5rem);
+      }
     }
     .magic-btn {
       position: relative;
