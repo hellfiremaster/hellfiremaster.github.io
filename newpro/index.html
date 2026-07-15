@@ -778,7 +778,6 @@
     import { getMessaging } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js';
 
     const awardPoints = httpsCallable(functions, 'awardPoints');
-    const requestDisasterPoint = httpsCallable(functions, 'requestDisasterPoint');
     let admin = null;
 
     /********************************
@@ -1266,34 +1265,6 @@
       if (celebrating) launchFireworks();
     }
 
-    async function maybeAskDisasterAid(user) {
-      if (!user) return;
-      try {
-        const disRef = doc(db, 'disasters', user.uid);
-        const disSnap = await getDoc(disRef);
-        if (disSnap.exists()) return;
-
-        const ok = await showOkModal({
-          title: '재앙지원금 도착!',
-          message: '재앙지원금 <strong>500포인트</strong>가 도착했슙니다. 훠훠. 받으시겠습니까?',
-          okText: '확인',
-        });
-        console.log('ok', ok);
-        if(!ok) {
-          return;
-        }
-
-        try {
-          await requestDisasterPoint();            // true/false 그대로 전달
-          showToast('받기 완료! 500점이 쓩~', '재앙지원금');
-        } catch (e) {
-          showToast(e.message, '오류');
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userData = await fetchUserNicknameAndScore(user.uid);
@@ -1304,7 +1275,6 @@
         const claims = idTokenResult.claims;
         admin = claims.admin ?? false;
         
-        maybeAskDisasterAid(user);
       } else {
         admin = false;
         currentNickname = null;
@@ -2375,6 +2345,7 @@
       // 기본 쿼리 +1개(limit+1) 가져오기
       let q = query(
         collection(db, 'users'),
+        where('anonymous', '==', false),
         orderBy('score', 'desc')
       );
       const cursor = rankingCursors[page];

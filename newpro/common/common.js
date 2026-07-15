@@ -1,11 +1,50 @@
 import { auth, db, functions, storage, analytics, app } from './firebase-init.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
+import { createUserWithEmailAndPassword, EmailAuthProvider, linkWithCredential, onAuthStateChanged, sendPasswordResetEmail, signInAnonymously, signInWithEmailAndPassword, signOut, updateProfile } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js';
 import { doc, setDoc, getDoc, collection, query, where, getDocs, limit, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js';
 import { getMessaging, getToken } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js';
 import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.2.0/firebase-functions.js';    
 
+export const GUEST_DISPLAY_NAME = '개발귀';
+
 let admin = null;
 let authInitalized = false;
+
+async function ensureAuthenticatedUser() {
+  await auth.authStateReady();
+
+  let user = auth.currentUser;
+  if (!user) {
+    const credential = await signInAnonymously(auth);
+    user = credential.user;
+  }
+
+  if (user.isAnonymous) {
+    if (user.displayName !== GUEST_DISPLAY_NAME) {
+      await updateProfile(user, { displayName: GUEST_DISPLAY_NAME });
+    }
+
+    const userRef = doc(db, 'users', user.uid);
+    const userSnap = await getDoc(userRef);
+    if (!userSnap.exists()) {
+      const userData = {
+        nickname: GUEST_DISPLAY_NAME,
+        anonymous: true,
+        updatedAt: serverTimestamp(),
+        score: 0,
+        createdAt: serverTimestamp(),
+      };
+      await setDoc(userRef, userData);
+    }
+  }
+
+  return user;
+}
+
+// All feature pages import this module. Finish guest authentication and the
+// matching user document before their page-specific auth listeners run.
+ensureAuthenticatedUser().catch((err) => {
+  console.error('Anonymous authentication failed', err);
+});
 
 // ---- 유틸: 점수→랭크 이모지(간단판) ----
 export function getRankByScore(score=0) {
@@ -35,7 +74,7 @@ function bindAuthUI() {
   // 상태 반영
   onAuthStateChanged(auth, async (user) => {
     if (authLoadingBtn) authLoadingBtn.classList.add('d-none');
-    if (user) {
+    if (user && !user.isAnonymous) {
       if (loginBtn)  loginBtn.classList.add('d-none');
       if (signupBtn) signupBtn.classList.add('d-none');
       if (userDropdown) userDropdown.classList.remove('d-none');
@@ -187,8 +226,22 @@ function bindModals() {
       if (!snap.empty) return showToast('이미 사용 중인 닉네임이에요.', '회원가입 실패');
 
       try {
-        const cred = await createUserWithEmailAndPassword(auth, email, pw);
-        await setDoc(doc(db,'users', cred.user.uid), { nickname, score: 0, createdAt: serverTimestamp() });
+        const anonymousUser = auth.currentUser?.isAnonymous ? auth.currentUser : null;
+        const cred = anonymousUser
+          ? await linkWithCredential(anonymousUser, EmailAuthProvider.credential(email, pw))
+          : await createUserWithEmailAndPassword(auth, email, pw);
+
+        await updateProfile(cred.user, { displayName: nickname });
+        const userData = {
+          nickname,
+          anonymous: false,
+          updatedAt: serverTimestamp()
+        };
+        if (!anonymousUser) {
+          userData.score = 0;
+          userData.createdAt = serverTimestamp();
+        }
+        await setDoc(doc(db,'users', cred.user.uid), userData, { merge: true });
         if(referrerNickname) {
           await setDoc(doc(db,'users_private', cred.user.uid), { referrerNickname });
         }
@@ -196,8 +249,9 @@ function bindModals() {
         bootstrap.Modal.getInstance(document.getElementById('signupModal'))?.hide();
         if(referrerNickname) {
           const applyReferrer = httpsCallable(functions, 'applyReferrer');
-          applyReferrer({ referrerNickname });
+          await applyReferrer({ referrerNickname });
         }
+        location.reload();
       } catch (err) {
         showToast(err.message, '회원가입 실패');
       }
