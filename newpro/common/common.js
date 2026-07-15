@@ -232,16 +232,19 @@ function bindModals() {
           : await createUserWithEmailAndPassword(auth, email, pw);
 
         await updateProfile(cred.user, { displayName: nickname });
+        await cred.user.getIdToken(true);
+        const userRef = doc(db, 'users', cred.user.uid);
+        const userDocSnap = await getDoc(userRef);
         const userData = {
           nickname,
           anonymous: false,
           updatedAt: serverTimestamp()
         };
-        if (!anonymousUser) {
+        if (!userDocSnap.exists()) {
           userData.score = 0;
           userData.createdAt = serverTimestamp();
         }
-        await setDoc(doc(db,'users', cred.user.uid), userData, { merge: true });
+        await setDoc(userRef, userData, { merge: true });
         if(referrerNickname) {
           await setDoc(doc(db,'users_private', cred.user.uid), { referrerNickname });
         }
