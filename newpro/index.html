@@ -168,6 +168,9 @@
       .comment-item .video-responsive {
         width: calc(100vw - 3rem);
         max-width: none;
+        margin-left: calc(50% - 50vw + 1.5rem);
+      }
+      .comment-item.comment-reply .video-responsive {
         margin-left: calc(50% - 54vw + 1.5rem);
       }
     }
@@ -1636,7 +1639,7 @@
         let commentNickname = comment.nickname || '익명';        
         const div = document.createElement('div');
         div.id = 'commentNode-' + comment.commentId;   // ★ 이 부분 추가!
-        div.className = 'comment-item';
+        div.className = indent > 0 ? 'comment-item comment-reply' : 'comment-item';
         // indent는 rem 단위로 적용되며, 최대 2rem까지만 들여쓰기합니다.
         div.style.marginLeft = indent + 'rem';
 
